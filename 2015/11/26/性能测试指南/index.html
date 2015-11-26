@@ -1,0 +1,516 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>性能测试指南 | Jyong&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Jyong">
+    
+    <meta name="description" content="性能测试指南概念性能测试是通过自动化的测试工具模拟多种正常、峰值以及异常负载条件来对系统的各项性能指标进行测试。负载测试和压力测试都属于性能测试，两者可以结合进行。
+
+负载测试是模拟实际软件系统所承受的负载条件的系统负荷，通过不断加载（如逐渐增加模拟用户的数量）或其它加载方式来观察不同负载下系统的响应时间和数据吞吐量、系统占用的资源（如CPU、内存）等，以检验系统的行为和特性，以发现系统可能存在的性能瓶颈、内存泄漏、不能实时同步等问题。负载测试更多地体现了一种方法或一种技术。
+压力测试是在强负载（大数据量、大量并发用户等）下的测试，查看应用系统在峰值使用情况下操作行为，从而有效地发现系统的某项功能隐患、系统是否具有良好的容错能力和可恢复能力。压力测试分为高负载下的长时间（如24小时以上）的稳定性压力测试和极限负载情况下导致系统崩溃的破坏性压力测试。">
+    
+    
+    
+    
+    <link rel="alternative" href="/atom.xml" title="Jyong&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/">
+    <link rel="apple-touch-icon-precomposed" href="/img/">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Jyong&#39;s Blog" title="Jyong&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Jyong&#39;s Blog">Jyong&#39;s Blog</a></h1>
+				<h2 class="blog-motto">人生の目的の一つは楽しむことです</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yukinami.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/26/性能测试指南/" title="性能测试指南" itemprop="url">性能测试指南</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-26T08:53:51.000Z" itemprop="datePublished"> 发表于 Nov 26 2015</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#性能测试指南"><span class="toc-number">1.</span> <span class="toc-text">性能测试指南</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#概念"><span class="toc-number">1.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关键指标"><span class="toc-number">1.2.</span> <span class="toc-text">关键指标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#系统性能"><span class="toc-number">1.3.</span> <span class="toc-text">系统性能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#系统吞吐量评估"><span class="toc-number">1.4.</span> <span class="toc-text">系统吞吐量评估</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PV到TPS的转换"><span class="toc-number">1.4.1.</span> <span class="toc-text">PV到TPS的转换</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#性能测试工具Jmeter"><span class="toc-number">1.5.</span> <span class="toc-text">性能测试工具Jmeter</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#原理"><span class="toc-number">1.5.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#测试计划元件"><span class="toc-number">1.5.2.</span> <span class="toc-text">测试计划元件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后台服务器性能测试实例"><span class="toc-number">1.6.</span> <span class="toc-text">后台服务器性能测试实例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#获取用户操作对应的接口请求"><span class="toc-number">1.6.1.</span> <span class="toc-text">获取用户操作对应的接口请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#模拟用户请求"><span class="toc-number">1.6.2.</span> <span class="toc-text">模拟用户请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Think_Time"><span class="toc-number">1.6.3.</span> <span class="toc-text">Think Time</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构建虚拟用户组"><span class="toc-number">1.6.4.</span> <span class="toc-text">构建虚拟用户组</span></a></li></ol></li></ol></li></ol>
+		
+		</div>
+		
+		<h1 id="性能测试指南">性能测试指南</h1><h2 id="概念">概念</h2><p>性能测试是通过自动化的测试工具模拟多种正常、峰值以及异常负载条件来对系统的各项性能指标进行测试。负载测试和压力测试都属于性能测试，两者可以结合进行。</p>
+<ul>
+<li>负载测试是模拟实际软件系统所承受的负载条件的系统负荷，通过不断加载（如逐渐增加模拟用户的数量）或其它加载方式来观察不同负载下系统的响应时间和数据吞吐量、系统占用的资源（如CPU、内存）等，以检验系统的行为和特性，以发现系统可能存在的性能瓶颈、内存泄漏、不能实时同步等问题。负载测试更多地体现了一种方法或一种技术。</li>
+<li>压力测试是在强负载（大数据量、大量并发用户等）下的测试，查看应用系统在峰值使用情况下操作行为，从而有效地发现系统的某项功能隐患、系统是否具有良好的容错能力和可恢复能力。压力测试分为高负载下的长时间（如24小时以上）的稳定性压力测试和极限负载情况下导致系统崩溃的破坏性压力测试。</li>
+</ul>
+<a id="more"></a>
+<h2 id="关键指标">关键指标</h2><p>性能测试监控指标主要分为：资源指标和系统指标，资源指标与硬件资源消耗直接相关，而系统指标则与用户场景及需求直接相关</p>
+<p><img src="http://my.csdn.net/uploads/201207/17/1342512888_1693.JPG" alt=""></p>
+<h2 id="系统性能">系统性能</h2><p>重要参数</p>
+<ul>
+<li>并发数 系统同时处理的请求数/事务数</li>
+<li>系统吞吐量（Throughput） 吞吐量是指系统在单位时间内处理请求的数量，度量单位是reqeust/s</li>
+<li>系统延迟（Latency）系统延迟是指系统在处理一个请求或一个任务时的延迟。系统延迟和响应时间的意思大致是一致的。</li>
+</ul>
+<p>一般来说，一个系统的性能受到这两个条件的约束，缺一不可。比如，我的系统可以顶得住一百万的并发，但是系统的延迟是2分钟以上，那么，这个一百万的负载毫无意义。系统延迟很短，但是吞吐量很低，同样没有意义。所以，一个好的系统的性能测试必然受到这两个条件的同时作用。</p>
+<p>下面的两个概念对比系统吞吐量是更为针对性的定义，虽然和吞吐量的计量单位不同，但基本是成正比的</p>
+<ul>
+<li>TPS Transactions Per Second 即服务器每秒处理的事务数。TPS包括一条消息入和一条消息出，加上一次用户数据库访问。</li>
+<li>QPS Queries Per Second </li>
+</ul>
+<p>每秒查询率QPS是对一个特定的查询服务器在规定时间内所处理流量多少的衡量标准，在因特网上，作为域名系统服务器的机器的性能经常用每秒查询率来衡量。</p>
+<p>它们之间的关系，Throughput(TPS/QPS) = 并发数/平均响应时间</p>
+<p>NOTE: 负载测试的目的就是找出这个Throughput(TPS/QPS)的最大值</p>
+<h2 id="系统吞吐量评估">系统吞吐量评估</h2><p>找出系统吞吐量的极限后，我们需要估算我们实际对系统吞吐量的需求值，看前者是否能够满足后者。</p>
+<h3 id="PV到TPS的转换">PV到TPS的转换</h3><p>日PV对于一个网站，很容易就统计出来。 日PV和TPS之间如何对应？公式就是80%的日PV，发生在T小时内。则公式为：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TPS = 日PV * <span class="number">80</span>% / <span class="number">24</span> * <span class="number">60</span> * <span class="number">60</span> * (T/<span class="number">24</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="性能测试工具Jmeter">性能测试工具Jmeter</h2><h3 id="原理">原理</h3><p>Jmeter工具和其他性能工具在原理上完全一致，工具包含4个部分：</p>
+<ul>
+<li>负载发生器  用于产生负载，通常以多线程或是多进程的方式模拟用户行为</li>
+<li>用户运行器  通常是一个脚本运行引擎，用户运行器附加在线程或进程上，根据脚本要求模拟指定的用户行为</li>
+<li>资源生成器  用于生成测试过程中服务器、负载机的资源数据</li>
+<li>报表生成器  根据测试中霍地的数据生成报表，提供可视化的数据显示方式</li>
+</ul>
+<h3 id="测试计划元件">测试计划元件</h3><ul>
+<li>测试计划(Test Plan) 用来描述一个性能测试，包含与本次性能测试所有相关的功能。也就说本的性能测试的所有内容是于基于一个计划的。</li>
+<li>Threads(Users) 这个就是我们通常添加运行的线程。通俗的讲一个线程组,，可以看做一个虚拟用户组，线程组中的每个线程都可以理解为一个虚拟用户。线程组中包含的线程数量在测试执行过程中是不会发生改变的。</li>
+<li>取样器(Sampler) 取样器(Sample)是性能测试中向服务器发送请求，记录响应信息，记录响应时间的最小单元，JMeter 原生支持多种不同的sampler ，如 HTTP Request Sampler 、 FTP Request Sample 、TCP Request Sample 、JDBC Request Sampler 等，每一种不同类型的 sampler 可以根据设置的参数向服务器发出不同类型的请求</li>
+<li>逻辑控制器(Logic Controller) 逻辑控制器，包括两类无件，一类是用于控制test plan 中 sampler 节点发送请求的逻辑顺序的控制器，常用的有 如果(If)控制器 、switch Controller 、Runtime Controller、循环控制器等。另一类是用来组织可控制 sampler 来节点的，如 事务控制器、吞吐量控制器。</li>
+<li>配置元件(Config Element) 配置元件(config element)用于提供对静态数据配置的支持。CSV Data Set config 可以将本地数据文件形成数据池(Data Pool)，而对应于HTTP Request Sampler和 TCP Request Sampler等类型的配制无件则可以修改Sampler的默认数据。(例如，HTTP Cookie Manager 可以用于对 HTTP Request Sampler 的cookie 进行管理)</li>
+<li>定时器(Timer) 定时器(Timer)用于操作之间设置等待时间，等待时间是性能测试中常用的控制客户端QPS的手端。类似于LoadRunner里面的“思考时间”。JMeter 定义了Bean Shell Timer、Constant Throughput Timer、固定定时器等不同类型的Timer。</li>
+<li>前置处理器(Per Processors) 用于在实际的请求发出之前对即将发出的请求进行特殊处理。例如，HTTP URL重写修复符则可以实现URL重写，当RUL中有sessionID 一类的session信息时，可以通过该处理器填充发出请求的实际的sessionID 。</li>
+<li>后置处理器(Post Processors) 用于对Sampler 发出请求后得到的服务器响应进行处理。一般用来提取响应中的特定数据(类似LoadRunner测试工具中的关联概念)。例如，XPath Extractor 则可以用于提取响应数据中通过给定XPath 值获得的数据。</li>
+<li>断言(Assertions) 断言用于检查测试中得到的相应数据等是否符合预期，断言一般用来设置检查点，用以保证性能测试过程中的数据交互是否与预期一致。</li>
+<li>监听器(Listener) 这个监听器可不是用来监听系统资源的元件。它是用来对测试结果数据进行处理和可视化展示的一系列元件。 图行结果、查看结果树、聚合报告。都是我们经常用到的元件。</li>
+</ul>
+<p>对于Jmeter这些组件可以这样理解。 配置测试计划就是通过代码来实现对服务器的访问，代码除了提供了语法级别的循环遍历，条件判断等等，还提供了各种函数库来供我们使用。Jmeter的这些组件其实就是实现了一些语法功能以及包括了各种功能的函数，不同的组件类型对函数的不能功能进行了分组。 另外除了函数，还提供了一些配置文件来控制这些函数的行为，这类组件(Config Element)通常作为子组件配置配置。</p>
+<h2 id="后台服务器性能测试实例">后台服务器性能测试实例</h2><p>台服务器性能测试是通过工具和脚本模出真实用户的请求，通过并发的方式来放大流量测试后台服务器的性能，并记录测试结果数据。所以如何获取和通过工具模拟出单个用户的行为是一个必须首先完成的工作。</p>
+<h3 id="获取用户操作对应的接口请求">获取用户操作对应的接口请求</h3><p>通过Charles、fiddler等抓包工具，分析用户的一个行为具体有哪些接口请求</p>
+<h3 id="模拟用户请求">模拟用户请求</h3><p>接下来需要在性能测试工具中模拟模拟出这样的请求。基于棘突的协议类型和工具提供的用法，常见的有两种方式，一是在工具中配置请求，二是通过代码的方法。Jmeter主要是第一种方法，对于HTTP请求可以直接配置各种参数，同时Jmeter还提供了录制的功能。</p>
+<p>Jmeter脚本的录制需要使用<code>HTTP(S) Test Script Recorder</code>，它属于非测试逻辑单元，添加需要在工作台才能进行。</p>
+<p><img src="/img/test-script-recorder.png" alt="Test Script Recorder"></p>
+<p>Target Controller 指的是作为脚本录制结果的Contorller保存到哪，可以直接保存到测试计划下，也可以保存到<code>HTTP(S) Test Script Recorder</code>下。个人建议先临时保存到<code>HTTP(S) Test Script Recorder</code>下，重新修改组织后，再将最终的Contorlller移动的测试计划下。</p>
+<p><code>Content-type filter</code>和<code>URL Patterns to Include</code>都可以用来过滤需要录制的请求，去除一些不关心的内容。这里需要的是如果请求域名没有指定端口，那么URL Pattern里也需要明确指定80端口，否则无法正确过滤。</p>
+<h3 id="Think_Time">Think Time</h3><p>如果直接执行录制下来的脚本有一个很大的问题。在于真实用户和脚本的不同。脚本如果是基于前面的方法录制的，两个请求的执行时间之间是没有任何的其他的停顿的，其间隔只是依赖于上一个服务的响应时间和测试机发起请求所需的时间。但是显然真实的用户不是机器，他们在做上面每一个步骤的时候都有一个思考的时间，这也是Think Time这个词的意义来源。</p>
+<p>Think Time在Jmeter可以通<code>Constant Timer</code>来实现。</p>
+<p><img src="/img/think-time.png" alt="Think Time"></p>
+<h3 id="构建虚拟用户组">构建虚拟用户组</h3><p>上面介绍的获取和模拟的是单个用户的行为，通过工具放大后其实代表了行为一致的一类用户。但是对于个真实的被测系统，通常有很多种使用方式，并不是每个用户做的步骤都一样，如果想看系统整体的性能，那就需要同时模拟多类不同的用户，这里我们称之为虚拟用户组。</p>
+<p>在Jmeter中虚拟用户组通过，线程组来实现。不同的线程组定义不同的用户行为。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/性能测试/">性能测试</a>
+  </div>
+
+</div>
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yukinami.github.io/2015/11/26/性能测试指南/" data-title="性能测试指南 | Jyong&#39;s Blog" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/11/26/Docker-CI/"  title="Docker CI">
+ <strong>下一篇：</strong><br/> 
+ <span>Docker CI
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#性能测试指南"><span class="toc-number">1.</span> <span class="toc-text">性能测试指南</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#概念"><span class="toc-number">1.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关键指标"><span class="toc-number">1.2.</span> <span class="toc-text">关键指标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#系统性能"><span class="toc-number">1.3.</span> <span class="toc-text">系统性能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#系统吞吐量评估"><span class="toc-number">1.4.</span> <span class="toc-text">系统吞吐量评估</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PV到TPS的转换"><span class="toc-number">1.4.1.</span> <span class="toc-text">PV到TPS的转换</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#性能测试工具Jmeter"><span class="toc-number">1.5.</span> <span class="toc-text">性能测试工具Jmeter</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#原理"><span class="toc-number">1.5.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#测试计划元件"><span class="toc-number">1.5.2.</span> <span class="toc-text">测试计划元件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后台服务器性能测试实例"><span class="toc-number">1.6.</span> <span class="toc-text">后台服务器性能测试实例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#获取用户操作对应的接口请求"><span class="toc-number">1.6.1.</span> <span class="toc-text">获取用户操作对应的接口请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#模拟用户请求"><span class="toc-number">1.6.2.</span> <span class="toc-text">模拟用户请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Think_Time"><span class="toc-number">1.6.3.</span> <span class="toc-text">Think Time</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构建虚拟用户组"><span class="toc-number">1.6.4.</span> <span class="toc-text">构建虚拟用户组</span></a></li></ol></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/Android/" title="Android">Android<sup>10</sup></a></li>
+		
+			<li><a href="/tags/经验错误/" title="经验错误">经验错误<sup>7</sup></a></li>
+		
+			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
+		
+			<li><a href="/tags/API/" title="API">API<sup>2</sup></a></li>
+		
+			<li><a href="/tags/OAuth2/" title="OAuth2">OAuth2<sup>1</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Concurrency/" title="Concurrency">Concurrency<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Agile/" title="Agile">Agile<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Swagger/" title="Swagger">Swagger<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>1</sup></a></li>
+		
+			<li><a href="/tags/性能测试/" title="性能测试">性能测试<sup>1</sup></a></li>
+		
+			<li><a href="/tags/gradle/" title="gradle">gradle<sup>1</sup></a></li>
+		
+			<li><a href="/tags/摘录/" title="摘录">摘录<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Spring-XD/" title="Spring XD">Spring XD<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Spring-Ingegration/" title="Spring Ingegration">Spring Ingegration<sup>1</sup></a></li>
+		
+			<li><a href="/tags/HTML/" title="HTML">HTML<sup>1</sup></a></li>
+		
+			<li><a href="/tags/iOS/" title="iOS">iOS<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Restkit/" title="Restkit">Restkit<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            <a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+          </li>
+        
+          <li>
+            <a href="http://hexo.io" target="_blank" title="Hexo">Hexo</a>
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I&#39;m Jyong, a web developer. <br/>
+			And hope you enjoy this blog.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2100171710" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yukinami" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="https://plus.google.com/100215768199802928787?rel=author" target="_blank" class="icon-google_plus" title="Google+"></a>
+		
+		
+		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2015 
+		
+		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"yukinami"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+  </body>
+</html>
+
+
+<a href="https://github.com/yukinami"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?ec2d95a543c1245fcad501b5484af450";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>

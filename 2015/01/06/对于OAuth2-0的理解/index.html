@@ -1,0 +1,523 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>对于OAuth2.0授权方式的理解 | Jyong&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Jyong">
+    
+    <meta name="description" content="概述OAuth2.0的最好的文档，莫过于RFC 6749。OAuth2.0本身是一个比较灵活的标准，能够适配应用到各种场景。本文主要是对文档的翻译以及加上部分个人的理解。
+角色OAuth定义了4个角色
+
+resource owner  能够对受保护的资源进行授权的实体。当resource owner是人的时候，它是指终端用户
+resource server  持有受保护的资源的服务器，使用access tokens能够接收和响应对受保护资源的请求
+client  在resource owner的行为和授权下，请求受保护资源的应用。“client”没有特指任何实现特性（比如，无论应用执行在服务器，桌面或者其他设备上）
+authorization server  当成功认证了resource owner并且获得授权后，分发access tokens给client的服务器。">
+    
+    
+    
+    
+    <link rel="alternative" href="/atom.xml" title="Jyong&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/">
+    <link rel="apple-touch-icon-precomposed" href="/img/">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Jyong&#39;s Blog" title="Jyong&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Jyong&#39;s Blog">Jyong&#39;s Blog</a></h1>
+				<h2 class="blog-motto">人生の目的の一つは楽しむことです</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yukinami.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/01/06/对于OAuth2-0的理解/" title="对于OAuth2.0授权方式的理解" itemprop="url">对于OAuth2.0授权方式的理解</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-01-06T13:23:21.000Z" itemprop="datePublished"> 发表于 Jan 6 2015</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#角色"><span class="toc-number">2.</span> <span class="toc-text">角色</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Client类型"><span class="toc-number">3.</span> <span class="toc-text">Client类型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#协议流程"><span class="toc-number">4.</span> <span class="toc-text">协议流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#授权模式（Authorization_Grant）"><span class="toc-number">5.</span> <span class="toc-text">授权模式（Authorization Grant）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Authorisation_Code"><span class="toc-number">5.1.</span> <span class="toc-text">Authorisation Code</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Implicit"><span class="toc-number">5.2.</span> <span class="toc-text">Implicit</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Resource_Owner_Password_Credentials"><span class="toc-number">5.3.</span> <span class="toc-text">Resource Owner Password Credentials</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Client_Credentials"><span class="toc-number">5.4.</span> <span class="toc-text">Client Credentials</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#其他"><span class="toc-number">6.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Access_Token_Scope"><span class="toc-number">6.1.</span> <span class="toc-text">Access Token Scope</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h1 id="概述">概述</h1><p>OAuth2.0的最好的文档，莫过于<a href="http://www.rfcreader.com/#rfc6749" target="_blank" rel="external">RFC 6749</a>。OAuth2.0本身是一个比较灵活的标准，能够适配应用到各种场景。本文主要是对文档的翻译以及加上部分个人的理解。</p>
+<h1 id="角色">角色</h1><p>OAuth定义了4个角色</p>
+<ul>
+<li>resource owner<br>  能够对受保护的资源进行授权的实体。当<code>resource owner</code>是人的时候，它是指终端用户</li>
+<li>resource server<br>  持有受保护的资源的服务器，使用<code>access tokens</code>能够接收和响应对受保护资源的请求</li>
+<li>client<br>  在resource <code>owner</code>的行为和授权下，请求受保护资源的应用。“client”没有特指任何实现特性（比如，无论应用执行在服务器，桌面或者其他设备上）</li>
+<li>authorization server<br>  当成功认证了<code>resource owner</code>并且获得授权后，分发<code>access tokens</code>给<code>client</code>的服务器。</li>
+</ul>
+<a id="more"></a>
+<h1 id="Client类型">Client类型</h1><p>OAuth定义了两种<code>client</code>类型，根据它们与<code>authorization server</code>安全地授权的能力（维护<code>client credentials</code>的保密性的能力）。</p>
+<ul>
+<li><p>confidential<br>  能够维护它们的<code>credentials</code>的保密性（例如，对<code>client credentials</code>的访问进行限制的安全的服务器上实现的<code>client</code>）的<code>client</code>。具体的应用类型：web application</p>
+</li>
+<li><p>public<br>  不能够维护它们的<code>credentials</code>的保密性的<code>client</code>（例如，执行在<code>resource owner</code>的设备上的<code>client</code>，比如安装的本地应用或者基于浏览器的web应用）。具体的应用类型：user-agent-based application， native application</p>
+</li>
+</ul>
+<h1 id="协议流程">协议流程</h1><pre><code>+--------+                               +---------------+
+|<span class="string">        </span>|<span class="string">--(A)- Authorization Request -&gt;</span>|<span class="string">   Resource    </span>|
+|<span class="string">        </span>|<span class="string">                               </span>|<span class="string">     Owner     </span>|
+|<span class="string">        </span>|<span class="string">&lt;-(B)-- Authorization Grant ---</span>|<span class="string">               </span>|
+|<span class="string">        </span>|<span class="string">                               +---------------+
+</span>|<span class="string">        </span>|
+|<span class="string">        </span>|<span class="string">                               +---------------+
+</span>|<span class="string">        </span>|<span class="string">--(C)-- Authorization Grant --&gt;</span>|<span class="string"> Authorization </span>|
+|<span class="string"> Client </span>|<span class="string">                               </span>|<span class="string">     Server    </span>|
+|<span class="string">        </span>|<span class="string">&lt;-(D)----- Access Token -------</span>|<span class="string">               </span>|
+|<span class="string">        </span>|<span class="string">                               +---------------+
+</span>|<span class="string">        </span>|
+|<span class="string">        </span>|<span class="string">                               +---------------+
+</span>|<span class="string">        </span>|<span class="string">--(E)----- Access Token ------&gt;</span>|<span class="string">    Resource   </span>|
+|<span class="string">        </span>|<span class="string">                               </span>|<span class="string">     Server    </span>|
+|<span class="string">        </span>|<span class="string">&lt;-(F)--- Protected Resource ---</span>|<span class="string">               </span>|
++--------+                               +---------------+
+</code></pre><p>(A) <code>client</code>从<code>resource owner</code>请求认证。认证请求可以直接向认证服务器请求或者间接地通过<code>authorization server</code><br>(B) <code>client</code>收到一个<code>authorization grant</code>，实际是代表了<code>resource owner</code>的认证的证书，使用文档中定义的四种授权类型或者扩展的授权类型来表示<br>(C) <code>client</code>向<code>authorization server</code>提交<code>authorization grant</code>，请求授权获取<code>access token</code>，<br>(D) <code>authorization server</code>授权<code>client</code>，验证<code>authorization grant</code>，如果是有效的，分发<code>access token</code><br>(E) <code>client</code>从<code>resource server</code>提交<code>access token</code>请求受保护的资源<br>(F) <code>resource server</code>验证<code>access token</code>，如果是有效的，接收请求</p>
+<h1 id="授权模式（Authorization_Grant）">授权模式（Authorization Grant）</h1><p>对于协议的流程来说，最灵活的部分就是上面提到的(B)中<code>Authorization Grant</code>。也就是说(C)请求授权<code>access token</code>所提交的<code>authorization grant</code>，根据授权模式不同是不一样的。</p>
+<p><a href="http://www.rfcreader.com/#rfc6749" target="_blank" rel="external">RFC 6749</a>文档中提及了4种授权模式：</p>
+<ul>
+<li>Authorisation code grant</li>
+<li>Implicit grant</li>
+<li>Resource owner credentials grant</li>
+<li>Client credentials grant</li>
+</ul>
+<h2 id="Authorisation_Code">Authorisation Code</h2><p><code>authorization code</code>是通过使用<code>authorization server</code>作为<code>client</code>和<code>resource owner</code>的中间人获取的。<code>client</code>把<code>resource owner</code>导向到<code>authorizatoin server</code>（通过它的用户代理），然后反过来带着<code>authorization code</code>把<code>resource owner</code>导向回<code>client</code>。</p>
+<p>在附带着<code>authorization code</code>把<code>resource owner</code>导向回<code>client</code>之前，<code>authorization server</code>认证<code>resource owner</code>并且获取授权。 因为<code>resource owner</code>只通过<code>authorization server</code>进行验证，<code>resource owner</code>的证书不需要和<code>client</code>共享。</p>
+<p><code>authorization code</code>提供了一些重要的安全方面的好处，比如说可以验证<code>client</code>，并且直接传递<code>access token</code>给<code>client</code>，不需要经过<code>resource owner</code>的用户代理，所以不会潜在地暴露给别人包括<code>resource owner</code>本身</p>
+<p>下面的图演示整个流程<br><img src="/img/oauth2_flow.png" alt="oauth2 work flow"></p>
+<h2 id="Implicit">Implicit</h2><p><code>implicit</code>授权为在浏览器中使用脚本语言（Javascript）实现的客户端而优化的简单版的<code>authorization code</code>流程。在<code>implicit</code>的流程中，<code>client</code>直接请求一个<code>access token</code>(作为<code>resource owner</code>授权的结果)而不是为<code>client</code>请求一个<code>authorization code</code></p>
+<p>在<code>implicit</code>的流程中请求一个<code>access token</code>时，<code>authorization server</code>不验证客户端。在一些情况下，<code>client</code>的标示，可以通过，用来传递<code>access token</code>给<code>client</code>的<code>redirection URI</code>来验证。<code>access token</code>会暴露给<code>resource owner</code>或者其他访问<code>resource owner</code>的用户代理的应用程序（因为首先要经过用户代理的重定向才能把<code>access token</code>传递给<code>client</code>）。</p>
+<p><code>Implicit</code>授权提高了响应效率以及一些<code>client</code>的效率（比如用浏览应用实现的<code>client</code>），因为它减少了为了获取<code>access token</code>而进行的来回交互。然而，这些便利应该和安全影响进行权衡。</p>
+<h2 id="Resource_Owner_Password_Credentials">Resource Owner Password Credentials</h2><p><code>resource owner password credentials</code>（比如说用户名密码）， 能够被直接用作<code>authorization grant</code>来获取<code>access token</code>。<code>credentials</code>只应该用在<code>resource owner</code>和<code>client</code>之间是高度信任的情况下（例如，<code>client</code>是设备操作系统的一部分或者一个具有高权限的应用），并且其他的授权方式不可用的情况下。</p>
+<p>尽管这种方式需要<code>client</code>直接访问<code>resource owner</code>的<code>credentials</code>，<code>resource owner</code>的<code>credentials</code>仅被用于一次请求来交换<code>access token</code>。这种授权类型能够通过用<code>credentials</code>交换长期存活的<code>access token</code>或者<code>refresh token</code>，排除<code>client</code>了为了以后的使用而保存<code>resource owner</code>的<code>credentials</code>的需要。</p>
+<h2 id="Client_Credentials">Client Credentials</h2><p>当授权范围被限制在，<code>client</code>控制下的受保护的资源的时候或者，受保护的资源事先和<code>authorization server</code>协商好的时候，能够使用<code>client credentials</code>（或者其他形式的<code>client</code>验证）。当<code>client</code>是在以自己名义行动（<code>client</code>就是就是<code>resource owner</code>），或者根据和<code>authorization server</code>事先协商好的授权访问受保护的资源的时候，使用<code>Client credentials</code>。</p>
+<h1 id="其他">其他</h1><h2 id="Access_Token_Scope">Access Token Scope</h2><p><code>authorization server</code>允许<code>client</code>获取<code>access token</code>的时候，指定<code>scope</code>参数。 这样获取的<code>access token</code>之后只能访问对应的<code>scope</code>的资源。资源服务器需要实现对资源的<code>scope</code>进行保护。<code>scope</code>的参数的值可以是多个用空格间隔的字符串，大写小敏感。<code>authorization server</code>需要定于<code>client</code>和其可获取的<code>scope</code>的对应关系，同时定义一个默认的<code>scope</code>。当请求<code>access token</code>实际获取的<code>scope</code>与<code>client</code>请求的<code>scope</code>不同的时候，<code>authorization server</code>需要返回实际授予的<code>scope</code>参数。</p>
+<p>实际应用的时候，可以实现一个类似RBAC的简化模型。<code>authorization server</code>定义的<code>scope</code>相当于定义了资源所属的角色。<code>client</code>定义多个需要的<code>scope</code>为一个access token type，相当于给用户赋予角色。根据<code>client</code>的不同，赋予不同的角色，即可实现对同一用户在不同的<code>client</code>中所能访问的资源的权限控制。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/OAuth2/">OAuth2</a>
+  </div>
+
+</div>
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yukinami.github.io/2015/01/06/对于OAuth2-0的理解/" data-title="对于OAuth2.0授权方式的理解 | Jyong&#39;s Blog" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/01/06/用spring-social构建API的client端/" title="用spring social构建API的client端">
+  <strong>上一篇：</strong><br/>
+  <span>
+  用spring social构建API的client端</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2014/12/18/RESTful API Versioning/"  title="RESTful API Versioning">
+ <strong>下一篇：</strong><br/> 
+ <span>RESTful API Versioning
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#角色"><span class="toc-number">2.</span> <span class="toc-text">角色</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Client类型"><span class="toc-number">3.</span> <span class="toc-text">Client类型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#协议流程"><span class="toc-number">4.</span> <span class="toc-text">协议流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#授权模式（Authorization_Grant）"><span class="toc-number">5.</span> <span class="toc-text">授权模式（Authorization Grant）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Authorisation_Code"><span class="toc-number">5.1.</span> <span class="toc-text">Authorisation Code</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Implicit"><span class="toc-number">5.2.</span> <span class="toc-text">Implicit</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Resource_Owner_Password_Credentials"><span class="toc-number">5.3.</span> <span class="toc-text">Resource Owner Password Credentials</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Client_Credentials"><span class="toc-number">5.4.</span> <span class="toc-text">Client Credentials</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#其他"><span class="toc-number">6.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Access_Token_Scope"><span class="toc-number">6.1.</span> <span class="toc-text">Access Token Scope</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/Android/" title="Android">Android<sup>10</sup></a></li>
+		
+			<li><a href="/tags/经验错误/" title="经验错误">经验错误<sup>7</sup></a></li>
+		
+			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
+		
+			<li><a href="/tags/API/" title="API">API<sup>2</sup></a></li>
+		
+			<li><a href="/tags/OAuth2/" title="OAuth2">OAuth2<sup>1</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Concurrency/" title="Concurrency">Concurrency<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Agile/" title="Agile">Agile<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Swagger/" title="Swagger">Swagger<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>1</sup></a></li>
+		
+			<li><a href="/tags/性能测试/" title="性能测试">性能测试<sup>1</sup></a></li>
+		
+			<li><a href="/tags/gradle/" title="gradle">gradle<sup>1</sup></a></li>
+		
+			<li><a href="/tags/摘录/" title="摘录">摘录<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Spring-XD/" title="Spring XD">Spring XD<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Spring-Ingegration/" title="Spring Ingegration">Spring Ingegration<sup>1</sup></a></li>
+		
+			<li><a href="/tags/HTML/" title="HTML">HTML<sup>1</sup></a></li>
+		
+			<li><a href="/tags/iOS/" title="iOS">iOS<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Restkit/" title="Restkit">Restkit<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            <a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+          </li>
+        
+          <li>
+            <a href="http://hexo.io" target="_blank" title="Hexo">Hexo</a>
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I&#39;m Jyong, a web developer. <br/>
+			And hope you enjoy this blog.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2100171710" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yukinami" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="https://plus.google.com/100215768199802928787?rel=author" target="_blank" class="icon-google_plus" title="Google+"></a>
+		
+		
+		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2015 
+		
+		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"yukinami"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+  </body>
+</html>
+
+
+<a href="https://github.com/yukinami"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?ec2d95a543c1245fcad501b5484af450";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>

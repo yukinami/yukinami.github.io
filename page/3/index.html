@@ -1,0 +1,617 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Jyong&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Jyong">
+    
+    
+    
+    
+    <link rel="alternative" href="/atom.xml" title="Jyong&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/">
+    <link rel="apple-touch-icon-precomposed" href="/img/">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Jyong&#39;s Blog" title="Jyong&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Jyong&#39;s Blog">Jyong&#39;s Blog</a></h1>
+				<h2 class="blog-motto">人生の目的の一つは楽しむことです</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yukinami.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main">
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/01/13/Spring-XD-Type-Conversion/" title="Spring XD Type Conversion" itemprop="url">Spring XD Type Conversion</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-01-13T14:12:06.000Z" itemprop="datePublished"> 发表于 Jan 13 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="Spring_Integration_的_Type_Conversion">Spring Integration 的 Type Conversion</h1><h2 id="Datatype_Channel">Datatype Channel</h2><p>Datatype Channel 可以指定Channel接收的数据的数据类型<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="keyword">int</span>:channel <span class="keyword">id</span>=<span class="string">"numberChannel"</span> datatype=<span class="string">"java.lang.Number"</span>/&gt;</span><br><span class="line">&lt;<span class="keyword">int</span>:channel <span class="keyword">id</span>=<span class="string">"stringOrNumberChannel"</span> datatype=<span class="string">"java.lang.String,java.lang.Number"</span>/&gt;</span><br></pre></td></tr></table></figure></p>
+<p>指定了<code>datatype</code>之后，如果Channel收到了类型不是指定的类型，会如下进行：</p>
+<ol>
+<li>查找是否定义了一个叫做”integrationConversionService”的Bean，该Bean是Spring’s <a href="http://docs.spring.io/spring/docs/current/spring-framework-reference/html/validation.html#core-convert-ConversionService-API">Conversion Service</a>的实例。如果没有，则会抛出异常。</li>
+<li>如果存在，则会尝试使用它将Message的Payload类型转换为Channel的<code>datatype</code></li>
+</ol>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/01/13/Spring-XD-Type-Conversion/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/01/06/用spring-social构建API的client端/" title="用spring social构建API的client端" itemprop="url">用spring social构建API的client端</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-01-06T13:26:02.000Z" itemprop="datePublished"> 发表于 Jan 6 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="介绍">介绍</h1><p>Spring Social可以用来连接Software-as-a-Service (SaaS) 服务商提供了REST API，Spring的项目本身已经提供了对Facebook, Twitter, Linkedin, Github等服务商的REST API的连接。<br>实际在开发app的过程中，通常是需要本地app连接到后台服务器的REST API的。客户端的开发本身可能还会涉及相对复杂的验证机制，比如<code>OAuth Dance</code>（客户端和服务器来回交互获取access token的过程），Spring Social为客户端的开发提供了一套框架，包括连接的建立，对API的强类型绑定，应用可以直接通过客户端访问需要的API。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/01/06/用spring-social构建API的client端/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/01/06/对于OAuth2-0的理解/" title="对于OAuth2.0授权方式的理解" itemprop="url">对于OAuth2.0授权方式的理解</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-01-06T13:23:21.000Z" itemprop="datePublished"> 发表于 Jan 6 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="概述">概述</h1><p>OAuth2.0的最好的文档，莫过于<a href="http://www.rfcreader.com/#rfc6749">RFC 6749</a>。OAuth2.0本身是一个比较灵活的标准，能够适配应用到各种场景。本文主要是对文档的翻译以及加上部分个人的理解。</p>
+<h1 id="角色">角色</h1><p>OAuth定义了4个角色</p>
+<ul>
+<li>resource owner<br>  能够对受保护的资源进行授权的实体。当<code>resource owner</code>是人的时候，它是指终端用户</li>
+<li>resource server<br>  持有受保护的资源的服务器，使用<code>access tokens</code>能够接收和响应对受保护资源的请求</li>
+<li>client<br>  在resource <code>owner</code>的行为和授权下，请求受保护资源的应用。“client”没有特指任何实现特性（比如，无论应用执行在服务器，桌面或者其他设备上）</li>
+<li>authorization server<br>  当成功认证了<code>resource owner</code>并且获得授权后，分发<code>access tokens</code>给<code>client</code>的服务器。</li>
+</ul>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/01/06/对于OAuth2-0的理解/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/12/18/RESTful API Versioning/" title="RESTful API Versioning" itemprop="url">RESTful API Versioning</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2014-12-18T06:23:06.000Z" itemprop="datePublished"> 发表于 Dec 18 2014</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>关于RESTful API Versioning，有很多讨论 <a href="http://blog.steveklabnik.com/posts/2011-07-03-nobody-understands-rest-or-http#i_want_my_api_to_be_versioned">Nobody Understands REST or HTTP</a>, <a href="http://www.informit.com/articles/article.aspx?p=1566460">Versioning REST Services</a>, <a href="http://stackoverflow.com/questions/389169/best-practices-for-api-versioning">best-practices-for-api-versioning</a>, <a href="http://www.lexicalscope.com/blog/2012/03/12/how-are-rest-apis-versioned/">How are REST APIs versioned?</a>， 总结如下。</p>
+<h1 id="为什么需要Versioning">为什么需要Versioning</h1><p>尽管设计API的时候，我们尽可能设计完美的API，尽可能的避免修改API。但是随着业务需求的变更，API接口的变化几乎是无法避免的。</p>
+<p>当业务需求变更的时候，可以这样选择：</p>
+<ol>
+<li>保持接口的兼容性。这是一种方式，但是并非能切实做到的，为了兼容必定会损失一些新特性，或者牺牲良好的代码为代价。</li>
+<li>修改API接口的同时，修改客户端。除非自己维护少量的客户端，否则这几乎是不现实的。</li>
+<li>保留旧的接口，通过版本来实现API接口的变更。</li>
+</ol>
+<p>通常情况下，我们会选择第三种方式来实现API接口的变更。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2014/12/18/RESTful API Versioning/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/12/07/基于Grunt的前端项目的完整构建/" title="基于Grunt的前端项目的完整构建" itemprop="url">基于Grunt的前端项目的完整构建</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2014-12-07T06:25:54.000Z" itemprop="datePublished"> 发表于 Dec 7 2014</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>本文主要简述一个前端项目使用grunt来进行构建的过程。项目本身是基于<code>RequireJS</code>的，样式则使用了<code>Less</code>来书写。</p>
+<h1 id="项目结构">项目结构</h1><p>先来看一下项目整体的目录结构。</p>
+<p><img src="/img/CE761032-FAA5-4FFE-9FC7-F87BA7DFF423.jpeg" alt="项目结构"></p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2014/12/07/基于Grunt的前端项目的完整构建/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/11/11/基于Spring的多租户系统的简单实现/" title="基于Spring的多租户系统的简单实现" itemprop="url">基于Spring的多租户系统的简单实现</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2014-11-11T09:44:39.000Z" itemprop="datePublished"> 发表于 Nov 11 2014</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h3 id="前言">前言</h3><p>对于一个完整的将web 应用程序转换为 SaaS 应用程序的过程而言，需要满足以下7个条件：</p>
+<ol>
+<li>应用程序必须支持多租户</li>
+<li>应用程序必须具备某种程度的自助注册功能。</li>
+<li>必须具备订阅/记账机制。</li>
+<li>应用程序必须能够有效地扩展。</li>
+<li>必须能够监视、配置和管理应用程序和租户。</li>
+<li>必须有一种机制能够支持惟一的用户标识和身份验证。</li>
+<li>必须有一种机制能够支持对每个租户进行某种程度的自定义。</li>
+</ol>
+<p>本文主要讨论的是实现SaaS的核心，支持多租户。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2014/11/11/基于Spring的多租户系统的简单实现/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/11/05/为什么AMD/" title="为什么AMD" itemprop="url">为什么AMD</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2014-11-05T09:48:54.000Z" itemprop="datePublished"> 发表于 Nov 5 2014</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>关于JS的模块化，阮一峰的博客上有篇很好的文章，请参考，<a href="http://www.ruanyifeng.com/blog/2012/10/javascript_module.html">模块的写法</a>，<a href="http://www.ruanyifeng.com/blog/2012/10/asynchronous_module_definition.html">AMD规范</a>。</p>
+<p>本文翻译自RequireJS官方文档 <a href="http://requirejs.org/docs/whyamd.html">WHY AMD?</a>, 更为详细地阐述了为什么需要AMD。</p>
+<h3 id="模块化的目的">模块化的目的</h3><p>什么是JavaScript模块？它们的目的是什么？</p>
+<ul>
+<li>定义：如何将一段代码封装为一个有用的单元，并且怎么描述它的功能、怎样为这个模块导出一个值</li>
+<li>依赖参考：如何引用其他代码单元</li>
+</ul>
+<h3 id="当今的WEB">当今的WEB</h3><pre class="crayon-plain-tag">(function () {
+    var $ = this.jQuery;
+
+    this.myExample = function () {};
+}());</pre>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2014/11/05/为什么AMD/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/11/04/Spring-Framework-4-1-–-处理静态web资源/" title="Spring Framework 4.1  – 处理静态web资源" itemprop="url">Spring Framework 4.1  – 处理静态web资源</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2014-11-04T13:00:59.000Z" itemprop="datePublished"> 发表于 Nov 4 2014</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>Spring Framework 4.1 的release已经有一阵子了，今天终于有点时间，看了下新特性中对于静态资源的灵活处理和转换，同时基于这种处理也提供了一种体验更好的开发方式，让我觉得非常兴奋。 先来看下对于这个新特性中的核心功能， <a href="http://docs.spring.io/spring-framework/docs/4.1.0.RC1/javadoc-api/org/springframework/web/servlet/resource/ResourceResolver.html">ResourceResolvers</a> 和 <a href="http://docs.spring.io/spring-framework/docs/4.1.0.RC1/javadoc-api/org/springframework/web/servlet/resource/ResourceTransformer.html">ResourceTransformers</a> 。</p>
+<ol>
+<li>ResourceResolvers用来将内部的URL解析为用户能够访问的外部公共的URL（ResourceResolver接口定义的是双向的解析）。</li>
+<li>ResourceTransformers用来修改资源的内容。</li>
+</ol>
+<p>这两个功能相结合，不禁让我想起了Rails的Sprockets。Sprockets主要进行三项工作，资源文件的合并，压缩，以及对高级语言的预编译（coffeescript，sass）。那么Spring的这个特性是另外一个pipeline吗？ 官方博客给出的解释是这样的，</p>
+<blockquote>
+<p>在Spring Framework 4.1中，我们使用依赖于优化的路径，这种优化在构件时使用最好的外部工具，在运行时使用Resolvers 和和Transformers 。</p>
+</blockquote>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2014/11/04/Spring-Framework-4-1-–-处理静态web资源/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+
+  <nav id="page-nav" class="clearfix">
+    <a class="extend prev" rel="prev" href="/page/2/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+  </nav>
+
+</div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/Android/" title="Android">Android<sup>10</sup></a></li>
+		
+			<li><a href="/tags/经验错误/" title="经验错误">经验错误<sup>7</sup></a></li>
+		
+			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
+		
+			<li><a href="/tags/API/" title="API">API<sup>2</sup></a></li>
+		
+			<li><a href="/tags/OAuth2/" title="OAuth2">OAuth2<sup>1</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Concurrency/" title="Concurrency">Concurrency<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Agile/" title="Agile">Agile<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Swagger/" title="Swagger">Swagger<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>1</sup></a></li>
+		
+			<li><a href="/tags/性能测试/" title="性能测试">性能测试<sup>1</sup></a></li>
+		
+			<li><a href="/tags/gradle/" title="gradle">gradle<sup>1</sup></a></li>
+		
+			<li><a href="/tags/摘录/" title="摘录">摘录<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Spring-XD/" title="Spring XD">Spring XD<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Spring-Ingegration/" title="Spring Ingegration">Spring Ingegration<sup>1</sup></a></li>
+		
+			<li><a href="/tags/HTML/" title="HTML">HTML<sup>1</sup></a></li>
+		
+			<li><a href="/tags/iOS/" title="iOS">iOS<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Restkit/" title="Restkit">Restkit<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            <a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+          </li>
+        
+          <li>
+            <a href="http://hexo.io" target="_blank" title="Hexo">Hexo</a>
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I&#39;m Jyong, a web developer. <br/>
+			And hope you enjoy this blog.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2100171710" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yukinami" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="https://plus.google.com/100215768199802928787?rel=author" target="_blank" class="icon-google_plus" title="Google+"></a>
+		
+		
+		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2015 
+		
+		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+
+
+
+
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+  </body>
+ </html>
+
+
+<a href="https://github.com/yukinami"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?ec2d95a543c1245fcad501b5484af450";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>

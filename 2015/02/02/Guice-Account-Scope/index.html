@@ -1,0 +1,492 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Guice Account Scope | Jyong&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Jyong">
+    
+    <meta name="description" content="Google Guice 支持自定义Scope，当然通常情况下我们不需要自己实现Scope。RoboGuice作为Android的IOC容器，实现了基于当前Context的ContextScope。我们可以根据自己需求自定义Scope，实现一些特殊的需求。GitHub的Android客户端定义了一个AccountScope，实现了基于当前账户的上下文对象的注入。">
+    
+    
+    
+    
+    <link rel="alternative" href="/atom.xml" title="Jyong&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/">
+    <link rel="apple-touch-icon-precomposed" href="/img/">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Jyong&#39;s Blog" title="Jyong&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Jyong&#39;s Blog">Jyong&#39;s Blog</a></h1>
+				<h2 class="blog-motto">人生の目的の一つは楽しむことです</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yukinami.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/02/02/Guice-Account-Scope/" title="Guice Account Scope" itemprop="url">Guice Account Scope</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-02-02T14:43:52.000Z" itemprop="datePublished"> 发表于 Feb 2 2015</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#自定义Scope"><span class="toc-number">1.</span> <span class="toc-text">自定义Scope</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Scope接口"><span class="toc-number">1.1.</span> <span class="toc-text">Scope接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现接口"><span class="toc-number">1.2.</span> <span class="toc-text">实现接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#定义Scope"><span class="toc-number">1.3.</span> <span class="toc-text">定义Scope</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#触发Scope"><span class="toc-number">1.4.</span> <span class="toc-text">触发Scope</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实现AccountScope"><span class="toc-number">2.</span> <span class="toc-text">实现AccountScope</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用AccountScope"><span class="toc-number">3.</span> <span class="toc-text">使用AccountScope</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Scope_API接口的访问"><span class="toc-number">3.1.</span> <span class="toc-text">Scope API接口的访问</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#集成Spring_Social"><span class="toc-number">4.</span> <span class="toc-text">集成Spring Social</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Provider"><span class="toc-number">4.1.</span> <span class="toc-text">Provider</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#扩展API_Binding"><span class="toc-number">4.2.</span> <span class="toc-text">扩展API Binding</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>Google Guice 支持自定义Scope，当然通常情况下我们不需要自己实现Scope。RoboGuice作为Android的IOC容器，实现了基于当前Context的ContextScope。我们可以根据自己需求自定义Scope，实现一些特殊的需求。GitHub的Android客户端定义了一个AccountScope，实现了基于当前账户的上下文对象的注入。<br><a id="more"></a></p>
+<h1 id="自定义Scope">自定义Scope</h1><h2 id="Scope接口">Scope接口</h2><p>Scope接口本身很简单<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">public interface Scope &#123;</span><br><span class="line"></span><br><span class="line">  /<span class="keyword">*</span><span class="keyword">*</span></span><br><span class="line">   <span class="keyword">*</span> Scopes a provider. The returned provider returns objects from this scope.</span><br><span class="line">   <span class="keyword">*</span> If an object does not exist in this scope, the provider can use the given</span><br><span class="line">   <span class="keyword">*</span> unscoped provider to retrieve one.</span><br><span class="line">   <span class="keyword">*</span></span><br><span class="line">   <span class="keyword">*</span> <span class="variable">&lt;p&gt;</span>Scope implementations are strongly encouraged to override</span><br><span class="line">   <span class="keyword">*</span> &#123;<span class="comment">@link Object#toString&#125; in the returned provider and include the backing</span></span><br><span class="line">   <span class="keyword">*</span> provider's &#123;<span class="comment">@code toString()&#125; output.</span></span><br><span class="line">   <span class="keyword">*</span></span><br><span class="line">   <span class="keyword">*</span> <span class="comment">@param key binding key</span></span><br><span class="line">   <span class="keyword">*</span> <span class="comment">@param unscoped locates an instance when one doesn't already exist in this</span></span><br><span class="line">   <span class="keyword">*</span>  scope.</span><br><span class="line">   <span class="keyword">*</span> <span class="comment">@return a new provider which only delegates to the given unscoped provider</span></span><br><span class="line">   <span class="keyword">*</span>  when an instance of the requested object doesn't already exist in this</span><br><span class="line">   <span class="keyword">*</span>  scope</span><br><span class="line">   <span class="keyword">*</span>/</span><br><span class="line">  public <span class="variable">&lt;T&gt;</span> Provider<span class="variable">&lt;T&gt;</span> scope(Key<span class="variable">&lt;T&gt;</span> key, Provider<span class="variable">&lt;T&gt;</span> unscoped);</span><br><span class="line"></span><br><span class="line">  /<span class="keyword">*</span><span class="keyword">*</span></span><br><span class="line">   <span class="keyword">*</span> A short but useful description of this scope.  For comparison, the standard</span><br><span class="line">   <span class="keyword">*</span> scopes that ship with guice use the descriptions</span><br><span class="line">   <span class="keyword">*</span> &#123;<span class="comment">@code "Scopes.SINGLETON"&#125;, &#123;@code "ServletScopes.SESSION"&#125; and</span></span><br><span class="line">   <span class="keyword">*</span> &#123;<span class="comment">@code "ServletScopes.REQUEST"&#125;.</span></span><br><span class="line">   <span class="keyword">*</span>/</span><br><span class="line">  String toString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>scope方法需要实现，如何根据指定的Key，返回其对应的Provider。通常直接返回<code>Provider</code>匿名实现类实例，在其实现方法<code>get</code>方法中，具体实现如何scope对应的对象。</p>
+<h2 id="实现接口">实现接口</h2><p>接口实现参考官方示例</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Scopes a single execution of a block of code. Apply this scope with a</span><br><span class="line"> * try/finally block: &lt;pre&gt;&lt;code&gt;</span><br><span class="line"> *</span><br><span class="line"> *   scope.enter();</span><br><span class="line"> *   try &#123;</span><br><span class="line"> *     // explicitly seed some seed objects...</span><br><span class="line"> *     scope.seed(Key.get(SomeObject.class), someObject);</span><br><span class="line"> *     // create and access scoped objects</span><br><span class="line"> *   &#125; finally &#123;</span><br><span class="line"> *     scope.exit();</span><br><span class="line"> *   &#125;</span><br><span class="line"> * &lt;/code&gt;&lt;/pre&gt;</span><br><span class="line"> *</span><br><span class="line"> * The scope can be initialized with one or more seed values by calling</span><br><span class="line"> * &lt;code&gt;seed(key, value)&lt;/code&gt; before the injector will be called upon to</span><br><span class="line"> * provide for this key. A typical use is for a servlet filter to enter/exit the</span><br><span class="line"> * scope, representing a Request Scope, and seed HttpServletRequest and</span><br><span class="line"> * HttpServletResponse.  For each key inserted with seed(), you must include a</span><br><span class="line"> * corresponding binding:</span><br><span class="line"> *  &lt;pre&gt;&lt;code&gt;</span><br><span class="line"> *   bind(key)</span><br><span class="line"> *       .toProvider(SimpleScope.&amp;lt;KeyClass&amp;gt;seededKeyProvider())</span><br><span class="line"> *       .in(ScopeAnnotation.class);</span><br><span class="line"> * &lt;/code&gt;&lt;/pre&gt;</span><br><span class="line"> *</span><br><span class="line"> * @author Jesse Wilson</span><br><span class="line"> * @author Fedor Karpelevitch</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> class SimpleScope implements Scope &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Provider&lt;<span class="keyword">Object</span>&gt; SEEDED_KEY_PROVIDER =</span><br><span class="line">      <span class="keyword">new</span> Provider&lt;<span class="keyword">Object</span>&gt;() &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">Object</span> <span class="built_in">get</span>() &#123;</span><br><span class="line">          <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"If you got here then it means that"</span> +</span><br><span class="line">              <span class="string">" your code asked for scoped object which should have been"</span> +</span><br><span class="line">              <span class="string">" explicitly seeded in this scope by calling"</span> +</span><br><span class="line">              <span class="string">" SimpleScope.seed(), but was not."</span>);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> ThreadLocal&lt;Map&lt;Key&lt;?&gt;, <span class="keyword">Object</span>&gt;&gt; values</span><br><span class="line">      = <span class="keyword">new</span> ThreadLocal&lt;Map&lt;Key&lt;?&gt;, <span class="keyword">Object</span>&gt;&gt;();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> enter() &#123;</span><br><span class="line">    checkState(values.<span class="built_in">get</span>() == <span class="keyword">null</span>, <span class="string">"A scoping block is already in progress"</span>);</span><br><span class="line">    values.<span class="built_in">set</span>(Maps.&lt;Key&lt;?&gt;, <span class="keyword">Object</span>&gt;newHashMap());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="built_in">exit</span>() &#123;</span><br><span class="line">    checkState(values.<span class="built_in">get</span>() != <span class="keyword">null</span>, <span class="string">"No scoping block in progress"</span>);</span><br><span class="line">    values.remove();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> &lt;T&gt; <span class="keyword">void</span> seed(Key&lt;T&gt; <span class="variable">key</span>, T value) &#123;</span><br><span class="line">    Map&lt;Key&lt;?&gt;, <span class="keyword">Object</span>&gt; scopedObjects = getScopedObjectMap(<span class="variable">key</span>);</span><br><span class="line">    checkState(!scopedObjects.containsKey(<span class="variable">key</span>), <span class="string">"A value for the key %s was "</span> +</span><br><span class="line">        <span class="string">"already seeded in this scope. Old value: %s New value: %s"</span>, <span class="variable">key</span>,</span><br><span class="line">        scopedObjects.<span class="built_in">get</span>(<span class="variable">key</span>), value);</span><br><span class="line">    scopedObjects.put(<span class="variable">key</span>, value);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> &lt;T&gt; <span class="keyword">void</span> seed(Class&lt;T&gt; clazz, T value) &#123;</span><br><span class="line">    seed(Key.<span class="built_in">get</span>(clazz), value);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> &lt;T&gt; Provider&lt;T&gt; scope(<span class="keyword">final</span> Key&lt;T&gt; <span class="variable">key</span>, <span class="keyword">final</span> Provider&lt;T&gt; unscoped) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Provider&lt;T&gt;() &#123;</span><br><span class="line">      <span class="keyword">public</span> T <span class="built_in">get</span>() &#123;</span><br><span class="line">        Map&lt;Key&lt;?&gt;, <span class="keyword">Object</span>&gt; scopedObjects = getScopedObjectMap(<span class="variable">key</span>);</span><br><span class="line"></span><br><span class="line">        @SuppressWarnings(<span class="string">"unchecked"</span>)</span><br><span class="line">        T current = (T) scopedObjects.<span class="built_in">get</span>(<span class="variable">key</span>);</span><br><span class="line">        <span class="keyword">if</span> (current == <span class="keyword">null</span> &amp;&amp; !scopedObjects.containsKey(<span class="variable">key</span>)) &#123;</span><br><span class="line">          current = unscoped.<span class="built_in">get</span>();</span><br><span class="line"></span><br><span class="line">          <span class="comment">// don't remember proxies; these exist only to serve circular dependencies</span></span><br><span class="line">          <span class="keyword">if</span> (Scopes.isCircularProxy(current)) &#123;</span><br><span class="line">            <span class="keyword">return</span> current;</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          scopedObjects.put(<span class="variable">key</span>, current);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> current;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> &lt;T&gt; Map&lt;Key&lt;?&gt;, <span class="keyword">Object</span>&gt; getScopedObjectMap(Key&lt;T&gt; <span class="variable">key</span>) &#123;</span><br><span class="line">    Map&lt;Key&lt;?&gt;, <span class="keyword">Object</span>&gt; scopedObjects = values.<span class="built_in">get</span>();</span><br><span class="line">    <span class="keyword">if</span> (scopedObjects == <span class="keyword">null</span>) &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> OutOfScopeException(<span class="string">"Cannot access "</span> + <span class="variable">key</span></span><br><span class="line">          + <span class="string">" outside of a scoping block"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> scopedObjects;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span><br><span class="line">   * Returns a provider that always throws exception complaining that the object</span><br><span class="line">   * in question must be seeded before it can be injected.</span><br><span class="line">   *</span><br><span class="line">   * @return typed provider</span><br><span class="line">   */</span></span><br><span class="line">  @SuppressWarnings(&#123;<span class="string">"unchecked"</span>&#125;)</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; Provider&lt;T&gt; seededKeyProvider() &#123;</span><br><span class="line">    <span class="keyword">return</span> (Provider&lt;T&gt;) SEEDED_KEY_PROVIDER;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个实现类实现了基于ThreadLocal，当前线程上下文的依赖注入。</p>
+<h2 id="定义Scope">定义Scope</h2><p>上面只是实现了Scope接口，对于这个实现，需要进行定义其注解，并且绑定到注解</p>
+<p>###定义注解<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">@Target</span>(&#123; TYPE, METHOD &#125;) <span class="variable">@Retention</span>(RUNTIME) <span class="variable">@ScopeAnnotation</span></span><br><span class="line">public <span class="variable">@interface</span> BatchScoped &#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>###绑定到注解<br><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BatchScopeModule</span> </span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> configure() &#123;</span><br><span class="line">    SimpleScope batchScope = <span class="keyword">new</span> SimpleScope();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// tell Guice about the scope</span></span><br><span class="line">    bindScope(BatchScoped.<span class="keyword">class</span>, batchScope);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// make our scope instance injectable</span></span><br><span class="line">    bind(SimpleScope.<span class="keyword">class</span>)</span><br><span class="line">        .annotatedWith(Names.named(<span class="string">"batchScope"</span>))</span><br><span class="line">        .toInstance(batchScope);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="触发Scope">触发Scope</h2><figure class="highlight d"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@Inject</span> <span class="keyword">@Named</span>(<span class="string">"batchScope"</span>) SimpleScope <span class="keyword">scope</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span><br><span class="line">   * Runs &#123;@code runnable&#125; in batch scope.</span><br><span class="line">   */</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> scopeRunnable(Runnable runnable) &#123;</span><br><span class="line">    <span class="keyword">scope</span>.enter();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="comment">// explicitly seed some seed objects...</span></span><br><span class="line">      <span class="keyword">scope</span>.seed(Key.get(SomeObject.<span class="keyword">class</span>), someObject);</span><br><span class="line"></span><br><span class="line">      <span class="comment">// create and access scoped objects</span></span><br><span class="line">      runnable.run();</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">      <span class="keyword">scope</span>.exit();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p><code>SimpleScope</code>需要先调用<code>enter</code>进入Scope，然后即可进行创建，注入Scoped对象。这样的代码比较底层，通常在过滤器或者拦截器中实现Scope的enter和exit。</p>
+<h1 id="实现AccountScope">实现AccountScope</h1><p>和上面实现的基于Thread的Scope类似，首先我们需要一个容器来维护所有Account的对象。这里可以用一个二维Map实现对应的保存，ThreadLocal保存当前线程所在的Account</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ThreadLocal&lt;Account&gt; currentAccount = <span class="keyword">new</span> ThreadLocal&lt;Account&gt;();</span><br><span class="line"></span><br><span class="line"><span class="built_in">Map</span>&lt;NoodlesAccount, <span class="built_in">Map</span>&lt;Key&lt;?&gt;, <span class="built_in">Object</span>&gt;&gt; scopeMaps = <span class="keyword">new</span> ConcurrentHashMap&lt;Account, <span class="built_in">Map</span>&lt;Key&lt;?&gt;, <span class="built_in">Object</span>&gt;&gt;();</span><br></pre></td></tr></table></figure>
+<p>然后需要实现基于Account上下文的注入时，将当前ThreadLocal的值设置为对应的Account对象，<code>scope</code>方法的实现中即可根据当前线程上下文的Account找到对应的<code>scopeMaps</code>的value值。</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> enterWith(<span class="keyword">final</span> NoodlesAccount account) &#123;</span><br><span class="line">    <span class="keyword">if</span> (currentAccount.<span class="keyword">get</span>() != <span class="literal">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(</span><br><span class="line">                <span class="string">"A scoping block is already in progress"</span>);</span><br><span class="line"></span><br><span class="line">    currentAccount.<span class="keyword">set</span>(account);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> &lt;T&gt; Map&lt;Key&lt;?&gt;, <span class="keyword">Object</span>&gt; getScopedObjectMap(<span class="keyword">final</span> Key&lt;T&gt; <span class="variable">key</span>) &#123;</span><br><span class="line">    NoodlesAccount account = currentAccount.<span class="built_in">get</span>();</span><br><span class="line">    <span class="keyword">if</span> (account == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Cannot access "</span> + <span class="variable">key</span></span><br><span class="line">                + <span class="string">" outside of a scoping block"</span>);</span><br><span class="line"></span><br><span class="line">    Map&lt;Key&lt;?&gt;, <span class="keyword">Object</span>&gt; scopeMap = scopeMaps.<span class="built_in">get</span>(account);</span><br><span class="line">    <span class="keyword">if</span> (scopeMap == <span class="keyword">null</span>) &#123;</span><br><span class="line">        scopeMap = <span class="keyword">new</span> ConcurrentHashMap&lt;Key&lt;?&gt;, <span class="keyword">Object</span>&gt;();</span><br><span class="line">        scopeMap.put(NOODLES_ACCOUNT_KEY, account);</span><br><span class="line">        scopeMaps.put(account, scopeMap);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> scopeMap;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> &lt;T&gt; <span class="keyword">void</span> seed(Key&lt;T&gt; <span class="variable">key</span>, T value) &#123;</span><br><span class="line">    Map&lt;Key&lt;?&gt;, <span class="keyword">Object</span>&gt; scopedObjects = getScopedObjectMap(<span class="variable">key</span>);</span><br><span class="line">    Preconditions.checkState(!scopedObjects.containsKey(<span class="variable">key</span>), <span class="string">"A value for the key %s was "</span> +</span><br><span class="line">                    <span class="string">"already seeded in this scope. Old value: %s New value: %s"</span>, <span class="variable">key</span>,</span><br><span class="line">            scopedObjects.<span class="built_in">get</span>(<span class="variable">key</span>), value);</span><br><span class="line">    scopedObjects.put(<span class="variable">key</span>, value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>完整的实现可以<a href="https://gist.github.com/yukinami/230dceea400d6548e7b3" target="_blank" rel="external">参考</a>。</p>
+<h1 id="使用AccountScope">使用AccountScope</h1><p>Android平台下，需要使用到AccountScope的地方，比如说Account的账户数据同步；对API接口的访问。</p>
+<h2 id="Scope_API接口的访问">Scope API接口的访问</h2><p>对API接口的访问通常在AsyncLoader或者AsyncTask中进行，因此只对这两个类进行一定抽象可以实现Scope API接口。</p>
+<p>在<code>loadInBackground</code>中实现如下<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">accountScope.enterWith(account);</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    contextScope.enter(getContext());</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> load(account);</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        contextScope.<span class="keyword">exit</span>(getContext());</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    accountScope.<span class="keyword">exit</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后即可根据当前Scope的Account对象，获取其Access Token（Android Account Framework），从而实现Scope对API接口的访问。</p>
+<p><strong><em>TIPS</em></strong>，这里也同时需要进入Context Scope，注入Context上下文环境中的对象。<code>ContextScope</code>的实现使用了ThreadLocal，并且<br>Async是在其他Thread中执行的，所有必须重新enter，否则无法注入Context上下文中的对象。</p>
+<h1 id="集成Spring_Social">集成Spring Social</h1><p>Spring Social是以API Binding的方式<a href="http://yukinami.github.io/2015/01/06/%E7%94%A8spring-social%E6%9E%84%E5%BB%BAAPI%E7%9A%84client%E7%AB%AF/">实现</a>API的访问。结合Roboguice的，理想的实现便是进行一次Binding，并将Binding对象注入guice容器中，然后在需要是要使用直接注入Binding对象即可。但是Spring Social绑定的过程中即需要access token，而上面对AccountScope的使用，只有调用AsyncLoader或者AsyncTask中才会进入AccountScope，获取其access token，这样只能每次调用的时候都进行一次API Binding。 所以可以对Spring Social进行扩展，使其Binding的时候不再依赖access token，而是依赖于Account的Provider对象。</p>
+<h2 id="Provider">Provider</h2><p>Provider除了可以用于封装对象相对复杂的初始化，更重要的时可以实现Lazy loading。 即在初始化不直接注入对象本身，而是注入对应的Provider，然后在使用的再调用<code>get</code>方法获取实例。</p>
+<p>因为注入的Provider是个代理对象，最终会代理给直接Provider的对象返回结果，所以可以通过先bind一个空的Provider实现，然后进入对应的Scope后，注入实际的Provider。</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Provider&lt;<span class="keyword">Object</span>&gt; SEEDED_KEY_PROVIDER = <span class="keyword">new</span> Provider&lt;<span class="keyword">Object</span>&gt;() &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">Object</span> <span class="built_in">get</span>() &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Object not seeded in this scope"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; Provider&lt;T&gt; seededKeyProvider() &#123;</span><br><span class="line">    <span class="keyword">return</span> (Provider&lt;T&gt;) SEEDED_KEY_PROVIDER;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">bind(NOODLES_ACCOUNT_KEY).toProvider(</span><br><span class="line">    AccountScope.&lt;NoodlesAccount&gt;seededKeyProvider()).in(</span><br><span class="line">    scope);</span><br></pre></td></tr></table></figure>
+<h2 id="扩展API_Binding">扩展API Binding</h2><p>利用Provider的机制，扩展API Binding，不再依赖access token，而是依赖Account的Provider，即可较为完美解决之前的问题。</p>
+<p>RoboNoodlesServiceProvider覆盖getApi方法，返回依赖于Account的template<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="function">Noodles <span class="title">getApi</span><span class="params">(String accessToken)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (AUTH_TOKEN.equals(accessToken)) &#123;</span><br><span class="line">        <span class="function"><span class="keyword">return</span> <span class="title">getApi</span><span class="params">(account)</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> NoodlesTemplate(accessToken);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function">Noodles <span class="title">getApi</span><span class="params">(Provider&lt;NoodlesAccount&gt; account)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> RoboNoodlesTemplate(account);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Template类重新配置Interceptor<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RoboNoodlesTemplate</span> <span class="keyword">extends</span> <span class="title">NoodlesTemplate</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Provider&lt;NoodlesAccount&gt; account;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">RoboNoodlesTemplate</span><span class="params">(Provider&lt;NoodlesAccount&gt; account)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.account = account;</span><br><span class="line">        configureRestTemplate();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">void</span> <span class="title">configureRestTemplate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        RestTemplate restTemplate = getRestTemplate();</span><br><span class="line">        restTemplate.getInterceptors().add(<span class="keyword">new</span> RoboOAuth2RequestInterceptor(account, OAuth2Version.BEARER));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RoboOAuth2RequestInterceptor</span> <span class="keyword">implements</span> <span class="title">ClientHttpRequestInterceptor</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Provider&lt;NoodlesAccount&gt; account;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> OAuth2Version oauth2Version;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">RoboOAuth2RequestInterceptor</span><span class="params">(Provider&lt;NoodlesAccount&gt; account, OAuth2Version oauth2Version)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.account = account;</span><br><span class="line">        <span class="keyword">this</span>.oauth2Version = oauth2Version;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function">ClientHttpResponse <span class="title">intercept</span><span class="params">(<span class="keyword">final</span> HttpRequest request, <span class="keyword">final</span> <span class="keyword">byte</span>[] body, ClientHttpRequestExecution <span class="keyword">execution</span>)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        HttpRequest protectedResourceRequest = <span class="keyword">new</span> HttpRequestDecorator(request);</span><br><span class="line">        protectedResourceRequest.getHeaders().set(<span class="string">"Authorization"</span>, oauth2Version.getAuthorizationHeaderValue(account.get().getAuthToken()));</span><br><span class="line">        <span class="function"><span class="keyword">return</span> <span class="keyword">execution</span>.<span class="title">execute</span><span class="params">(protectedResourceRequest, body)</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/Guice/">Guice</a><a href="/tags/Spring-Social/">Spring Social</a>
+  </div>
+
+</div>
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yukinami.github.io/2015/02/02/Guice-Account-Scope/" data-title="Guice Account Scope | Jyong&#39;s Blog" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/02/04/failed-to-complete-gradle-execution-Cause/" title="Failed to complete gradle execution Cause">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Failed to complete gradle execution Cause</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/02/02/gradle-plugin/"  title="Gradle plugin">
+ <strong>下一篇：</strong><br/> 
+ <span>Gradle plugin
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#自定义Scope"><span class="toc-number">1.</span> <span class="toc-text">自定义Scope</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Scope接口"><span class="toc-number">1.1.</span> <span class="toc-text">Scope接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现接口"><span class="toc-number">1.2.</span> <span class="toc-text">实现接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#定义Scope"><span class="toc-number">1.3.</span> <span class="toc-text">定义Scope</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#触发Scope"><span class="toc-number">1.4.</span> <span class="toc-text">触发Scope</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实现AccountScope"><span class="toc-number">2.</span> <span class="toc-text">实现AccountScope</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用AccountScope"><span class="toc-number">3.</span> <span class="toc-text">使用AccountScope</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Scope_API接口的访问"><span class="toc-number">3.1.</span> <span class="toc-text">Scope API接口的访问</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#集成Spring_Social"><span class="toc-number">4.</span> <span class="toc-text">集成Spring Social</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Provider"><span class="toc-number">4.1.</span> <span class="toc-text">Provider</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#扩展API_Binding"><span class="toc-number">4.2.</span> <span class="toc-text">扩展API Binding</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/Android/" title="Android">Android<sup>10</sup></a></li>
+		
+			<li><a href="/tags/经验错误/" title="经验错误">经验错误<sup>7</sup></a></li>
+		
+			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
+		
+			<li><a href="/tags/API/" title="API">API<sup>2</sup></a></li>
+		
+			<li><a href="/tags/OAuth2/" title="OAuth2">OAuth2<sup>1</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Concurrency/" title="Concurrency">Concurrency<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Agile/" title="Agile">Agile<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Swagger/" title="Swagger">Swagger<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>1</sup></a></li>
+		
+			<li><a href="/tags/性能测试/" title="性能测试">性能测试<sup>1</sup></a></li>
+		
+			<li><a href="/tags/gradle/" title="gradle">gradle<sup>1</sup></a></li>
+		
+			<li><a href="/tags/摘录/" title="摘录">摘录<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Spring-XD/" title="Spring XD">Spring XD<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Spring-Ingegration/" title="Spring Ingegration">Spring Ingegration<sup>1</sup></a></li>
+		
+			<li><a href="/tags/HTML/" title="HTML">HTML<sup>1</sup></a></li>
+		
+			<li><a href="/tags/iOS/" title="iOS">iOS<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Restkit/" title="Restkit">Restkit<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            <a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+          </li>
+        
+          <li>
+            <a href="http://hexo.io" target="_blank" title="Hexo">Hexo</a>
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I&#39;m Jyong, a web developer. <br/>
+			And hope you enjoy this blog.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2100171710" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yukinami" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="https://plus.google.com/100215768199802928787?rel=author" target="_blank" class="icon-google_plus" title="Google+"></a>
+		
+		
+		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2015 
+		
+		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"yukinami"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+  </body>
+</html>
+
+
+<a href="https://github.com/yukinami"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?ec2d95a543c1245fcad501b5484af450";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>

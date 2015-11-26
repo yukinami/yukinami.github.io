@@ -1,0 +1,649 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Jyong&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Jyong">
+    
+    
+    
+    
+    <link rel="alternative" href="/atom.xml" title="Jyong&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/">
+    <link rel="apple-touch-icon-precomposed" href="/img/">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Jyong&#39;s Blog" title="Jyong&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Jyong&#39;s Blog">Jyong&#39;s Blog</a></h1>
+				<h2 class="blog-motto">人生の目的の一つは楽しむことです</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yukinami.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main">
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/26/性能测试指南/" title="性能测试指南" itemprop="url">性能测试指南</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-26T08:53:51.000Z" itemprop="datePublished"> 发表于 Nov 26 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="性能测试指南">性能测试指南</h1><h2 id="概念">概念</h2><p>性能测试是通过自动化的测试工具模拟多种正常、峰值以及异常负载条件来对系统的各项性能指标进行测试。负载测试和压力测试都属于性能测试，两者可以结合进行。</p>
+<ul>
+<li>负载测试是模拟实际软件系统所承受的负载条件的系统负荷，通过不断加载（如逐渐增加模拟用户的数量）或其它加载方式来观察不同负载下系统的响应时间和数据吞吐量、系统占用的资源（如CPU、内存）等，以检验系统的行为和特性，以发现系统可能存在的性能瓶颈、内存泄漏、不能实时同步等问题。负载测试更多地体现了一种方法或一种技术。</li>
+<li>压力测试是在强负载（大数据量、大量并发用户等）下的测试，查看应用系统在峰值使用情况下操作行为，从而有效地发现系统的某项功能隐患、系统是否具有良好的容错能力和可恢复能力。压力测试分为高负载下的长时间（如24小时以上）的稳定性压力测试和极限负载情况下导致系统崩溃的破坏性压力测试。</li>
+</ul>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/11/26/性能测试指南/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/26/Docker-CI/" title="Docker CI" itemprop="url">Docker CI</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-26T08:50:42.000Z" itemprop="datePublished"> 发表于 Nov 26 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="Docker_CI">Docker CI</h1><h2 id="构建私有_Docker_Registry">构建私有 Docker Registry</h2><h3 id="启动_registry">启动 registry</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p <span class="number">5000</span>:<span class="number">5000</span> --name registry registry:<span class="number">2</span></span><br></pre></td></tr></table></figure>
+<h3 id="Insecure_Registry">Insecure Registry</h3><p>当尝试从配有配置TLS的Registry会报如下错</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FATA[<span class="number">0000</span>] Error response <span class="built_in">from</span> daemon: v1 ping attempt failed <span class="operator">with</span> error: Get <span class="keyword">https</span>://<span class="number">121.42</span><span class="number">.160</span><span class="number">.161</span>:<span class="number">5000</span>/v1/<span class="title">_ping</span>: tls: oversized record received <span class="operator">with</span> <span class="built_in">length</span> <span class="number">20527.</span> If this <span class="keyword">private</span> registry supports only HTTP <span class="operator">or</span> HTTPS <span class="operator">with</span> <span class="operator">an</span> unknown CA certificate, please <span class="built_in">add</span> `<span class="comment">--insecure-registry 121.42.160.161:5000` to the daemon's arguments. In the case of HTTPS, if you have access to the registry's CA certificate, no need for the flag; simply place the CA certificate at /etc/docker/certs.d/121.42.160.161:5000/ca.crt</span></span><br></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/11/26/Docker-CI/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/09/29/Property-managedObjectStore-not-found-on-object-of-type-RKObjectManager/" title="Property &#39;managedObjectStore&#39; not found on object of type&#39;RKObjectManager *&#39;" itemprop="url">Property &#39;managedObjectStore&#39; not found on object of type&#39;RKObjectManager *&#39;</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-29T06:34:03.000Z" itemprop="datePublished"> 发表于 Sep 29 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="问题">问题</h2><p>使用Restkit时，访问<code>RKObjectManger</code>的<code>managedObjectStore</code>属性是提示</p>
+<blockquote>
+<p>Property ‘managedObjectStore’ not found on object of type’RKObjectManager *’</p>
+</blockquote>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/09/29/Property-managedObjectStore-not-found-on-object-of-type-RKObjectManager/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/08/03/基于Java的Web敏捷开发/" title="基于Java的Web敏捷开发" itemprop="url">基于Java的Web敏捷开发</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-03T13:48:49.000Z" itemprop="datePublished"> 发表于 Aug 3 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>敏捷的Web框架，应该至少做到开箱即用，开发时不依赖任何外部数据库和外部的服务器是最理想的。</p>
+<h2 id="Web框架">Web框架</h2><p>Spring Boot基于Spring平台，涉及到了构建一个Java Web项目的大部分方面，是一个非常好的选择。只要简单的声明依赖，便可支持基于Spring各种特性。Web层基于Spring MVC，持久层支持JPA，Spring Data JPA，View层支持Freemarker等模板语言，支持Message、Application properties，支持日志，支持多个环境的Profile，安全方面支持Spring Security等等。Spring Boot把Spring的各个项目无缝的结合在一起，可以统一的使用Application properties对它们进行配置。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/08/03/基于Java的Web敏捷开发/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/29/gradle-tomcat-plugin-404/" title="gradle-tomcat-plugin 404" itemprop="url">gradle-tomcat-plugin 404</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-29T07:30:50.000Z" itemprop="datePublished"> 发表于 Jul 29 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="问题">问题</h1><p>执行gradle-tomcat-plugin的tomcatRun任务时，服务器正常启动，没有任何异常，输出的log也没有异常，但是访问时返回404页面</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/07/29/gradle-tomcat-plugin-404/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/14/JVM热部署/" title="JVM热部署" itemprop="url">JVM热部署</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-14T08:30:56.000Z" itemprop="datePublished"> 发表于 Jul 14 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="JVM_Hot_Swapping">JVM Hot Swapping</h1><p>从Java1.4启，JVM引入了HotSwap，能够在Debug的时候更新类的字节码，所有新式的IDE（包括Eclipse、IDEA和NetBeans）都支持这一技术。但是它只能用来更新方法体，这一定程度上限制了它的实用性。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/07/14/JVM热部署/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/07/使用springfox生成springmvc项目的swagger的文档/" title="使用springfox生成springmvc项目的swagger的文档" itemprop="url">使用springfox生成springmvc项目的swagger的文档</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-07T05:29:20.000Z" itemprop="datePublished"> 发表于 Jul 7 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="介绍">介绍</h1><h2 id="Swagger">Swagger</h2><p><code>Swagger</code>是用来描述和文档化RESTful API的一个项目。<a href="https://github.com/swagger-api/swagger-spec/blob/master/versions/2.0.md">Swagger Spec</a>是一套规范，定义了该如何去描述一个<code>RESTful API</code>。类似的项目还有<code>RAML</code>、<code>API Blueprint</code>。 根据<code>Swagger Spec</code>来描述RESTful API的文件称之为<code>Swagger specification file</code>，它使用JSON来表述，也支持作为JSON支持的YAML。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/07/07/使用springfox生成springmvc项目的swagger的文档/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/01/关于AsyncTaskLoader/" title="关于AsyncTaskLoader" itemprop="url">关于AsyncTaskLoader</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-01T03:14:47.000Z" itemprop="datePublished"> 发表于 Jul 1 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="Concurrency基础">Concurrency基础</h1><h2 id="Executor">Executor</h2><p><code>Executor</code>是一个用来执行<code>Runable</code>实例的对象，接口定义如下</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">/<span class="keyword">*</span><span class="keyword">*</span></span><br><span class="line"> <span class="keyword">*</span> An object that executes submitted &#123;<span class="comment">@link Runnable&#125; tasks. This</span></span><br><span class="line"> <span class="keyword">*</span> interface provides a way of decoupling task submission from the</span><br><span class="line"> <span class="keyword">*</span> mechanics of how each task will be run, including details of thread</span><br><span class="line"> <span class="keyword">*</span> use, scheduling, etc.  An &#123;<span class="comment">@code Executor&#125; is normally used</span></span><br><span class="line"> <span class="keyword">*</span> instead of explicitly creating threads.</span><br><span class="line"> <span class="keyword">*</span>/</span><br><span class="line">public interface Executor &#123;</span><br><span class="line"></span><br><span class="line">    /<span class="keyword">*</span><span class="keyword">*</span></span><br><span class="line">     <span class="keyword">*</span> Executes the given command at some time in the future.  The command</span><br><span class="line">     <span class="keyword">*</span> may execute in a new thread, in a pooled thread, or in the calling</span><br><span class="line">     <span class="keyword">*</span> thread, at the discretion of the &#123;<span class="comment">@code Executor&#125; implementation.</span></span><br><span class="line">     <span class="keyword">*</span></span><br><span class="line">     <span class="keyword">*</span> <span class="comment">@param command the runnable task</span></span><br><span class="line">     <span class="keyword">*</span> <span class="comment">@throws RejectedExecutionException if this task cannot be</span></span><br><span class="line">     <span class="keyword">*</span> accepted for execution</span><br><span class="line">     <span class="keyword">*</span> <span class="comment">@throws NullPointerException if command is null</span></span><br><span class="line">     <span class="keyword">*</span>/</span><br><span class="line">    void execute(Runnable command);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/07/01/关于AsyncTaskLoader/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/01/FLAG-ACTIVITY-CLEAR-TOP-launches-new-instance/" title="FLAG_ACTIVITY_CLEAR_TOP launches new instance" itemprop="url">FLAG_ACTIVITY_CLEAR_TOP launches new instance</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-01T01:40:53.000Z" itemprop="datePublished"> 发表于 Jul 1 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="错误">错误</h1><p>在使用<code>NavUtils.navigateUpFromSameTask(this)</code>导航到父Activity时，页面切换的动画是从右往左滑动，这样的动画看起来不像是返回动画，而是打开了一个新的页面的动画。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/07/01/FLAG-ACTIVITY-CLEAR-TOP-launches-new-instance/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/21/Junit-Rules/" title="Junit Rules" itemprop="url">Junit Rules</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-21T02:41:28.000Z" itemprop="datePublished"> 发表于 Apr 21 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="Interceptors">Interceptors</h1><p>Junit4.7引入了一个新功能叫做”Interceptors”，旨在以一个更为清晰简单的API，带回JUnit<code>meta-testing</code>的能力。但是之后又被重新命名为”Rule”。</p>
+<h2 id="Meta-testing">Meta-testing</h2><p>Junit擅长表达尽量少的测试逻辑。在Junit3中，你能够以不同的方式控制测试运行过程。Junit4简化的代价就是失去了这个“meta-testing”。这不影响简单测试，但是限制了更为强大的测试。现在Junit4重新把meta-testing带了回来。</p>
+<p>比如说，你想输出一个log当每个测试失败的时候。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/04/21/Junit-Rules/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+
+  <nav id="page-nav" class="clearfix">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
+  </nav>
+
+</div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/Android/" title="Android">Android<sup>10</sup></a></li>
+		
+			<li><a href="/tags/经验错误/" title="经验错误">经验错误<sup>7</sup></a></li>
+		
+			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
+		
+			<li><a href="/tags/API/" title="API">API<sup>2</sup></a></li>
+		
+			<li><a href="/tags/OAuth2/" title="OAuth2">OAuth2<sup>1</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Concurrency/" title="Concurrency">Concurrency<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Agile/" title="Agile">Agile<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Swagger/" title="Swagger">Swagger<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>1</sup></a></li>
+		
+			<li><a href="/tags/性能测试/" title="性能测试">性能测试<sup>1</sup></a></li>
+		
+			<li><a href="/tags/gradle/" title="gradle">gradle<sup>1</sup></a></li>
+		
+			<li><a href="/tags/摘录/" title="摘录">摘录<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Spring-XD/" title="Spring XD">Spring XD<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Spring-Ingegration/" title="Spring Ingegration">Spring Ingegration<sup>1</sup></a></li>
+		
+			<li><a href="/tags/HTML/" title="HTML">HTML<sup>1</sup></a></li>
+		
+			<li><a href="/tags/iOS/" title="iOS">iOS<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Restkit/" title="Restkit">Restkit<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            <a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+          </li>
+        
+          <li>
+            <a href="http://hexo.io" target="_blank" title="Hexo">Hexo</a>
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I&#39;m Jyong, a web developer. <br/>
+			And hope you enjoy this blog.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2100171710" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yukinami" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="https://plus.google.com/100215768199802928787?rel=author" target="_blank" class="icon-google_plus" title="Google+"></a>
+		
+		
+		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2015 
+		
+		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+
+
+
+
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+  </body>
+ </html>
+
+
+<a href="https://github.com/yukinami"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?ec2d95a543c1245fcad501b5484af450";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>

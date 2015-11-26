@@ -1,0 +1,527 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Spring Framework 4.1  – 处理静态web资源 | Jyong&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Jyong">
+    
+    <meta name="description" content="Spring Framework 4.1 的release已经有一阵子了，今天终于有点时间，看了下新特性中对于静态资源的灵活处理和转换，同时基于这种处理也提供了一种体验更好的开发方式，让我觉得非常兴奋。 先来看下对于这个新特性中的核心功能， ResourceResolvers 和 ResourceTransformers 。
+
+ResourceResolvers用来将内部的URL解析为用户能够访问的外部公共的URL（ResourceResolver接口定义的是双向的解析）。
+ResourceTransformers用来修改资源的内容。
+
+这两个功能相结合，不禁让我想起了Rails的Sprockets。Sprockets主要进行三项工作，资源文件的合并，压缩，以及对高级语言的预编译（coffeescript，sass）。那么Spring的这个特性是另外一个pipeline吗？ 官方博客给出的解释是这样的，
+
+在Spring Framework 4.1中，我们使用依赖于优化的路径，这种优化在构件时使用最好的外部工具，在运行时使用Resolvers 和和Transformers 。">
+    
+    
+    
+    
+    <link rel="alternative" href="/atom.xml" title="Jyong&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/">
+    <link rel="apple-touch-icon-precomposed" href="/img/">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Jyong&#39;s Blog" title="Jyong&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Jyong&#39;s Blog">Jyong&#39;s Blog</a></h1>
+				<h2 class="blog-motto">人生の目的の一つは楽しむことです</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yukinami.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/11/04/Spring-Framework-4-1-–-处理静态web资源/" title="Spring Framework 4.1  – 处理静态web资源" itemprop="url">Spring Framework 4.1  – 处理静态web资源</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2014-11-04T13:00:59.000Z" itemprop="datePublished"> 发表于 Nov 4 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			
+		
+		</div>
+		
+		<p>Spring Framework 4.1 的release已经有一阵子了，今天终于有点时间，看了下新特性中对于静态资源的灵活处理和转换，同时基于这种处理也提供了一种体验更好的开发方式，让我觉得非常兴奋。 先来看下对于这个新特性中的核心功能， <a href="http://docs.spring.io/spring-framework/docs/4.1.0.RC1/javadoc-api/org/springframework/web/servlet/resource/ResourceResolver.html" target="_blank" rel="external">ResourceResolvers</a> 和 <a href="http://docs.spring.io/spring-framework/docs/4.1.0.RC1/javadoc-api/org/springframework/web/servlet/resource/ResourceTransformer.html" target="_blank" rel="external">ResourceTransformers</a> 。</p>
+<ol>
+<li>ResourceResolvers用来将内部的URL解析为用户能够访问的外部公共的URL（ResourceResolver接口定义的是双向的解析）。</li>
+<li>ResourceTransformers用来修改资源的内容。</li>
+</ol>
+<p>这两个功能相结合，不禁让我想起了Rails的Sprockets。Sprockets主要进行三项工作，资源文件的合并，压缩，以及对高级语言的预编译（coffeescript，sass）。那么Spring的这个特性是另外一个pipeline吗？ 官方博客给出的解释是这样的，</p>
+<blockquote>
+<p>在Spring Framework 4.1中，我们使用依赖于优化的路径，这种优化在构件时使用最好的外部工具，在运行时使用Resolvers 和和Transformers 。</p>
+</blockquote>
+<a id="more"></a>
+<p>比如说，我们可以用yeoman，grunt，bower搭建一个面向前端开发者的项目，在开发阶段，利用ResourceResolvers直接引用工程源代码的资源路径。在生产环境，再引用经过其他工具优化过的构建完成的资源。正式通过这种方式带给了我们一种全新的开发体验。 <strong>Spring为这两个类提供了一些默认的实现类。</strong></p>
+<table><br><thead><br><tr><br><th>类名</th><br><th>目标</th><br></tr><br></thead><br><tbody><br><tr><br><td><a href="http://docs.spring.io/spring-framework/docs/4.1.0.RC1/javadoc-api/org/springframework/web/servlet/resource/PathResourceResolver.html" target="_blank" rel="external">PathResourceResolver</a></td><br><td>在配置的路径下查找匹配请求路径的资源</td><br></tr><br><tr><br><td><a href="http://docs.spring.io/spring-framework/docs/4.1.0.RC1/javadoc-api/org/springframework/web/servlet/resource/CachingResourceResolver.html" target="_blank" rel="external">CachingResourceResolver</a></td><br><td>从缓存实例中解析资源并且代理给下一个解析器</td><br></tr><br><tr><br><td><a href="http://docs.spring.io/spring-framework/docs/4.1.0.RC1/javadoc-api/org/springframework/web/servlet/resource/GzipResourceResolver.html" target="_blank" rel="external">GzipResourceResolver</a></td><br><td>当客户端支持gzip压缩时，查找资源的.gz扩展名形式的资源</td><br></tr><br><tr><br><td><a href="http://docs.spring.io/spring-framework/docs/4.1.0.RC1/javadoc-api/org/springframework/web/servlet/resource/VersionResourceResolver.html" target="_blank" rel="external">VersionResourceResolver</a></td><br><td>解析包含版本字符串的请求, 这个解析器通过改变资源的URL来设置HTTP缓存策略时很有用</td><br></tr><br></tbody><br></table>
+
+<table><br><thead><br><tr><br><th>类名</th><br><th>目标</th><br></tr><br></thead><br><tbody><br><tr><br><td><a href="http://docs.spring.io/spring-framework/docs/4.1.0.RC1/javadoc-api/org/springframework/web/servlet/resource/CssLinkResourceTransformer.html" target="_blank" rel="external">CssLinkResourceTransformer</a></td><br><td>修改CSS文件中得链接来匹配应该暴露给客户端的公共URL</td><br></tr><br><tr><br><td><a href="http://docs.spring.io/spring-framework/docs/4.1.0.RC1/javadoc-api/org/springframework/web/servlet/resource/CachingResourceTransformer.html" target="_blank" rel="external">CachingResourceTransformer</a></td><br><td>缓存transformations的结果或者代理给下一个Transformer</td><br></tr><br><tr><br><td><a href="http://docs.spring.io/spring-framework/docs/4.1.0.RC1/javadoc-api/org/springframework/web/servlet/resource/AppCacheManifestTransfomer.html" target="_blank" rel="external">AppCacheManifestTransfomer</a></td><br><td>帮助处理HTML5离线应用的AppCache清单内的文件</td><br></tr><br></tbody><br></table>
+
+
+<p><strong>最后来看点例子</strong>。 首先是目录结构， <a href="https://github.com/bclozel/spring-resource-handling" target="_blank" rel="external">Spring Resource Handling showcase application</a>：</p>
+<pre class="crayon-plain-tag">spring-app/
+|- build.gradle
+|- client/
+|  |- src/
+|  |  |- css/
+|  |  |- js/
+|  |     |- main.js
+|  |- test/
+|  |- build.gradle
+|  |- gulpfile.js
+|- server/
+|  |- src/main/java/
+|  |&ndash; build.gradle</pre>
+
+<p>这样的项目结构有两个好处，</p>
+<ol>
+<li><span style="font-size: 12px;">更好的开发体验，因为在开发阶段引用的是源代码。</span></li>
+<li><span style="font-size: 12px;">生产环境中优化的性能，静态资源通过构建得以优化并且打包为webJar。</span></li>
+</ol>
+<p><strong>配置实例</strong></p>
+<p>1. 注册Resolver和Transformer</p>
+<pre class="crayon-plain-tag">AppCacheManifestTransformer appCacheTransformer = new AppCacheManifestTransformer();
+VersionResourceResolver versionResolver = new VersionResourceResolver()
+.addFixedVersionStrategy(version, &quot;/**/*.js&quot;)
+.addContentVersionStrategy(&quot;/**&quot;);
+
+registry.addResourceHandler(&quot;/**&quot;)
+.addResourceLocations(location)
+.setCachePeriod(cachePeriod)
+.resourceChain(useResourceCache)
+.addResolver(versionResolver)
+.addTransformer(appCacheTransformer);</pre>
+
+<p>2. 手动解析</p>
+<pre class="crayon-plain-tag">ResourceUrlProvider.getForLookupPath()</pre>
+
+<p>3. 注册</p>
+<p>ResourceUrlEncodingFilter，调用Response的encodeURL进行解析</p>
+<pre class="crayon-plain-tag">@Bean
+public ResourceUrlEncodingFilter resourceUrlEncodingFilter() {
+ResourceUrlEncodingFilter filter = new ResourceUrlEncodingFilter();
+
+return filter;
+}</pre>
+
+<p>ResourceUrlEncodingFilter是一个包装HttpServletResponse的过滤器，它覆盖了{HttpServletResponse#encodeURL(String) encodeUR} 方法，将内部URL转换为外部的公共URL。其内部也是使用了ResourceUrlProvider来进行转换的。</p>
+<p>ResourceUrlProvider是获取外部URL路径的转换的核心组件，其内部定了Map&lt;String, ResourceHttpRequestHandler&gt; handlerMap用来进行链式的解析。</p>
+<p>ResourceHttpRequestHandler是&lt;mvc:resource /&gt; 标签的具体实现，4.1版本ResourceHttpRequestHandler内部使用ResourceResolver以及ResourceTransformer来进行解析处理。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Spring-Framework/">Spring Framework</a>
+  </div>
+
+</div>
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yukinami.github.io/2014/11/04/Spring-Framework-4-1-–-处理静态web资源/" data-title="Spring Framework 4.1  – 处理静态web资源 | Jyong&#39;s Blog" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2014/11/05/为什么AMD/" title="为什么AMD">
+  <strong>上一篇：</strong><br/>
+  <span>
+  为什么AMD</span>
+</a>
+</div>
+
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ 
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/Android/" title="Android">Android<sup>10</sup></a></li>
+		
+			<li><a href="/tags/经验错误/" title="经验错误">经验错误<sup>7</sup></a></li>
+		
+			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
+		
+			<li><a href="/tags/API/" title="API">API<sup>2</sup></a></li>
+		
+			<li><a href="/tags/OAuth2/" title="OAuth2">OAuth2<sup>1</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Concurrency/" title="Concurrency">Concurrency<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Agile/" title="Agile">Agile<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Swagger/" title="Swagger">Swagger<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>1</sup></a></li>
+		
+			<li><a href="/tags/性能测试/" title="性能测试">性能测试<sup>1</sup></a></li>
+		
+			<li><a href="/tags/gradle/" title="gradle">gradle<sup>1</sup></a></li>
+		
+			<li><a href="/tags/摘录/" title="摘录">摘录<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Spring-XD/" title="Spring XD">Spring XD<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Spring-Ingegration/" title="Spring Ingegration">Spring Ingegration<sup>1</sup></a></li>
+		
+			<li><a href="/tags/HTML/" title="HTML">HTML<sup>1</sup></a></li>
+		
+			<li><a href="/tags/iOS/" title="iOS">iOS<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Restkit/" title="Restkit">Restkit<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            <a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+          </li>
+        
+          <li>
+            <a href="http://hexo.io" target="_blank" title="Hexo">Hexo</a>
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I&#39;m Jyong, a web developer. <br/>
+			And hope you enjoy this blog.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2100171710" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yukinami" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="https://plus.google.com/100215768199802928787?rel=author" target="_blank" class="icon-google_plus" title="Google+"></a>
+		
+		
+		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2015 
+		
+		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"yukinami"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+  </body>
+</html>
+
+
+<a href="https://github.com/yukinami"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?ec2d95a543c1245fcad501b5484af450";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
