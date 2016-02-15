@@ -1,0 +1,480 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Spring Security的WebSecurityConfiguration配置及初始化流程 | Jyong&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Jyong">
+    
+    <meta name="description" content="基于源码的流程分析下面的源码基于Spring Security 4.0.3版本。
+入口 WebSecurityConfiguration1234567891011121314151617181920212223242526272829@Autowired(required = false)public void setFilterChainProxySecurityConfigurer(		ObjectPostProcessor&amp;lt;Object&amp;gt; objectPostProcessor,		@Value(&quot;#&amp;#123;@autowiredWebSecurityConfigurersIgnoreParents.getWebSecurityConfigurers()&amp;#125;&quot;) List&amp;lt;SecurityConfigurer&amp;lt;Filter, WebSecurity&amp;gt;&amp;gt; webSecurityConfigurers)		throws Exception &amp;#123;	webSecurity = objectPostProcessor			.postProcess(new WebSecurity(objectPostProcessor));	if (debugEnabled != null) &amp;#123;		webSecurity.debug(debugEnabled);	&amp;#125;	Collections.sort(webSecurityConfigurers, AnnotationAwareOrderComparator.INSTANCE);	Integer previousOrder = null;	for (SecurityConfigurer&amp;lt;Filter, WebSecurity&amp;gt; config : webSecurityConfigurers) &amp;#123;		Integer order = AnnotationAwareOrderComparator.lookupOrder(config);		if (previousOrder != null &amp;amp;&amp;amp; previousOrder.equals(order)) &amp;#123;			throw new IllegalStateException(					&quot;@Order on WebSecurityConfigurers must be unique. Order of &quot;							+ order + &quot; was already used, so it cannot be used on &quot;							+ config + &quot; too.&quot;);		&amp;#125;		previousOrder = order;	&amp;#125;	for (SecurityConfigurer&amp;lt;Filter, WebSecurity&amp;gt; webSecurityConfigurer : webSecurityConfigurers) &amp;#123;		webSecurity.apply(webSecurityConfigurer);	&amp;#125;	this.webSecurityConfigurers = webSecurityConfigurers;&amp;#125;">
+    
+    
+    
+    
+    <link rel="alternative" href="/atom.xml" title="Jyong&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/">
+    <link rel="apple-touch-icon-precomposed" href="/img/">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Jyong&#39;s Blog" title="Jyong&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Jyong&#39;s Blog">Jyong&#39;s Blog</a></h1>
+				<h2 class="blog-motto">人生の目的の一つは楽しむことです</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yukinami.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/02/14/Spring-Security的WebSecurityConfiguration配置及初始化流程/" title="Spring Security的WebSecurityConfiguration配置及初始化流程" itemprop="url">Spring Security的WebSecurityConfiguration配置及初始化流程</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-14T03:26:31.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基于源码的流程分析"><span class="toc-number">1.</span> <span class="toc-text">基于源码的流程分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#入口_WebSecurityConfiguration"><span class="toc-number">1.1.</span> <span class="toc-text">入口 WebSecurityConfiguration</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置HttpSecurity"><span class="toc-number">1.2.</span> <span class="toc-text">配置HttpSecurity</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构建Filter"><span class="toc-number">1.3.</span> <span class="toc-text">构建Filter</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#相关的一些问题"><span class="toc-number">2.</span> <span class="toc-text">相关的一些问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring_Boot的H2ConsoleAutoConfiguration"><span class="toc-number">2.1.</span> <span class="toc-text">Spring Boot的H2ConsoleAutoConfiguration</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h2 id="基于源码的流程分析">基于源码的流程分析</h2><p>下面的源码基于<code>Spring Security 4.0.3</code>版本。</p>
+<h3 id="入口_WebSecurityConfiguration">入口 WebSecurityConfiguration</h3><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Autowired</span>(required = <span class="literal">false</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="typename">void</span> setFilterChainProxySecurityConfigurer(</span><br><span class="line">		ObjectPostProcessor&lt;Object&gt; objectPostProcessor,</span><br><span class="line">		<span class="annotation">@Value</span>(<span class="string">"#&#123;@autowiredWebSecurityConfigurersIgnoreParents.getWebSecurityConfigurers()&#125;"</span>) List&lt;SecurityConfigurer&lt;Filter, WebSecurity&gt;&gt; webSecurityConfigurers)</span><br><span class="line">		<span class="keyword">throws</span> Exception &#123;</span><br><span class="line">	webSecurity = objectPostProcessor</span><br><span class="line">			.postProcess(<span class="keyword">new</span> WebSecurity(objectPostProcessor));</span><br><span class="line">	<span class="keyword">if</span> (debugEnabled != <span class="literal">null</span>) &#123;</span><br><span class="line">		webSecurity.debug(debugEnabled);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	Collections.sort(webSecurityConfigurers, AnnotationAwareOrderComparator.INSTANCE);</span><br><span class="line"></span><br><span class="line">	Integer previousOrder = <span class="literal">null</span>;</span><br><span class="line">	<span class="keyword">for</span> (SecurityConfigurer&lt;Filter, WebSecurity&gt; <span class="string">config :</span> webSecurityConfigurers) &#123;</span><br><span class="line">		Integer order = AnnotationAwareOrderComparator.lookupOrder(config);</span><br><span class="line">		<span class="keyword">if</span> (previousOrder != <span class="literal">null</span> &amp;&amp; previousOrder.equals(order)) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(</span><br><span class="line">					<span class="string">"@Order on WebSecurityConfigurers must be unique. Order of "</span></span><br><span class="line">							+ order + <span class="string">" was already used, so it cannot be used on "</span></span><br><span class="line">							+ config + <span class="string">" too."</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		previousOrder = order;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> (SecurityConfigurer&lt;Filter, WebSecurity&gt; <span class="string">webSecurityConfigurer :</span> webSecurityConfigurers) &#123;</span><br><span class="line">		webSecurity.apply(webSecurityConfigurer);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">this</span>.webSecurityConfigurers = webSecurityConfigurers;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>这里会对WebSecurity套用所有的<code>SecurityConfigurer</code>的实例，包括自定义的继承了<code>WebSecurityConfigurerAdapter</code>的自定义配置。</p>
+<p>这里的套用的过程只是把实例添加到<code>configurers</code>属性中</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;C <span class="keyword">extends</span> SecurityConfigurer&lt;O, B&gt;&gt; <span class="function">C <span class="title">apply</span><span class="params">(C configurer)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">	add(configurer);</span><br><span class="line">	<span class="keyword">return</span> configurer;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最终在build的过程中会初始化这些配置并套用。</p>
+<h3 id="配置HttpSecurity">配置HttpSecurity</h3><p>WebSecurityConfigurerAdapter会初始化一个默认的HttpSecurity，同时会调用<code>protected void configure(HttpSecurity http)</code>来进行自定义的设置。最终HttpSecurity的实例会作为SecurityFilterChainBuilder传入WebSecurity，以及调用<code>postBuildAction</code>来设置FilterSecurityInterceptor。</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">(<span class="keyword">final</span> WebSecurity web)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">	<span class="keyword">final</span> HttpSecurity http = getHttp();</span><br><span class="line">	web.addSecurityFilterChainBuilder(http).postBuildAction(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">		<span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">			FilterSecurityInterceptor securityInterceptor = http</span><br><span class="line">					.getSharedObject(FilterSecurityInterceptor.class);</span><br><span class="line">			web.securityInterceptor(securityInterceptor);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里需要注意的是如果有多个WebSecurityConfigurerAdapter的子类实例，那么只有最后一个HttpSecurity中的FilterSecurityInterceptor才会生效，其余的会被覆盖。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Creates the &#123;<span class="doctag">@link</span> HttpSecurity&#125; or returns the current instance</span><br><span class="line"> *</span><br><span class="line"> * ] * <span class="doctag">@return</span> the &#123;<span class="doctag">@link</span> HttpSecurity&#125;</span><br><span class="line"> * <span class="doctag">@throws</span> Exception</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">final</span> HttpSecurity getHttp() throws <span class="keyword">Exception</span> &#123;</span><br><span class="line">	<span class="keyword">if</span> (http != <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> http;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	DefaultAuthenticationEventPublisher eventPublisher = objectPostProcessor</span><br><span class="line">			.postProcess(<span class="keyword">new</span> DefaultAuthenticationEventPublisher());</span><br><span class="line">	localConfigureAuthenticationBldr.authenticationEventPublisher(eventPublisher);</span><br><span class="line"></span><br><span class="line">	AuthenticationManager authenticationManager = authenticationManager();</span><br><span class="line">	authenticationBuilder.parentAuthenticationManager(authenticationManager);</span><br><span class="line">	http = <span class="keyword">new</span> HttpSecurity(objectPostProcessor, authenticationBuilder,</span><br><span class="line">			localConfigureAuthenticationBldr.getSharedObjects());</span><br><span class="line">	http.setSharedObject(UserDetailsService.class, userDetailsService());</span><br><span class="line">	http.setSharedObject(ApplicationContext.class, context);</span><br><span class="line">	http.setSharedObject(ContentNegotiationStrategy.class, contentNegotiationStrategy);</span><br><span class="line">	http.setSharedObject(AuthenticationTrustResolver.class, trustResolver);</span><br><span class="line">	<span class="keyword">if</span> (!disableDefaults) &#123;</span><br><span class="line">		<span class="comment">// @formatter:off</span></span><br><span class="line">		http</span><br><span class="line">			.csrf().<span class="keyword">and</span>()</span><br><span class="line">			.addFilter(<span class="keyword">new</span> WebAsyncManagerIntegrationFilter())</span><br><span class="line">			.exceptionHandling().<span class="keyword">and</span>()</span><br><span class="line">			.headers().<span class="keyword">and</span>()</span><br><span class="line">			.sessionManagement().<span class="keyword">and</span>()</span><br><span class="line">			.securityContext().<span class="keyword">and</span>()</span><br><span class="line">			.requestCache().<span class="keyword">and</span>()</span><br><span class="line">			.anonymous().<span class="keyword">and</span>()</span><br><span class="line">			.servletApi().<span class="keyword">and</span>()</span><br><span class="line">			.apply(<span class="keyword">new</span> DefaultLoginPageConfigurer&lt;HttpSecurity&gt;()).<span class="keyword">and</span>()</span><br><span class="line">			.logout();</span><br><span class="line">		<span class="comment">// @formatter:on</span></span><br><span class="line">	&#125;</span><br><span class="line">	configure(http);</span><br><span class="line">	<span class="keyword">return</span> http;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="构建Filter">构建Filter</h3><p>WebSecurity最终会构建Servlet Filter</p>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">protected final O doBuild() throws <span class="type">Exception</span> &#123;</span><br><span class="line">	synchronized (configurers) &#123;</span><br><span class="line">		buildState = <span class="type">BuildState</span>.<span class="type">INITIALIZING</span>;</span><br><span class="line"></span><br><span class="line">		beforeInit();</span><br><span class="line">		init();</span><br><span class="line"></span><br><span class="line">		buildState = <span class="type">BuildState</span>.<span class="type">CONFIGURING</span>;</span><br><span class="line"></span><br><span class="line">		beforeConfigure();</span><br><span class="line">		configure();</span><br><span class="line"></span><br><span class="line">		buildState = <span class="type">BuildState</span>.<span class="type">BUILDING</span>;</span><br><span class="line"></span><br><span class="line">		O <span class="literal">result</span> = performBuild();</span><br><span class="line"></span><br><span class="line">		buildState = <span class="type">BuildState</span>.<span class="type">BUILT</span>;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> <span class="literal">result</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>HttpSecurity的performBuild则最终会构建DefaultSecurityFilterChain对象，然后添加到Filter的securityFilterChains中</p>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">@<span class="type">Override</span></span><br><span class="line">protected <span class="type">Filter</span> performBuild() throws <span class="type">Exception</span> &#123;</span><br><span class="line">	<span class="type">Assert</span>.state(</span><br><span class="line">			!securityFilterChainBuilders.isEmpty(),</span><br><span class="line">			<span class="string">"At least one SecurityBuilder&lt;? extends SecurityFilterChain&gt; needs to be specified. Typically this done by adding a @Configuration that extends WebSecurityConfigurerAdapter. More advanced users can invoke "</span></span><br><span class="line">					+ <span class="type">WebSecurity</span>.class.getSimpleName()</span><br><span class="line">					+ <span class="string">".addSecurityFilterChainBuilder directly"</span>);</span><br><span class="line">	<span class="type">int</span> chainSize = ignoredRequests.size() + securityFilterChainBuilders.size();</span><br><span class="line">	<span class="type">List</span>&lt;<span class="type">SecurityFilterChain</span>&gt; securityFilterChains = new <span class="type">ArrayList</span>&lt;<span class="type">SecurityFilterChain</span>&gt;(</span><br><span class="line">			chainSize);</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">RequestMatcher</span> ignoredRequest : ignoredRequests) &#123;</span><br><span class="line">		securityFilterChains.add(new <span class="type">DefaultSecurityFilterChain</span>(ignoredRequest));</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">SecurityBuilder</span>&lt;? extends <span class="type">SecurityFilterChain</span>&gt; securityFilterChainBuilder : securityFilterChainBuilders) &#123;</span><br><span class="line">		securityFilterChains.add(securityFilterChainBuilder.build());</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="type">FilterChainProxy</span> filterChainProxy = new <span class="type">FilterChainProxy</span>(securityFilterChains);</span><br><span class="line">	<span class="keyword">if</span> (httpFirewall != null) &#123;</span><br><span class="line">		filterChainProxy.setFirewall(httpFirewall);</span><br><span class="line">	&#125;</span><br><span class="line">	filterChainProxy.afterPropertiesSet();</span><br><span class="line"></span><br><span class="line">	<span class="type">Filter</span> <span class="literal">result</span> = filterChainProxy;</span><br><span class="line">	<span class="keyword">if</span> (debugEnabled) &#123;</span><br><span class="line">		logger.warn(<span class="string">"\n\n"</span></span><br><span class="line">				+ <span class="string">"********************************************************************\n"</span></span><br><span class="line">				+ <span class="string">"**********        Security debugging is enabled.       *************\n"</span></span><br><span class="line">				+ <span class="string">"**********    This may include sensitive information.  *************\n"</span></span><br><span class="line">				+ <span class="string">"**********      Do not use in a production system!     *************\n"</span></span><br><span class="line">				+ <span class="string">"********************************************************************\n\n"</span>);</span><br><span class="line">		<span class="literal">result</span> = new <span class="type">DebugFilter</span>(filterChainProxy);</span><br><span class="line">	&#125;</span><br><span class="line">	postBuildAction.run();</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">result</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="相关的一些问题">相关的一些问题</h2><h3 id="Spring_Boot的H2ConsoleAutoConfiguration">Spring Boot的H2ConsoleAutoConfiguration</h3><p>如果Spring Boot启用了H2 Console的话，由于H2ConsoleAutoConfiguration并没有注解<code>@ConditionalOnMissingBean(WebSecurityConfiguration.class)</code>，所以即便应用配置了WebSecurityConfiguration的子类，如果没有显示地把<code>security.basic.enabled</code>设置成false的话，最终还是会导致<code>H2ConsoleSecurityConfiguration</code>配置的套用，WebSecurity的FilterSecurityInterceptor会被覆盖。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Spring-Security/">Spring Security</a>
+  </div>
+
+</div>
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yukinami.github.io/2016/02/14/Spring-Security的WebSecurityConfiguration配置及初始化流程/" data-title="Spring Security的WebSecurityConfiguration配置及初始化流程 | Jyong&#39;s Blog" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/02/14/Spring-Security-RememberMe/" title="Spring Security RememberMe">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Spring Security RememberMe</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/02/14/The-last-packet-successfully-received-from-the-server-was-xxx-ago/"  title="The last packet successfully received from the server was xxx ago">
+ <strong>下一篇：</strong><br/> 
+ <span>The last packet successfully received from the server was xxx ago
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基于源码的流程分析"><span class="toc-number">1.</span> <span class="toc-text">基于源码的流程分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#入口_WebSecurityConfiguration"><span class="toc-number">1.1.</span> <span class="toc-text">入口 WebSecurityConfiguration</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置HttpSecurity"><span class="toc-number">1.2.</span> <span class="toc-text">配置HttpSecurity</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构建Filter"><span class="toc-number">1.3.</span> <span class="toc-text">构建Filter</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#相关的一些问题"><span class="toc-number">2.</span> <span class="toc-text">相关的一些问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring_Boot的H2ConsoleAutoConfiguration"><span class="toc-number">2.1.</span> <span class="toc-text">Spring Boot的H2ConsoleAutoConfiguration</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/Android/" title="Android">Android<sup>12</sup></a></li>
+		
+			<li><a href="/tags/经验错误/" title="经验错误">经验错误<sup>7</sup></a></li>
+		
+			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>6</sup></a></li>
+		
+			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>5</sup></a></li>
+		
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
+		
+			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
+			<li><a href="/tags/API/" title="API">API<sup>2</sup></a></li>
+		
+			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Agile/" title="Agile">Agile<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Concurrency/" title="Concurrency">Concurrency<sup>1</sup></a></li>
+		
+			<li><a href="/tags/gradle/" title="gradle">gradle<sup>1</sup></a></li>
+		
+			<li><a href="/tags/性能测试/" title="性能测试">性能测试<sup>1</sup></a></li>
+		
+			<li><a href="/tags/git/" title="git">git<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Thymeleaf/" title="Thymeleaf">Thymeleaf<sup>1</sup></a></li>
+		
+			<li><a href="/tags/OAuth2/" title="OAuth2">OAuth2<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            <a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+          </li>
+        
+          <li>
+            <a href="http://hexo.io" target="_blank" title="Hexo">Hexo</a>
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I&#39;m Jyong, a web developer. <br/>
+			And hope you enjoy this blog.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2100171710" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yukinami" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="https://plus.google.com/100215768199802928787?rel=author" target="_blank" class="icon-google_plus" title="Google+"></a>
+		
+		
+		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		
+		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"yukinami"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+  </body>
+</html>
+
+
+<a href="https://github.com/yukinami"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?ec2d95a543c1245fcad501b5484af450";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>

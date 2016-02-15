@@ -1,0 +1,488 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Spring Annotation-driven Formatting | Jyong&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Jyong">
+    
+    <meta name="description" content="应用中可能设计很多不同格式的时间、数字的转换和显示。可以通过基于Annotation-driven Formatting来实现。 使用@NumberFormat来格式化java.lang.Number字段，使用@DateTimeFormat来格式化java.util.Date, java.util.Calendar, java.util.Long, 或者Joda Time字段。
+AnnotationFormatterFactory为了使用注解格式化，需要注册AnnotationFormatterFactory的实例，下面是个例子">
+    
+    
+    
+    
+    <link rel="alternative" href="/atom.xml" title="Jyong&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/">
+    <link rel="apple-touch-icon-precomposed" href="/img/">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Jyong&#39;s Blog" title="Jyong&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Jyong&#39;s Blog">Jyong&#39;s Blog</a></h1>
+				<h2 class="blog-motto">人生の目的の一つは楽しむことです</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yukinami.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/02/14/Spring-Annotation-driven-Formatting/" title="Spring Annotation-driven Formatting" itemprop="url">Spring Annotation-driven Formatting</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-14T08:45:22.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#AnnotationFormatterFactory"><span class="toc-number">1.</span> <span class="toc-text">AnnotationFormatterFactory</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#注册AnnotationFormatterFactory"><span class="toc-number">2.</span> <span class="toc-text">注册AnnotationFormatterFactory</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置全局的date_&_time格式"><span class="toc-number">3.</span> <span class="toc-text">配置全局的date & time格式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一些问题"><span class="toc-number">3.1.</span> <span class="toc-text">一些问题</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>应用中可能设计很多不同格式的时间、数字的转换和显示。可以通过基于Annotation-driven Formatting来实现。 使用@NumberFormat来格式化java.lang.Number字段，使用@DateTimeFormat来格式化java.util.Date, java.util.Calendar, java.util.Long, 或者Joda Time字段。</p>
+<h2 id="AnnotationFormatterFactory">AnnotationFormatterFactory</h2><p>为了使用注解格式化，需要注册<code>AnnotationFormatterFactory</code>的实例，下面是个例子</p>
+<a id="more"></a>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> NumberFormatAnnotationFormatterFactory</span><br><span class="line">        <span class="keyword">implements</span> AnnotationFormatterFactory&lt;NumberFormat&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Set&lt;<span class="keyword">Class</span>&lt;?&gt;&gt; getFieldTypes() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> HashSet&lt;<span class="keyword">Class</span>&lt;?&gt;&gt;(<span class="keyword">asList</span>(<span class="keyword">new</span> <span class="keyword">Class</span>&lt;?&gt;[] &#123;</span><br><span class="line">            <span class="keyword">Short</span>.<span class="keyword">class</span>, Integer.<span class="keyword">class</span>, <span class="keyword">Long</span>.<span class="keyword">class</span>, <span class="keyword">Float</span>.<span class="keyword">class</span>,</span><br><span class="line">            <span class="keyword">Double</span>.<span class="keyword">class</span>, BigDecimal.<span class="keyword">class</span>, BigInteger.<span class="keyword">class</span> &#125;));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Printer&lt;Number&gt; getPrinter(NumberFormat annotation, <span class="keyword">Class</span>&lt;?&gt; fieldType) &#123;</span><br><span class="line">        <span class="keyword">return</span> configureFormatterFrom(annotation, fieldType);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Parser&lt;Number&gt; getParser(NumberFormat annotation, <span class="keyword">Class</span>&lt;?&gt; fieldType) &#123;</span><br><span class="line">        <span class="keyword">return</span> configureFormatterFrom(annotation, fieldType);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Formatter&lt;Number&gt; configureFormatterFrom(NumberFormat annotation,</span><br><span class="line">            <span class="keyword">Class</span>&lt;?&gt; fieldType) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!annotation.pattern().isEmpty()) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> NumberFormatter(annotation.pattern());</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Style style = annotation.style();</span><br><span class="line">            <span class="keyword">if</span> (style == Style.PERCENT) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> PercentFormatter();</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (style == Style.CURRENCY) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> CurrencyFormatter();</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> NumberFormatter();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Spring提供了很多默认的实现</p>
+<ul>
+<li>DateTimeFormatAnnotationFormatterFactory 支持Date，Calendar，Long</li>
+<li>NumberFormatAnnotationFormatterFactory 支持Byte，Short，Integer，Long，BigInteger，Float，Double，BigDecimal</li>
+</ul>
+<p>还有<code>JodaDateTimeFormatAnnotationFormatterFactory</code>, <code>Jsr310DateTimeFormatAnnotationFormatterFactory</code>, <code>Jsr354NumberFormatAnnotationFormatterFactory</code></p>
+<h2 id="注册AnnotationFormatterFactory">注册AnnotationFormatterFactory</h2><p><code>FormatterRegistrar</code>接口是一个注册formatters和converters的SPI。Spring提供了<code>DateTimeFormatterRegistrar</code>，<code>DateTimeFormatterRegistrar</code>，<code>JodaTimeFormatterRegistrar</code>来注册对应的AnnotationFormatterFactory。</p>
+<p>另外这几个Registrar会在<code>DefaultFormattingConversionService</code>中根据classpath中包含的类自动的进行注册</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Add formatters appropriate <span class="keyword">for</span> most environments: including number formatters,</span><br><span class="line"> * JSR-<span class="number">354</span> Money &amp; Currency formatters, JSR-<span class="number">310</span> Date-Time <span class="keyword">and</span>/<span class="keyword">or</span> Joda-Time formatters,</span><br><span class="line"> * depending on the presence <span class="keyword">of</span> the corresponding API on the classpath.</span><br><span class="line"> * @param formatterRegistry the service <span class="keyword">to</span> register <span class="keyword">default</span> formatters <span class="keyword">with</span></span><br><span class="line"> */</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> addDefaultFormatters(FormatterRegistry formatterRegistry) &#123;</span><br><span class="line">	<span class="comment">// Default handling of number values</span></span><br><span class="line">	formatterRegistry.addFormatterForFieldAnnotation(<span class="keyword">new</span> NumberFormatAnnotationFormatterFactory());</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Default handling of monetary values</span></span><br><span class="line">	<span class="keyword">if</span> (jsr354Present) &#123;</span><br><span class="line">		formatterRegistry.addFormatter(<span class="keyword">new</span> CurrencyUnitFormatter());</span><br><span class="line">		formatterRegistry.addFormatter(<span class="keyword">new</span> MonetaryAmountFormatter());</span><br><span class="line">		formatterRegistry.addFormatterForFieldAnnotation(<span class="keyword">new</span> Jsr354NumberFormatAnnotationFormatterFactory());</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Default handling of date-time values</span></span><br><span class="line">	<span class="keyword">if</span> (jsr310Present) &#123;</span><br><span class="line">		<span class="comment">// just handling JSR-310 specific date and time types</span></span><br><span class="line">		<span class="keyword">new</span> DateTimeFormatterRegistrar().registerFormatters(formatterRegistry);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (jodaTimePresent) &#123;</span><br><span class="line">		<span class="comment">// handles Joda-specific types as well as Date, Calendar, Long</span></span><br><span class="line">		<span class="keyword">new</span> JodaTimeFormatterRegistrar().registerFormatters(formatterRegistry);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="comment">// regular DateFormat-based Date, Calendar, Long converters</span></span><br><span class="line">		<span class="keyword">new</span> DateFormatterRegistrar().registerFormatters(formatterRegistry);</span><br><span class="line">	&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>NOTE: DefaultFormattingConversionService由FormattingConversionServiceFactoryBean注册</p>
+<h2 id="配置全局的date_&amp;_time格式">配置全局的date &amp; time格式</h2><p>默认情况下，没有@DateTimeFormat注解的日期和时间，会使用<code>DateFormat.SHORT</code>格式来转换。 可以自定义这个全局的格式。</p>
+<p>首先需要确保Spring不自动注册默认的formatters，然后自己手动注册。以DateFormatterRegistrar为例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AppConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> FormattingConversionService <span class="title">conversionService</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Use the DefaultFormattingConversionService but do not register defaults</span></span><br><span class="line">        DefaultFormattingConversionService conversionService = <span class="keyword">new</span> DefaultFormattingConversionService(<span class="keyword">false</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Ensure @NumberFormat is still supported</span></span><br><span class="line">        conversionService.addFormatterForFieldAnnotation(<span class="keyword">new</span> NumberFormatAnnotationFormatterFactory());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Register date conversion with a specific global format</span></span><br><span class="line">        DateFormatterRegistrar registrar = <span class="keyword">new</span> DateFormatterRegistrar();</span><br><span class="line">        registrar.setFormatter(<span class="keyword">new</span> DateFormatter(<span class="string">"yyyyMMdd"</span>));</span><br><span class="line">        registrar.registerFormatters(conversionService);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> conversionService;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="一些问题">一些问题</h3><p>上面其实就是额外再注册了一个DateFormatter，但是由于某些原因，DateFormatter必须在DateTimeFormatAnnotationFormatterFactory之前注册，否则@DateTimeFormat注解将会失效。 </p>
+<p>大概原因是<code>GenericConversionService</code>在查找对应的Converter时的策略问题</p>
+<p>ConvertersForPair</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ConvertersForPair</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> LinkedList&lt;GenericConverter&gt; converters = <span class="keyword">new</span> LinkedList&lt;GenericConverter&gt;();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(GenericConverter converter)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.converters.addFirst(converter);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function">GenericConverter <span class="title">getConverter</span><span class="params">(TypeDescriptor sourceType, TypeDescriptor targetType)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">for</span> (GenericConverter converter : <span class="keyword">this</span>.converters) &#123;</span><br><span class="line">			<span class="keyword">if</span> (!(converter <span class="keyword">instanceof</span> ConditionalGenericConverter) ||</span><br><span class="line">					((ConditionalGenericConverter) converter).matches(sourceType, targetType)) &#123;</span><br><span class="line">				<span class="keyword">return</span> converter;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="annotation">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function">String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="function"><span class="keyword">return</span> StringUtils.<span class="title">collectionToCommaDelimitedString</span><span class="params">(<span class="keyword">this</span>.converters)</span></span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里如果converter不是ConditionalGenericConverter的实例，那么是直接通过的，如果DateFormatter的顺序在前，便会直接返回DateFormatter的converter，而不考虑字段上面的注解。</p>
+<p>由于ConvertersForPair中add方法是添加到converters的头部的，所以DateFormatter的注册顺序得在前面。但是配合Spring Boot的WebMvcAutoConfigurationAdapter注册全局的日期格式时，由于它初始化的顺序永远在自定义的WebMvcConfigurerAdapter之后，所以只能不使用<code>spring.mvc.date-format</code>的设置，自己手动添加DateFormatter。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public void addFormatters(FormatterRegistry registry) &#123;&#10;    super.addFormatters(registry);&#10;    registry.addFormatter(new DateFormatter(&#34;yyyy-MM-dd HH:mm&#34;));&#10;    registry.addFormatterForFieldAnnotation(new DateTimeFormatAnnotationFormatterFactory());&#10;&#125;</span><br></pre></td></tr></table></figure>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Spring-Framework/">Spring Framework</a>
+  </div>
+
+</div>
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yukinami.github.io/2016/02/14/Spring-Annotation-driven-Formatting/" data-title="Spring Annotation-driven Formatting | Jyong&#39;s Blog" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/02/14/Thymeleaf-spring-convert-format/" title="Thymeleaf spring convert/format">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Thymeleaf spring convert/format</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/02/14/PropertySource-Environment/"  title="PropertySource &amp; Environment">
+ <strong>下一篇：</strong><br/> 
+ <span>PropertySource &amp; Environment
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#AnnotationFormatterFactory"><span class="toc-number">1.</span> <span class="toc-text">AnnotationFormatterFactory</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#注册AnnotationFormatterFactory"><span class="toc-number">2.</span> <span class="toc-text">注册AnnotationFormatterFactory</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置全局的date_&_time格式"><span class="toc-number">3.</span> <span class="toc-text">配置全局的date & time格式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一些问题"><span class="toc-number">3.1.</span> <span class="toc-text">一些问题</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/Android/" title="Android">Android<sup>12</sup></a></li>
+		
+			<li><a href="/tags/经验错误/" title="经验错误">经验错误<sup>7</sup></a></li>
+		
+			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>6</sup></a></li>
+		
+			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>5</sup></a></li>
+		
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
+		
+			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
+			<li><a href="/tags/API/" title="API">API<sup>2</sup></a></li>
+		
+			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Agile/" title="Agile">Agile<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Concurrency/" title="Concurrency">Concurrency<sup>1</sup></a></li>
+		
+			<li><a href="/tags/gradle/" title="gradle">gradle<sup>1</sup></a></li>
+		
+			<li><a href="/tags/性能测试/" title="性能测试">性能测试<sup>1</sup></a></li>
+		
+			<li><a href="/tags/git/" title="git">git<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Thymeleaf/" title="Thymeleaf">Thymeleaf<sup>1</sup></a></li>
+		
+			<li><a href="/tags/OAuth2/" title="OAuth2">OAuth2<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            <a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+          </li>
+        
+          <li>
+            <a href="http://hexo.io" target="_blank" title="Hexo">Hexo</a>
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I&#39;m Jyong, a web developer. <br/>
+			And hope you enjoy this blog.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2100171710" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yukinami" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="https://plus.google.com/100215768199802928787?rel=author" target="_blank" class="icon-google_plus" title="Google+"></a>
+		
+		
+		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		
+		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"yukinami"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+  </body>
+</html>
+
+
+<a href="https://github.com/yukinami"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?ec2d95a543c1245fcad501b5484af450";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>

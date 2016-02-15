@@ -1,0 +1,489 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Android使用HTTPS通信 | Jyong&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Jyong">
+    
+    <meta name="description" content="Android使用HTTPS通信首先需要告诉底层的HTTP客户端，对应https的Schema，使用什么端口，进行SSLSocket的通信。
+这里以Httpclient为例
+1234567891011121314SSLSocketFactory  sf = new SSLSocketFactory();sf.setHostnameVerifier(SSLSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);HttpParams params = new BasicHttpParams();HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);SchemeRegistry registry = new SchemeRegistry();registry.register(new Scheme(&quot;http&quot;, PlainSocketFactory.getSocketFactory(), 80));registry.register(new Scheme(&quot;https&quot;, sf, 443));ClientConnectionManager ccm = new ThreadSafeClientConnManager(params, registry);return new DefaultHttpClient(ccm, params);">
+    
+    
+    
+    
+    <link rel="alternative" href="/atom.xml" title="Jyong&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/">
+    <link rel="apple-touch-icon-precomposed" href="/img/">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Jyong&#39;s Blog" title="Jyong&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Jyong&#39;s Blog">Jyong&#39;s Blog</a></h1>
+				<h2 class="blog-motto">人生の目的の一つは楽しむことです</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yukinami.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/02/15/Android使用HTTPS通信/" title="Android使用HTTPS通信" itemprop="url">Android使用HTTPS通信</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-15T07:34:25.000Z" itemprop="datePublished"> 发表于 Feb 15 2016</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#未知的CA"><span class="toc-number">1.</span> <span class="toc-text">未知的CA</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自签名证书"><span class="toc-number">2.</span> <span class="toc-text">自签名证书</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#缺少中间CA"><span class="toc-number">3.</span> <span class="toc-text">缺少中间CA</span></a></li></ol>
+		
+		</div>
+		
+		<p>Android使用HTTPS通信首先需要告诉底层的HTTP客户端，对应https的Schema，使用什么端口，进行SSLSocket的通信。</p>
+<p>这里以Httpclient为例</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">SSLSocketFactory  sf = <span class="keyword">new</span> SSLSocketFactory();</span><br><span class="line">sf.setHostnameVerifier(SSLSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);</span><br><span class="line"></span><br><span class="line">HttpParams <span class="keyword">params</span> = <span class="keyword">new</span> BasicHttpParams();</span><br><span class="line">HttpProtocolParams.setVersion(<span class="keyword">params</span>, HttpVersion.HTTP_1_1);</span><br><span class="line">HttpProtocolParams.setContentCharset(<span class="keyword">params</span>, HTTP.UTF_8);</span><br><span class="line"></span><br><span class="line">SchemeRegistry registry = <span class="keyword">new</span> SchemeRegistry();</span><br><span class="line">registry.register(<span class="keyword">new</span> Scheme(<span class="string">"http"</span>, PlainSocketFactory.getSocketFactory(), <span class="number">80</span>));</span><br><span class="line">registry.register(<span class="keyword">new</span> Scheme(<span class="string">"https"</span>, sf, <span class="number">443</span>));</span><br><span class="line"></span><br><span class="line">ClientConnectionManager ccm = <span class="keyword">new</span> ThreadSafeClientConnManager(<span class="keyword">params</span>, registry);</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> <span class="keyword">new</span> DefaultHttpClient(ccm, <span class="keyword">params</span>);</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>HostnameVerifier有下面几个策略</p>
+<ul>
+<li>ALLOW_ALL_HOSTNAME_VERIFIER 关闭host验证，允许和所有的host简历SSL通信</li>
+<li>BROWSER_COMPATIBLE_HOSTNAME_VERIFIER  和浏览器兼容的验证策略，即通配符能够匹配所有子域名</li>
+<li>StrictHostnameVerifier 严格匹配模式，hostname必须匹配第一个CN或者任何一个subject-alts</li>
+</ul>
+<p>为了避免中间人攻击，首先是需要打开host验证，其次打开了host验证后，那么客户端必须能够验证证书的有效性，否则在请求时会报如下错误</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">javax<span class="class">.net</span><span class="class">.ssl</span><span class="class">.SSLHandshakeException</span>: java<span class="class">.security</span><span class="class">.cert</span><span class="class">.CertPathValidatorException</span>: Trust anchor <span class="keyword">for</span> certification path not found.</span><br><span class="line">        at org<span class="class">.apache</span><span class="class">.harmony</span><span class="class">.xnet</span><span class="class">.provider</span><span class="class">.jsse</span><span class="class">.OpenSSLSocketImpl</span><span class="class">.startHandshake</span>(OpenSSLSocketImpl<span class="class">.java</span>:<span class="number">374</span>)</span><br><span class="line">        at libcore<span class="class">.net</span><span class="class">.http</span><span class="class">.HttpConnection</span><span class="class">.setupSecureSocket</span>(HttpConnection<span class="class">.java</span>:<span class="number">209</span>)</span><br><span class="line">        at libcore<span class="class">.net</span><span class="class">.http</span><span class="class">.HttpsURLConnectionImpl</span><span class="variable">$HttpsEngine</span>.<span class="function"><span class="title">makeSslConnection</span><span class="params">(HttpsURLConnectionImpl.java:<span class="number">478</span>)</span></span></span><br><span class="line">        at libcore<span class="class">.net</span><span class="class">.http</span><span class="class">.HttpsURLConnectionImpl</span><span class="variable">$HttpsEngine</span>.<span class="function"><span class="title">connect</span><span class="params">(HttpsURLConnectionImpl.java:<span class="number">433</span>)</span></span></span><br><span class="line">        at libcore<span class="class">.net</span><span class="class">.http</span><span class="class">.HttpEngine</span><span class="class">.sendSocketRequest</span>(HttpEngine<span class="class">.java</span>:<span class="number">290</span>)</span><br><span class="line">        at libcore<span class="class">.net</span><span class="class">.http</span><span class="class">.HttpEngine</span><span class="class">.sendRequest</span>(HttpEngine<span class="class">.java</span>:<span class="number">240</span>)</span><br><span class="line">        at libcore<span class="class">.net</span><span class="class">.http</span><span class="class">.HttpURLConnectionImpl</span><span class="class">.getResponse</span>(HttpURLConnectionImpl<span class="class">.java</span>:<span class="number">282</span>)</span><br><span class="line">        at libcore<span class="class">.net</span><span class="class">.http</span><span class="class">.HttpURLConnectionImpl</span><span class="class">.getInputStream</span>(HttpURLConnectionImpl<span class="class">.java</span>:<span class="number">177</span>)</span><br><span class="line">        at libcore<span class="class">.net</span><span class="class">.http</span><span class="class">.HttpsURLConnectionImpl</span><span class="class">.getInputStream</span>(HttpsURLConnectionImpl<span class="class">.java</span>:<span class="number">271</span>)</span><br></pre></td></tr></table></figure>
+<p>出现上述错误，通常是下面几个原因：</p>
+<ol>
+<li>签名证书的CA是个未知的CA</li>
+<li>服务器证书不是由CA签名的，而是自签名的</li>
+<li>服务器配置缺少中间CA</li>
+</ol>
+<h2 id="未知的CA">未知的CA</h2><p>出现这种情况的原因是签名CA没有被系统所信任。这种情况可以告诉<code>HttpsURLConnection</code>来信任CA。</p>
+<p>下面的例子从<code>InputStream</code>读取CA证书，用来创建<code>KeyStore</code>，然后用它来创建和初始化<code>TrustManager</code>。<code>TrustManager</code>是系统用来验证从服务器获取证书的。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Load CAs from an InputStream</span></span><br><span class="line"><span class="comment">// (could be from a resource or ByteArrayInputStream or ...)</span></span><br><span class="line">CertificateFactory cf = CertificateFactory.getInstance(<span class="string">"X.509"</span>);</span><br><span class="line"><span class="comment">// From https://www.washington.edu/itconnect/security/ca/load-der.crt</span></span><br><span class="line">InputStream caInput = <span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"load-der.crt"</span>));</span><br><span class="line">Certificate ca;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    ca = cf.generateCertificate(caInput);</span><br><span class="line">    System.<span class="keyword">out</span>.println(<span class="string">"ca="</span> + ((X509Certificate) ca).getSubjectDN());</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    caInput.close();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Create a KeyStore containing our trusted CAs</span></span><br><span class="line">String keyStoreType = KeyStore.getDefaultType();</span><br><span class="line">KeyStore keyStore = KeyStore.getInstance(keyStoreType);</span><br><span class="line">keyStore.load(<span class="keyword">null</span>, <span class="keyword">null</span>);</span><br><span class="line">keyStore.setCertificateEntry(<span class="string">"ca"</span>, ca);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Create a TrustManager that trusts the CAs in our KeyStore</span></span><br><span class="line">String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();</span><br><span class="line">TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);</span><br><span class="line">tmf.init(keyStore);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Create an SSLContext that uses our TrustManager</span></span><br><span class="line">SSLContext context = SSLContext.getInstance(<span class="string">"TLS"</span>);</span><br><span class="line">context.init(<span class="keyword">null</span>, tmf.getTrustManagers(), <span class="keyword">null</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Tell the URLConnection to use a SocketFactory from our SSLContext</span></span><br><span class="line">URL url = <span class="keyword">new</span> URL(<span class="string">"https://certs.cac.washington.edu/CAtest/"</span>);</span><br><span class="line">HttpsURLConnection urlConnection =</span><br><span class="line">    (HttpsURLConnection)url.openConnection();</span><br><span class="line">urlConnection.setSSLSocketFactory(context.getSocketFactory());</span><br><span class="line">InputStream <span class="keyword">in</span> = urlConnection.getInputStream();</span><br><span class="line">copyInputStreamToOutputStream(<span class="keyword">in</span>, System.<span class="keyword">out</span>);</span><br></pre></td></tr></table></figure>
+<p>NOTE: 这里如果传入的<code>TrustManager</code>什么都没有做，那么相当于还是没有加密通信，因为它会接受任何的证书，仍可能遭受中间人攻击。</p>
+<p><code>KeyStore</code>也可以用JDK的keytool工具生成</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">keytool -import -file ssl<span class="class">.crt</span>  -storetype BKS -provider org<span class="class">.bouncycastle</span><span class="class">.jce</span><span class="class">.provider</span><span class="class">.BouncyCastleProvider</span> -providerpath ./bouncycastle<span class="class">.jar</span> -storetype BKS -keystore ssl.truststore</span><br></pre></td></tr></table></figure>
+<p>需要注意的是，Android默认使用BKS作为KeyStore Type。</p>
+<p>下面的Httpclient的例子</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">InputStream keyStoreStream = <span class="keyword">this</span>.getClass().getClassLoader().getResourceAsStream(<span class="string">"ssl.truststore"</span>);</span><br><span class="line"></span><br><span class="line">KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());</span><br><span class="line"><span class="keyword">char</span>[] key = <span class="string">"XXX"</span>.toCharArray();</span><br><span class="line">trustStore.load(keyStoreStream,key);</span><br><span class="line"></span><br><span class="line">SSLSocketFactory  sf = <span class="keyword">new</span> SSLSocketFactory(trustStore);</span><br><span class="line">sf.setHostnameVerifier(SSLSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);</span><br><span class="line"></span><br><span class="line">HttpParams <span class="keyword">params</span> = <span class="keyword">new</span> BasicHttpParams();</span><br><span class="line">HttpProtocolParams.setVersion(<span class="keyword">params</span>, HttpVersion.HTTP_1_1);</span><br><span class="line">HttpProtocolParams.setContentCharset(<span class="keyword">params</span>, HTTP.UTF_8);</span><br><span class="line"></span><br><span class="line">SchemeRegistry registry = <span class="keyword">new</span> SchemeRegistry();</span><br><span class="line">registry.register(<span class="keyword">new</span> Scheme(<span class="string">"http"</span>, PlainSocketFactory.getSocketFactory(), <span class="number">80</span>));</span><br><span class="line">registry.register(<span class="keyword">new</span> Scheme(<span class="string">"https"</span>, sf, <span class="number">443</span>));</span><br><span class="line"></span><br><span class="line">ClientConnectionManager ccm = <span class="keyword">new</span> ThreadSafeClientConnManager(<span class="keyword">params</span>, registry);</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> <span class="keyword">new</span> DefaultHttpClient(ccm, <span class="keyword">params</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="自签名证书">自签名证书</h2><p>自签名证书以为着服务器担当自己的CA，这个未知的CA类似的，可以把自签名证书作为信任的CA导入TrustManager。</p>
+<h2 id="缺少中间CA">缺少中间CA</h2><ul>
+<li>服务器把证书链安装完整</li>
+<li>把未知的中间CA作为信任的未知CA导入TrustManager</li>
+</ul>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/Https/">Https</a>
+  </div>
+
+</div>
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yukinami.github.io/2016/02/15/Android使用HTTPS通信/" data-title="Android使用HTTPS通信 | Jyong&#39;s Blog" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2016/02/15/了解HTTPS/"  title="了解HTTPS">
+ <strong>下一篇：</strong><br/> 
+ <span>了解HTTPS
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#未知的CA"><span class="toc-number">1.</span> <span class="toc-text">未知的CA</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自签名证书"><span class="toc-number">2.</span> <span class="toc-text">自签名证书</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#缺少中间CA"><span class="toc-number">3.</span> <span class="toc-text">缺少中间CA</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/Android/" title="Android">Android<sup>12</sup></a></li>
+		
+			<li><a href="/tags/经验错误/" title="经验错误">经验错误<sup>7</sup></a></li>
+		
+			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>6</sup></a></li>
+		
+			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>5</sup></a></li>
+		
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
+		
+			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
+			<li><a href="/tags/API/" title="API">API<sup>2</sup></a></li>
+		
+			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Agile/" title="Agile">Agile<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Concurrency/" title="Concurrency">Concurrency<sup>1</sup></a></li>
+		
+			<li><a href="/tags/gradle/" title="gradle">gradle<sup>1</sup></a></li>
+		
+			<li><a href="/tags/性能测试/" title="性能测试">性能测试<sup>1</sup></a></li>
+		
+			<li><a href="/tags/git/" title="git">git<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Thymeleaf/" title="Thymeleaf">Thymeleaf<sup>1</sup></a></li>
+		
+			<li><a href="/tags/OAuth2/" title="OAuth2">OAuth2<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            <a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+          </li>
+        
+          <li>
+            <a href="http://hexo.io" target="_blank" title="Hexo">Hexo</a>
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I&#39;m Jyong, a web developer. <br/>
+			And hope you enjoy this blog.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2100171710" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yukinami" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="https://plus.google.com/100215768199802928787?rel=author" target="_blank" class="icon-google_plus" title="Google+"></a>
+		
+		
+		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		
+		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"yukinami"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+  </body>
+</html>
+
+
+<a href="https://github.com/yukinami"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?ec2d95a543c1245fcad501b5484af450";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>

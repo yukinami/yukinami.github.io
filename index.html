@@ -70,35 +70,174 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/12/02/Work-Flow/" title="Work Flow" itemprop="url">Work Flow</a>
+      <a href="/2016/02/15/Android使用HTTPS通信/" title="Android使用HTTPS通信" itemprop="url">Android使用HTTPS通信</a>
   </h1>
   <p class="article-author">By
        
 		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
 		
   <p class="article-time">
-    <time datetime="2015-12-02T14:24:50.000Z" itemprop="datePublished"> 发表于 Dec 2 2015</time>
+    <time datetime="2016-02-15T07:34:25.000Z" itemprop="datePublished"> 发表于 Feb 15 2016</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <h1 id="Work_Flow">Work Flow</h1><h2 id="Git_Flow">Git Flow</h2><p><img src="https://about.gitlab.com/images/git_flow/gitdashflow.png" alt=""></p>
-<h3 id="主要分支">主要分支</h3><p>核心库应该有两个无限生命周期的分支：</p>
+        <p>Android使用HTTPS通信首先需要告诉底层的HTTP客户端，对应https的Schema，使用什么端口，进行SSLSocket的通信。</p>
+<p>这里以Httpclient为例</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">SSLSocketFactory  sf = <span class="keyword">new</span> SSLSocketFactory();</span><br><span class="line">sf.setHostnameVerifier(SSLSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);</span><br><span class="line"></span><br><span class="line">HttpParams <span class="keyword">params</span> = <span class="keyword">new</span> BasicHttpParams();</span><br><span class="line">HttpProtocolParams.setVersion(<span class="keyword">params</span>, HttpVersion.HTTP_1_1);</span><br><span class="line">HttpProtocolParams.setContentCharset(<span class="keyword">params</span>, HTTP.UTF_8);</span><br><span class="line"></span><br><span class="line">SchemeRegistry registry = <span class="keyword">new</span> SchemeRegistry();</span><br><span class="line">registry.register(<span class="keyword">new</span> Scheme(<span class="string">"http"</span>, PlainSocketFactory.getSocketFactory(), <span class="number">80</span>));</span><br><span class="line">registry.register(<span class="keyword">new</span> Scheme(<span class="string">"https"</span>, sf, <span class="number">443</span>));</span><br><span class="line"></span><br><span class="line">ClientConnectionManager ccm = <span class="keyword">new</span> ThreadSafeClientConnManager(<span class="keyword">params</span>, registry);</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> <span class="keyword">new</span> DefaultHttpClient(ccm, <span class="keyword">params</span>);</span><br></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/02/15/Android使用HTTPS通信/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/02/15/了解HTTPS/" title="了解HTTPS" itemprop="url">了解HTTPS</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-15T05:53:56.000Z" itemprop="datePublished"> 发表于 Feb 15 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>HTTPS是在基于TLS/SSL的安全套接字上的的应用层协议，除了传输层进行了加密外，其它与常规HTTP协议基本保持一致。</p>
+<h2 id="SSL通信原理">SSL通信原理</h2><p>当你的浏览器向服务器请求一个安全的网页(通常是 https://)<br><img src="http://cdn.yeeyan.org/upload/attached/2011-02/23/20110223210236_77545.png" alt=""></p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/02/15/了解HTTPS/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/02/15/Spring-Boot应用从main方法运行/" title="Spring Boot应用从main方法运行" itemprop="url">Spring Boot应用从main方法运行</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-15T01:45:37.000Z" itemprop="datePublished"> 发表于 Feb 15 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>Spring Boot的应用是可以通过main方法中运行SpringApplication.run()来启动的。如果项目使用了gradle或者maven，则可以通过<code>gradle bootRun</code>或者<code>mvn spring-boot:run</code>等插件来运行。</p>
+<p>但是运行起来是有不同的，因为通过gradle或者maven运行，他们运行起来之后能够正确的处理一些runtime和provided的依赖，但是通过main方法运行的cp则是IDE中固定的。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/02/15/Spring-Boot应用从main方法运行/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/02/14/Spring-Boot-Use-Forward-Headers/" title="Spring Boot Use Forward Headers" itemprop="url">Spring Boot Use Forward Headers</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-14T11:38:04.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="Forward_Headers">Forward Headers</h2><p>应用有时候需要发送<code>302</code>重定向或者渲染指向自身的绝对链接。当应用运行在一个反向代理的后端，调用者想要获得的是指向代理的地址，而不是后面主机的物理地址。 通常这个这种情况，代理会通过添加HTTP头来告诉后端应用如何构建指向自己的链接。</p>
+<p>如果代理添加了通常约定的<code>X-Forwarded-For</code>，<code>X-Forwarded-Proto</code>， 设置<code>server.use-forward-headers</code>为<code>true</code>， 就能生成正确的链接。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/02/14/Spring-Boot-Use-Forward-Headers/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/02/14/Thymeleaf-spring-convert-format/" title="Thymeleaf spring convert/format" itemprop="url">Thymeleaf spring convert/format</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-14T09:35:39.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>Thymeleaf的双大括号语法，会调用Conversion Service来进行任何对象到String的转换。</p>
 <ul>
-<li>master</li>
-<li>develop</li>
+<li>For variable expressions: ${&#123;…&#125;}</li>
+<li>For selection expressions: *{&#123;..&#125;}</li>
 </ul>
-<p><img src="http://nvie.com/img/main-branches@2x.png" alt="main-branches"></p>
-<p>我们把<code>origin/master</code>分支作为production主分支，它的HEAD版本的代码总是处于随时可以release的状态。  </p>
-<p>我们把<code>origin/develop</code>分支作为develop主分支，它的HEAD版本的代码总是处于最新的交付的开发状态。有时候也称之为<strong>集成分支</strong>。这也分支也是构建每日的晚间快照版本的来源。</p>
-<p>当<code>develop</code>分支的源码达到一个稳定的状态并且准备release的时候，所有的修改应该合并回<code>master</code>分支，然后做一个release序号的标记(tag)。</p>
-<p>所以，当每次修改合并回<code>master</code>的时候，就是一个新的production release版本。所以理论上，我们可以使用一个Git钩子脚本来进行自动构建然后发布到我们的生产环境。</p>
+<p>这对大多数的属性标签都是有用的，但是th:field是个例外。</p>
+
         
         
         <p class="article-more-link">
-          
-            <a href="/2015/12/02/Work-Flow/#more">阅读更多</a>
           
        </p>
     </div>
@@ -115,29 +254,26 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/11/26/性能测试指南/" title="性能测试指南" itemprop="url">性能测试指南</a>
+      <a href="/2016/02/14/Spring-Annotation-driven-Formatting/" title="Spring Annotation-driven Formatting" itemprop="url">Spring Annotation-driven Formatting</a>
   </h1>
   <p class="article-author">By
        
 		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-26T08:53:51.000Z" itemprop="datePublished"> 发表于 Nov 26 2015</time>
+    <time datetime="2016-02-14T08:45:22.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <h1 id="性能测试指南">性能测试指南</h1><h2 id="概念">概念</h2><p>性能测试是通过自动化的测试工具模拟多种正常、峰值以及异常负载条件来对系统的各项性能指标进行测试。负载测试和压力测试都属于性能测试，两者可以结合进行。</p>
-<ul>
-<li>负载测试是模拟实际软件系统所承受的负载条件的系统负荷，通过不断加载（如逐渐增加模拟用户的数量）或其它加载方式来观察不同负载下系统的响应时间和数据吞吐量、系统占用的资源（如CPU、内存）等，以检验系统的行为和特性，以发现系统可能存在的性能瓶颈、内存泄漏、不能实时同步等问题。负载测试更多地体现了一种方法或一种技术。</li>
-<li>压力测试是在强负载（大数据量、大量并发用户等）下的测试，查看应用系统在峰值使用情况下操作行为，从而有效地发现系统的某项功能隐患、系统是否具有良好的容错能力和可恢复能力。压力测试分为高负载下的长时间（如24小时以上）的稳定性压力测试和极限负载情况下导致系统崩溃的破坏性压力测试。</li>
-</ul>
+        <p>应用中可能设计很多不同格式的时间、数字的转换和显示。可以通过基于Annotation-driven Formatting来实现。 使用@NumberFormat来格式化java.lang.Number字段，使用@DateTimeFormat来格式化java.util.Date, java.util.Calendar, java.util.Long, 或者Joda Time字段。</p>
+<h2 id="AnnotationFormatterFactory">AnnotationFormatterFactory</h2><p>为了使用注解格式化，需要注册<code>AnnotationFormatterFactory</code>的实例，下面是个例子</p>
         
         
         <p class="article-more-link">
           
-            <a href="/2015/11/26/性能测试指南/#more">阅读更多</a>
+            <a href="/2016/02/14/Spring-Annotation-driven-Formatting/#more">阅读更多</a>
           
        </p>
     </div>
@@ -154,27 +290,29 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/11/26/Docker-CI/" title="Docker CI" itemprop="url">Docker CI</a>
+      <a href="/2016/02/14/PropertySource-Environment/" title="PropertySource &amp; Environment" itemprop="url">PropertySource &amp; Environment</a>
   </h1>
   <p class="article-author">By
        
 		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-26T08:50:42.000Z" itemprop="datePublished"> 发表于 Nov 26 2015</time>
+    <time datetime="2016-02-14T08:21:58.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <h1 id="Docker_CI">Docker CI</h1><h2 id="构建私有_Docker_Registry">构建私有 Docker Registry</h2><h3 id="启动_registry">启动 registry</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p <span class="number">5000</span>:<span class="number">5000</span> --name registry registry:<span class="number">2</span></span><br></pre></td></tr></table></figure>
-<h3 id="Insecure_Registry">Insecure Registry</h3><p>当尝试从配有配置TLS的Registry会报如下错</p>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FATA[<span class="number">0000</span>] Error response <span class="built_in">from</span> daemon: v1 ping attempt failed <span class="operator">with</span> error: Get <span class="keyword">https</span>://<span class="number">121.42</span><span class="number">.160</span><span class="number">.161</span>:<span class="number">5000</span>/v1/<span class="title">_ping</span>: tls: oversized record received <span class="operator">with</span> <span class="built_in">length</span> <span class="number">20527.</span> If this <span class="keyword">private</span> registry supports only HTTP <span class="operator">or</span> HTTPS <span class="operator">with</span> <span class="operator">an</span> unknown CA certificate, please <span class="built_in">add</span> `<span class="comment">--insecure-registry 121.42.160.161:5000` to the daemon's arguments. In the case of HTTPS, if you have access to the registry's CA certificate, no need for the flag; simply place the CA certificate at /etc/docker/certs.d/121.42.160.161:5000/ca.crt</span></span><br></pre></td></tr></table></figure>
+        <p>在Spring 3.1之前，注册一个配置文件的唯一方法就是</p>
+<figure class="highlight vhdl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="keyword">context</span>:<span class="keyword">property</span>-placeholder location=<span class="string">"some.properties"</span>/&gt;</span><br></pre></td></tr></table></figure>
+<p>Spring 3.1引入了<code>PropertySource</code>和<code>Environment</code>接口，可以通过@PropertySource注解来注册</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">@Configuration</span></span><br><span class="line"><span class="variable">@PropertySource</span>(<span class="string">"classpath:some.properties"</span>)</span><br><span class="line">public class ApplicationConfiguration</span><br></pre></td></tr></table></figure>
+<p>并且从Spring 3.1之后，<code>&lt;context:property-placeholder&gt;</code>实际底层注册的是<code>PropertySourcesPlaceholderConfigurer</code>对象。 这个对象具有更好的扩展性并且和<code>Environment</code>，<code>PropertySource</code>接口交互。</p>
         
         
         <p class="article-more-link">
           
-            <a href="/2015/11/26/Docker-CI/#more">阅读更多</a>
+            <a href="/2016/02/14/PropertySource-Environment/#more">阅读更多</a>
           
        </p>
     </div>
@@ -191,28 +329,27 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/09/29/Property-managedObjectStore-not-found-on-object-of-type-RKObjectManager/" title="Property &#39;managedObjectStore&#39; not found on object of type&#39;RKObjectManager *&#39;" itemprop="url">Property &#39;managedObjectStore&#39; not found on object of type&#39;RKObjectManager *&#39;</a>
+      <a href="/2016/02/14/spring-boot-error-handling/" title="spring boot error handling" itemprop="url">spring boot error handling</a>
   </h1>
   <p class="article-author">By
        
 		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
 		
   <p class="article-time">
-    <time datetime="2015-09-29T06:34:03.000Z" itemprop="datePublished"> 发表于 Sep 29 2015</time>
+    <time datetime="2016-02-14T07:33:24.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <h2 id="问题">问题</h2><p>使用Restkit时，访问<code>RKObjectManger</code>的<code>managedObjectStore</code>属性是提示</p>
-<blockquote>
-<p>Property ‘managedObjectStore’ not found on object of type’RKObjectManager *’</p>
-</blockquote>
+        <h2 id="Spring_MVC的异常处理">Spring MVC的异常处理</h2><p><code>HandlerExceptionResolver</code>的实现用来处理意外的异常。</p>
+<h3 id="ExceptionHandlerExceptionResolver">ExceptionHandlerExceptionResolver</h3><p><code>ExceptionHandlerExceptionResolver</code>实现通常寻找@ExceptionHandler注解的方法来处理异常。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleController</span> &#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// @RequestMapping methods omitted ...</span></span><br><span class="line"></span><br><span class="line">    <span class="annotation">@ExceptionHandler</span>(IOException.<span class="keyword">class</span>)</span><br><span class="line">    <span class="keyword">public</span> ResponseEntity&lt;String&gt; handleIOException(IOException ex) &#123;</span><br><span class="line">        <span class="comment">// prepare responseEntity</span></span><br><span class="line">        <span class="keyword">return</span> responseEntity;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
         
         
         <p class="article-more-link">
           
-            <a href="/2015/09/29/Property-managedObjectStore-not-found-on-object-of-type-RKObjectManager/#more">阅读更多</a>
+            <a href="/2016/02/14/spring-boot-error-handling/#more">阅读更多</a>
           
        </p>
     </div>
@@ -229,26 +366,27 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/08/03/基于Java的Web敏捷开发/" title="基于Java的Web敏捷开发" itemprop="url">基于Java的Web敏捷开发</a>
+      <a href="/2016/02/14/Spring-Security-CSRF/" title="Spring Security CSRF" itemprop="url">Spring Security CSRF</a>
   </h1>
   <p class="article-author">By
        
 		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
 		
   <p class="article-time">
-    <time datetime="2015-08-03T13:48:49.000Z" itemprop="datePublished"> 发表于 Aug 3 2015</time>
+    <time datetime="2016-02-14T06:54:43.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <p>敏捷的Web框架，应该至少做到开箱即用，开发时不依赖任何外部数据库和外部的服务器是最理想的。</p>
-<h2 id="Web框架">Web框架</h2><p>Spring Boot基于Spring平台，涉及到了构建一个Java Web项目的大部分方面，是一个非常好的选择。只要简单的声明依赖，便可支持基于Spring各种特性。Web层基于Spring MVC，持久层支持JPA，Spring Data JPA，View层支持Freemarker等模板语言，支持Message、Application properties，支持日志，支持多个环境的Profile，安全方面支持Spring Security等等。Spring Boot把Spring的各个项目无缝的结合在一起，可以统一的使用Application properties对它们进行配置。</p>
+        <p>Spring Security可以保护应用免收Cross Site Request Forgery (CSRF)的攻击。</p>
+<h2 id="什么是CSRF">什么是CSRF</h2><p>假设你的银行网站提供如下的表单进行转账</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="request">POST <span class="string">/transfer</span> HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span>: <span class="string">bank.example.com</span></span><br><span class="line"><span class="attribute">Cookie</span>: <span class="string">JSESSIONID=randomid; Domain=bank.example.com; Secure; HttpOnly</span></span><br><span class="line"><span class="attribute">Content-Type</span>: <span class="string">application/x-www-form-urlencoded</span></span><br><span class="line"></span><br><span class="line"><span class="cpp">amount=<span class="number">100.00</span>&amp;routingNumber=<span class="number">1234</span>&amp;account=<span class="number">9876</span></span></span><br></pre></td></tr></table></figure>
         
         
         <p class="article-more-link">
           
-            <a href="/2015/08/03/基于Java的Web敏捷开发/#more">阅读更多</a>
+            <a href="/2016/02/14/Spring-Security-CSRF/#more">阅读更多</a>
           
        </p>
     </div>
@@ -265,166 +403,25 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/07/29/gradle-tomcat-plugin-404/" title="gradle-tomcat-plugin 404" itemprop="url">gradle-tomcat-plugin 404</a>
+      <a href="/2016/02/14/Spring-Security-RememberMe/" title="Spring Security RememberMe" itemprop="url">Spring Security RememberMe</a>
   </h1>
   <p class="article-author">By
        
 		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
 		
   <p class="article-time">
-    <time datetime="2015-07-29T07:30:50.000Z" itemprop="datePublished"> 发表于 Jul 29 2015</time>
+    <time datetime="2016-02-14T06:25:55.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <h1 id="问题">问题</h1><p>执行gradle-tomcat-plugin的tomcatRun任务时，服务器正常启动，没有任何异常，输出的log也没有异常，但是访问时返回404页面</p>
+        <h2 id="Remember-Me接口和实现">Remember-Me接口和实现</h2><figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Authentication autoLogin<span class="list">(<span class="keyword">HttpServletRequest</span> request, HttpServletResponse response)</span><span class="comment">;</span></span><br><span class="line"></span><br><span class="line">void loginFail<span class="list">(<span class="keyword">HttpServletRequest</span> request, HttpServletResponse response)</span><span class="comment">;</span></span><br><span class="line"></span><br><span class="line">void loginSuccess<span class="list">(<span class="keyword">HttpServletRequest</span> request, HttpServletResponse response,</span><br><span class="line">	Authentication successfulAuthentication)</span><span class="comment">;</span></span><br></pre></td></tr></table></figure>
         
         
         <p class="article-more-link">
           
-            <a href="/2015/07/29/gradle-tomcat-plugin-404/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/14/JVM热部署/" title="JVM热部署" itemprop="url">JVM热部署</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-14T08:30:56.000Z" itemprop="datePublished"> 发表于 Jul 14 2015</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="JVM_Hot_Swapping">JVM Hot Swapping</h1><p>从Java1.4启，JVM引入了HotSwap，能够在Debug的时候更新类的字节码，所有新式的IDE（包括Eclipse、IDEA和NetBeans）都支持这一技术。但是它只能用来更新方法体，这一定程度上限制了它的实用性。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/07/14/JVM热部署/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/07/使用springfox生成springmvc项目的swagger的文档/" title="使用springfox生成springmvc项目的swagger的文档" itemprop="url">使用springfox生成springmvc项目的swagger的文档</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-07T05:29:20.000Z" itemprop="datePublished"> 发表于 Jul 7 2015</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="介绍">介绍</h1><h2 id="Swagger">Swagger</h2><p><code>Swagger</code>是用来描述和文档化RESTful API的一个项目。<a href="https://github.com/swagger-api/swagger-spec/blob/master/versions/2.0.md">Swagger Spec</a>是一套规范，定义了该如何去描述一个<code>RESTful API</code>。类似的项目还有<code>RAML</code>、<code>API Blueprint</code>。 根据<code>Swagger Spec</code>来描述RESTful API的文件称之为<code>Swagger specification file</code>，它使用JSON来表述，也支持作为JSON支持的YAML。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/07/07/使用springfox生成springmvc项目的swagger的文档/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/01/关于AsyncTaskLoader/" title="关于AsyncTaskLoader" itemprop="url">关于AsyncTaskLoader</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-01T03:14:47.000Z" itemprop="datePublished"> 发表于 Jul 1 2015</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="Concurrency基础">Concurrency基础</h1><h2 id="Executor">Executor</h2><p><code>Executor</code>是一个用来执行<code>Runable</code>实例的对象，接口定义如下</p>
-<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">/<span class="keyword">*</span><span class="keyword">*</span></span><br><span class="line"> <span class="keyword">*</span> An object that executes submitted &#123;<span class="comment">@link Runnable&#125; tasks. This</span></span><br><span class="line"> <span class="keyword">*</span> interface provides a way of decoupling task submission from the</span><br><span class="line"> <span class="keyword">*</span> mechanics of how each task will be run, including details of thread</span><br><span class="line"> <span class="keyword">*</span> use, scheduling, etc.  An &#123;<span class="comment">@code Executor&#125; is normally used</span></span><br><span class="line"> <span class="keyword">*</span> instead of explicitly creating threads.</span><br><span class="line"> <span class="keyword">*</span>/</span><br><span class="line">public interface Executor &#123;</span><br><span class="line"></span><br><span class="line">    /<span class="keyword">*</span><span class="keyword">*</span></span><br><span class="line">     <span class="keyword">*</span> Executes the given command at some time in the future.  The command</span><br><span class="line">     <span class="keyword">*</span> may execute in a new thread, in a pooled thread, or in the calling</span><br><span class="line">     <span class="keyword">*</span> thread, at the discretion of the &#123;<span class="comment">@code Executor&#125; implementation.</span></span><br><span class="line">     <span class="keyword">*</span></span><br><span class="line">     <span class="keyword">*</span> <span class="comment">@param command the runnable task</span></span><br><span class="line">     <span class="keyword">*</span> <span class="comment">@throws RejectedExecutionException if this task cannot be</span></span><br><span class="line">     <span class="keyword">*</span> accepted for execution</span><br><span class="line">     <span class="keyword">*</span> <span class="comment">@throws NullPointerException if command is null</span></span><br><span class="line">     <span class="keyword">*</span>/</span><br><span class="line">    void execute(Runnable command);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/07/01/关于AsyncTaskLoader/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/01/FLAG-ACTIVITY-CLEAR-TOP-launches-new-instance/" title="FLAG_ACTIVITY_CLEAR_TOP launches new instance" itemprop="url">FLAG_ACTIVITY_CLEAR_TOP launches new instance</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-01T01:40:53.000Z" itemprop="datePublished"> 发表于 Jul 1 2015</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="错误">错误</h1><p>在使用<code>NavUtils.navigateUpFromSameTask(this)</code>导航到父Activity时，页面切换的动画是从右往左滑动，这样的动画看起来不像是返回动画，而是打开了一个新的页面的动画。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/07/01/FLAG-ACTIVITY-CLEAR-TOP-launches-new-instance/#more">阅读更多</a>
+            <a href="/2016/02/14/Spring-Security-RememberMe/#more">阅读更多</a>
           
        </p>
     </div>
@@ -437,7 +434,7 @@
 
 
   <nav id="page-nav" class="clearfix">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
   </nav>
 
 </div>
@@ -454,45 +451,45 @@
 	<p class="asidetitle">标签</p>
 		<ul class="clearfix">
 		
-			<li><a href="/tags/Android/" title="Android">Android<sup>10</sup></a></li>
+			<li><a href="/tags/Android/" title="Android">Android<sup>12</sup></a></li>
 		
 			<li><a href="/tags/经验错误/" title="经验错误">经验错误<sup>7</sup></a></li>
 		
-			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>5</sup></a></li>
+		
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/API/" title="API">API<sup>2</sup></a></li>
 		
-			<li><a href="/tags/OAuth2/" title="OAuth2">OAuth2<sup>1</sup></a></li>
+			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
-			<li><a href="/tags/CI/" title="CI">CI<sup>1</sup></a></li>
-		
-			<li><a href="/tags/Concurrency/" title="Concurrency">Concurrency<sup>1</sup></a></li>
+			<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
 		
 			<li><a href="/tags/Agile/" title="Agile">Agile<sup>1</sup></a></li>
 		
-			<li><a href="/tags/Swagger/" title="Swagger">Swagger<sup>1</sup></a></li>
+			<li><a href="/tags/Concurrency/" title="Concurrency">Concurrency<sup>1</sup></a></li>
 		
-			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>1</sup></a></li>
-		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>1</sup></a></li>
+			<li><a href="/tags/gradle/" title="gradle">gradle<sup>1</sup></a></li>
 		
 			<li><a href="/tags/性能测试/" title="性能测试">性能测试<sup>1</sup></a></li>
 		
-			<li><a href="/tags/摘录/" title="摘录">摘录<sup>1</sup></a></li>
-		
 			<li><a href="/tags/git/" title="git">git<sup>1</sup></a></li>
 		
-			<li><a href="/tags/Spring-XD/" title="Spring XD">Spring XD<sup>1</sup></a></li>
+			<li><a href="/tags/Thymeleaf/" title="Thymeleaf">Thymeleaf<sup>1</sup></a></li>
 		
-			<li><a href="/tags/Spring-Ingegration/" title="Spring Ingegration">Spring Ingegration<sup>1</sup></a></li>
-		
-			<li><a href="/tags/HTML/" title="HTML">HTML<sup>1</sup></a></li>
-		
-			<li><a href="/tags/iOS/" title="iOS">iOS<sup>1</sup></a></li>
+			<li><a href="/tags/OAuth2/" title="OAuth2">OAuth2<sup>1</sup></a></li>
 		
 		</ul>
 </div>
@@ -553,7 +550,7 @@
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2015 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

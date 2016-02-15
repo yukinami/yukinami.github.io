@@ -1,0 +1,483 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Spring Security CSRF | Jyong&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Jyong">
+    
+    <meta name="description" content="Spring Security可以保护应用免收Cross Site Request Forgery (CSRF)的攻击。
+什么是CSRF假设你的银行网站提供如下的表单进行转账
+123456POST /transfer HTTP/1.1Host: bank.example.comCookie: JSESSIONID=randomid; Domain=bank.example.com; Secure; HttpOnlyContent-Type: application/x-www-form-urlencodedamount=100.00&amp;amp;routingNumber=1234&amp;amp;account=9876">
+    
+    
+    
+    
+    <link rel="alternative" href="/atom.xml" title="Jyong&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/">
+    <link rel="apple-touch-icon-precomposed" href="/img/">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Jyong&#39;s Blog" title="Jyong&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Jyong&#39;s Blog">Jyong&#39;s Blog</a></h1>
+				<h2 class="blog-motto">人生の目的の一つは楽しむことです</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yukinami.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/02/14/Spring-Security-CSRF/" title="Spring Security CSRF" itemprop="url">Spring Security CSRF</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-14T06:54:43.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是CSRF"><span class="toc-number">1.</span> <span class="toc-text">什么是CSRF</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#解决办法"><span class="toc-number">1.1.</span> <span class="toc-text">解决办法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring_Security中启用CSRF保护"><span class="toc-number">1.2.</span> <span class="toc-text">Spring Security中启用CSRF保护</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#配置CSRF保护"><span class="toc-number">1.2.1.</span> <span class="toc-text">配置CSRF保护</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#包含CSRF_Token"><span class="toc-number">1.2.2.</span> <span class="toc-text">包含CSRF Token</span></a></li></ol></li></ol></li></ol>
+		
+		</div>
+		
+		<p>Spring Security可以保护应用免收Cross Site Request Forgery (CSRF)的攻击。</p>
+<h2 id="什么是CSRF">什么是CSRF</h2><p>假设你的银行网站提供如下的表单进行转账</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="request">POST <span class="string">/transfer</span> HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span>: <span class="string">bank.example.com</span></span><br><span class="line"><span class="attribute">Cookie</span>: <span class="string">JSESSIONID=randomid; Domain=bank.example.com; Secure; HttpOnly</span></span><br><span class="line"><span class="attribute">Content-Type</span>: <span class="string">application/x-www-form-urlencoded</span></span><br><span class="line"></span><br><span class="line"><span class="cpp">amount=<span class="number">100.00</span>&amp;routingNumber=<span class="number">1234</span>&amp;account=<span class="number">9876</span></span></span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>现在假设你登陆了银行的网站，然后没有登出，访问了一个恶意网站，恶意网站有这么一个表单</p>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;form action=<span class="string">"https://bank.example.com/transfer"</span> <span class="keyword">method</span>=<span class="string">"post"</span>&gt;</span><br><span class="line">&lt;input <span class="keyword">type</span>=<span class="string">"hidden"</span></span><br><span class="line">	name=<span class="string">"amount"</span></span><br><span class="line">	value=<span class="string">"100.00"</span>/&gt;</span><br><span class="line">&lt;input <span class="keyword">type</span>=<span class="string">"hidden"</span></span><br><span class="line">	name=<span class="string">"routingNumber"</span></span><br><span class="line">	value=<span class="string">"evilsRoutingNumber"</span>/&gt;</span><br><span class="line">&lt;input <span class="keyword">type</span>=<span class="string">"hidden"</span></span><br><span class="line">	name=<span class="string">"account"</span></span><br><span class="line">	value=<span class="string">"evilsAccountNumber"</span>/&gt;</span><br><span class="line">&lt;input <span class="keyword">type</span>=<span class="string">"submit"</span></span><br><span class="line">	value=<span class="string">"Win Money!"</span>/&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+<p>并且你点了这个表单，尽管恶意网站不知道你的用户名密码，看不到的cookies，但是最终请求还是被发出，钱就被转走了。并且这还能通过Javascript脚本来实现，就是说恶意网站根本就不需要你点击这个按钮，只要访问了他们的网站就能实现。</p>
+<h3 id="解决办法">解决办法</h3><p>解决的方法就是使用Synchronizer Token Pattern。这个方案确保每个请求，除了session的cookies值，还需要发送一个预先生成的随机值作为请求参数。</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="request">POST <span class="string">/transfer</span> HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span>: <span class="string">bank.example.com</span></span><br><span class="line"><span class="attribute">Cookie</span>: <span class="string">JSESSIONID=randomid; Domain=bank.example.com; Secure; HttpOnly</span></span><br><span class="line"><span class="attribute">Content-Type</span>: <span class="string">application/x-www-form-urlencoded</span></span><br><span class="line"></span><br><span class="line"><span class="cpp">amount=<span class="number">100.00</span>&amp;routingNumber=<span class="number">1234</span>&amp;account=<span class="number">9876</span>&amp;_csrf=&lt;secure-random&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="Spring_Security中启用CSRF保护">Spring Security中启用CSRF保护</h3><h4 id="配置CSRF保护">配置CSRF保护</h4><p>Spring Security 4.0，CSRF保护是默认启用的，如果要关闭</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">http</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- ... --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">csrf</span> <span class="attribute">disabled</span>=<span class="value">"true"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">http</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@EnableWebSecurity</span></span><br><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">WebSecurityConfig</span> <span class="keyword"><span class="keyword">extends</span></span></span><br><span class="line"></span><span class="type">WebSecurityConfigurerAdapter</span> &#123;</span><br><span class="line"></span><br><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="keyword">protected</span> void configure(<span class="type">HttpSecurity</span> http) <span class="keyword">throws</span> <span class="type">Exception</span> &#123;</span><br><span class="line">	http</span><br><span class="line">	.csrf().disable();</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="包含CSRF_Token">包含CSRF Token</h4><p>启用CSRF保护后，需要在请求中包含CSRF Token。下面是一个JSP的例子</p>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;c:url <span class="keyword">var</span>=<span class="string">"logoutUrl"</span> value=<span class="string">"/logout"</span>/&gt;</span><br><span class="line">&lt;form action=<span class="string">"$&#123;logoutUrl&#125;"</span></span><br><span class="line">	<span class="keyword">method</span>=<span class="string">"post"</span>&gt;</span><br><span class="line">&lt;input <span class="keyword">type</span>=<span class="string">"submit"</span></span><br><span class="line">	value=<span class="string">"Log out"</span> /&gt;</span><br><span class="line">&lt;input <span class="keyword">type</span>=<span class="string">"hidden"</span></span><br><span class="line">	name=<span class="string">"$&#123;_csrf.parameterName&#125;"</span></span><br><span class="line">	value=<span class="string">"$&#123;_csrf.token&#125;"</span>/&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+<p>AJAX的例子</p>
+<figure class="highlight dust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"><span class="tag">&lt;<span class="title">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">meta</span> <span class="attribute">name</span>=<span class="value">"_csrf"</span> <span class="attribute">content</span>=<span class="value">"$</span></span></span><span class="expression">&#123;_<span class="variable">csrf.token</span>&#125;</span><span class="xml"><span class="tag"><span class="value">"</span>/&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- default header name is X-CSRF-TOKEN --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">meta</span> <span class="attribute">name</span>=<span class="value">"_csrf_header"</span> <span class="attribute">content</span>=<span class="value">"$</span></span></span><span class="expression">&#123;_<span class="variable">csrf.headerName</span>&#125;</span><span class="xml"><span class="tag"><span class="value">"</span>/&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- ... --&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- ... --&gt;</span></span><br><span class="line"></span><br><span class="line">$(function () </span><span class="expression">&#123;</span><br><span class="line"><span class="variable">var</span> <span class="variable">token</span> = $(<span class="string">"meta[name='_csrf']"</span>)<span class="variable">.attr</span>(<span class="string">"content"</span>);</span><br><span class="line"><span class="variable">var</span> <span class="variable">header</span> = $(<span class="string">"meta[name='_csrf_header']"</span>)<span class="variable">.attr</span>(<span class="string">"content"</span>);</span><br><span class="line">$(<span class="variable">document</span>)<span class="variable">.ajaxSend</span>(<span class="variable">function</span>(<span class="variable">e</span>, <span class="variable">xhr</span>, <span class="variable">options</span>) &#123;</span><br><span class="line">	<span class="variable">xhr.setRequestHeader</span>(<span class="variable">header</span>, <span class="variable">token</span>);</span><br><span class="line">&#125;</span><span class="xml">);</span><br><span class="line">&#125;);</span></span><br></pre></td></tr></table></figure>
+<p>如果使用JSP标签<form:form>，或者Thymeleaf 2.1+，CSRF会自动通过<code>RequestDataValueProcessor</code>的子类<code>CsrfRequestDataValueProcessor</code>自动加入到form表单中。 前提是需要启用@EnableWebMvcSecurity来生成<code>CsrfRequestDataValueProcessor</code>的实例</form:form></p>
+<p>NOTE: 从Spring Security 4.0开始，@EnableWebMvcSecurity注解被废弃，使用@EnableWebSecurity注解即可。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Spring-Security/">Spring Security</a>
+  </div>
+
+</div>
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yukinami.github.io/2016/02/14/Spring-Security-CSRF/" data-title="Spring Security CSRF | Jyong&#39;s Blog" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/02/14/spring-boot-error-handling/" title="spring boot error handling">
+  <strong>上一篇：</strong><br/>
+  <span>
+  spring boot error handling</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/02/14/Spring-Security-RememberMe/"  title="Spring Security RememberMe">
+ <strong>下一篇：</strong><br/> 
+ <span>Spring Security RememberMe
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是CSRF"><span class="toc-number">1.</span> <span class="toc-text">什么是CSRF</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#解决办法"><span class="toc-number">1.1.</span> <span class="toc-text">解决办法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring_Security中启用CSRF保护"><span class="toc-number">1.2.</span> <span class="toc-text">Spring Security中启用CSRF保护</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#配置CSRF保护"><span class="toc-number">1.2.1.</span> <span class="toc-text">配置CSRF保护</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#包含CSRF_Token"><span class="toc-number">1.2.2.</span> <span class="toc-text">包含CSRF Token</span></a></li></ol></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/Android/" title="Android">Android<sup>12</sup></a></li>
+		
+			<li><a href="/tags/经验错误/" title="经验错误">经验错误<sup>7</sup></a></li>
+		
+			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>6</sup></a></li>
+		
+			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>5</sup></a></li>
+		
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
+		
+			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
+			<li><a href="/tags/API/" title="API">API<sup>2</sup></a></li>
+		
+			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Agile/" title="Agile">Agile<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Concurrency/" title="Concurrency">Concurrency<sup>1</sup></a></li>
+		
+			<li><a href="/tags/gradle/" title="gradle">gradle<sup>1</sup></a></li>
+		
+			<li><a href="/tags/性能测试/" title="性能测试">性能测试<sup>1</sup></a></li>
+		
+			<li><a href="/tags/git/" title="git">git<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Thymeleaf/" title="Thymeleaf">Thymeleaf<sup>1</sup></a></li>
+		
+			<li><a href="/tags/OAuth2/" title="OAuth2">OAuth2<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            <a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+          </li>
+        
+          <li>
+            <a href="http://hexo.io" target="_blank" title="Hexo">Hexo</a>
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I&#39;m Jyong, a web developer. <br/>
+			And hope you enjoy this blog.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2100171710" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yukinami" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="https://plus.google.com/100215768199802928787?rel=author" target="_blank" class="icon-google_plus" title="Google+"></a>
+		
+		
+		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		
+		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"yukinami"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+  </body>
+</html>
+
+
+<a href="https://github.com/yukinami"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?ec2d95a543c1245fcad501b5484af450";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
