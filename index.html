@@ -70,6 +70,77 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2016/02/17/JPA fetch join & N+1/" title="JPA fetch join &amp; N+1" itemprop="url">JPA fetch join &amp; N+1</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-17T06:33:44.000Z" itemprop="datePublished"> 发表于 Feb 17 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>JPA对于关联属性的加载时机，可以通过<code>FetchType</code>来定义<code>EAGER</code>或者<code>LAZY</code>，但是对于加载的方式，是使用SELECT、SUBSELEC、JOIN则是由provider来决定的。JPA并没有提供相关的定义。例如，在使用Hibernate作为proider时，即便定义OneToMany的<code>FetchType</code>为<code>EAGER</code>, Hibernate确实会在加载对象的时候同时加载关联对象，但是却是通过SELECT方式来实现的，也就是我们常说的N+1问题，对性能有较大的影响。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/02/17/JPA fetch join & N+1/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/02/15/Spring Data JPA & EntityManager/" title="Spring Data JPA &amp; EntityManager" itemprop="url">Spring Data JPA &amp; EntityManager</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-15T09:55:48.000Z" itemprop="datePublished"> 发表于 Feb 15 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="核心术语">核心术语</h2><h3 id="Persistence_Contexts">Persistence Contexts</h3><p>Persistence Unit 是实体类的一个命名配置。Persistence Context是托管的实体实例的集合。 每个Persistence Context关联一个Persistence Unit，限制了托管的实例的类在Persistence Unit所定义的类的集合范围内。一个实体实例被托管的意思是说，它被包含在一个Persistence Context中并且能够通过Entity Manager来操纵它。 因此，我们说Entity Manager管理一个Persistence Context。</p>
+<p>如果一个Persistence Context参与到事务中，那么托管的实体的在内存中的状态将会同步到数据库。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/02/15/Spring Data JPA & EntityManager/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2016/02/15/Android使用HTTPS通信/" title="Android使用HTTPS通信" itemprop="url">Android使用HTTPS通信</a>
   </h1>
   <p class="article-author">By
@@ -360,78 +431,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/02/14/Spring-Security-CSRF/" title="Spring Security CSRF" itemprop="url">Spring Security CSRF</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2016-02-14T06:54:43.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>Spring Security可以保护应用免收Cross Site Request Forgery (CSRF)的攻击。</p>
-<h2 id="什么是CSRF">什么是CSRF</h2><p>假设你的银行网站提供如下的表单进行转账</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="request">POST <span class="string">/transfer</span> HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span>: <span class="string">bank.example.com</span></span><br><span class="line"><span class="attribute">Cookie</span>: <span class="string">JSESSIONID=randomid; Domain=bank.example.com; Secure; HttpOnly</span></span><br><span class="line"><span class="attribute">Content-Type</span>: <span class="string">application/x-www-form-urlencoded</span></span><br><span class="line"></span><br><span class="line"><span class="cpp">amount=<span class="number">100.00</span>&amp;routingNumber=<span class="number">1234</span>&amp;account=<span class="number">9876</span></span></span><br></pre></td></tr></table></figure>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2016/02/14/Spring-Security-CSRF/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/02/14/Spring-Security-RememberMe/" title="Spring Security RememberMe" itemprop="url">Spring Security RememberMe</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2016-02-14T06:25:55.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="Remember-Me接口和实现">Remember-Me接口和实现</h2><figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Authentication autoLogin<span class="list">(<span class="keyword">HttpServletRequest</span> request, HttpServletResponse response)</span><span class="comment">;</span></span><br><span class="line"></span><br><span class="line">void loginFail<span class="list">(<span class="keyword">HttpServletRequest</span> request, HttpServletResponse response)</span><span class="comment">;</span></span><br><span class="line"></span><br><span class="line">void loginSuccess<span class="list">(<span class="keyword">HttpServletRequest</span> request, HttpServletResponse response,</span><br><span class="line">	Authentication successfulAuthentication)</span><span class="comment">;</span></span><br></pre></td></tr></table></figure>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2016/02/14/Spring-Security-RememberMe/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -461,31 +460,31 @@
 		
 			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>3</sup></a></li>
 		
+			<li><a href="/tags/API/" title="API">API<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
 		
 			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
 		
 			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
 		
-			<li><a href="/tags/API/" title="API">API<sup>2</sup></a></li>
+			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>2</sup></a></li>
+		
+			<li><a href="/tags/JPA/" title="JPA">JPA<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Agile/" title="Agile">Agile<sup>1</sup></a></li>
-		
-			<li><a href="/tags/Concurrency/" title="Concurrency">Concurrency<sup>1</sup></a></li>
 		
 			<li><a href="/tags/gradle/" title="gradle">gradle<sup>1</sup></a></li>
 		
-			<li><a href="/tags/性能测试/" title="性能测试">性能测试<sup>1</sup></a></li>
+			<li><a href="/tags/摘录/" title="摘录">摘录<sup>1</sup></a></li>
 		
-			<li><a href="/tags/git/" title="git">git<sup>1</sup></a></li>
+			<li><a href="/tags/性能测试/" title="性能测试">性能测试<sup>1</sup></a></li>
 		
 			<li><a href="/tags/Thymeleaf/" title="Thymeleaf">Thymeleaf<sup>1</sup></a></li>
 		
