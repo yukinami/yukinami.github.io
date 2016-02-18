@@ -70,6 +70,43 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2016/02/14/spring-boot-error-handling/" title="spring boot error handling" itemprop="url">spring boot error handling</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-14T07:33:24.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="Spring_MVC的异常处理">Spring MVC的异常处理</h2><p><code>HandlerExceptionResolver</code>的实现用来处理意外的异常。</p>
+<h3 id="ExceptionHandlerExceptionResolver">ExceptionHandlerExceptionResolver</h3><p><code>ExceptionHandlerExceptionResolver</code>实现通常寻找@ExceptionHandler注解的方法来处理异常。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleController</span> &#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// @RequestMapping methods omitted ...</span></span><br><span class="line"></span><br><span class="line">    <span class="annotation">@ExceptionHandler</span>(IOException.<span class="keyword">class</span>)</span><br><span class="line">    <span class="keyword">public</span> ResponseEntity&lt;String&gt; handleIOException(IOException ex) &#123;</span><br><span class="line">        <span class="comment">// prepare responseEntity</span></span><br><span class="line">        <span class="keyword">return</span> responseEntity;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/02/14/spring-boot-error-handling/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2016/02/14/Spring-Security-CSRF/" title="Spring Security CSRF" itemprop="url">Spring Security CSRF</a>
   </h1>
   <p class="article-author">By
@@ -401,44 +438,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/09/29/Property-managedObjectStore-not-found-on-object-of-type-RKObjectManager/" title="Property &#39;managedObjectStore&#39; not found on object of type&#39;RKObjectManager *&#39;" itemprop="url">Property &#39;managedObjectStore&#39; not found on object of type&#39;RKObjectManager *&#39;</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-29T06:34:03.000Z" itemprop="datePublished"> 发表于 Sep 29 2015</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="问题">问题</h2><p>使用Restkit时，访问<code>RKObjectManger</code>的<code>managedObjectStore</code>属性是提示</p>
-<blockquote>
-<p>Property ‘managedObjectStore’ not found on object of type’RKObjectManager *’</p>
-</blockquote>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/09/29/Property-managedObjectStore-not-found-on-object-of-type-RKObjectManager/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
@@ -462,7 +461,7 @@
 		
 			<li><a href="/tags/经验错误/" title="经验错误">经验错误<sup>7</sup></a></li>
 		
-			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>6</sup></a></li>
+			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>7</sup></a></li>
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>5</sup></a></li>
 		

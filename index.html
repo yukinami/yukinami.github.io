@@ -70,6 +70,41 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2016/02/18/Spring自定义Constraints的ErrorCode/" title="Spring自定义Constraints的ErrorCode" itemprop="url">Spring自定义Constraints的ErrorCode</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-18T09:40:31.000Z" itemprop="datePublished"> 发表于 Feb 18 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>如果使用自定义Constraints，ErrorCode的是根据Constraints的名称按照优先度生成的<code>{Constraints名}.{类名}.{字段名}</code>、<code>{Constraints名}.{字段名}</code>、<code>{Constraints名}.{字段类型}</code>、<code>{Constraints名}</code>。 在注解中定义的message会优先给Bean Validation解析，然后使用解析的结果作为Default Message，ErrorCode作为key，到Spring的MessageSource中再进行一次解析，获得最终的message template。</p>
+<p>另外被验证字段本身的名称，再加上注解中除了<code>message</code>，<code>groups</code>，<code>payload</code>属性定义的其他属性的值，会作为key再次到MessageSource进行解析，结果的结果作为变量传入到上面的message template中。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2016/02/17/JPA fetch join & N+1/" title="JPA fetch join &amp; N+1" itemprop="url">JPA fetch join &amp; N+1</a>
   </h1>
   <p class="article-author">By
@@ -394,43 +429,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/02/14/spring-boot-error-handling/" title="spring boot error handling" itemprop="url">spring boot error handling</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2016-02-14T07:33:24.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="Spring_MVC的异常处理">Spring MVC的异常处理</h2><p><code>HandlerExceptionResolver</code>的实现用来处理意外的异常。</p>
-<h3 id="ExceptionHandlerExceptionResolver">ExceptionHandlerExceptionResolver</h3><p><code>ExceptionHandlerExceptionResolver</code>实现通常寻找@ExceptionHandler注解的方法来处理异常。</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleController</span> &#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// @RequestMapping methods omitted ...</span></span><br><span class="line"></span><br><span class="line">    <span class="annotation">@ExceptionHandler</span>(IOException.<span class="keyword">class</span>)</span><br><span class="line">    <span class="keyword">public</span> ResponseEntity&lt;String&gt; handleIOException(IOException ex) &#123;</span><br><span class="line">        <span class="comment">// prepare responseEntity</span></span><br><span class="line">        <span class="keyword">return</span> responseEntity;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2016/02/14/spring-boot-error-handling/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -454,7 +452,7 @@
 		
 			<li><a href="/tags/经验错误/" title="经验错误">经验错误<sup>7</sup></a></li>
 		
-			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>6</sup></a></li>
+			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>7</sup></a></li>
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>5</sup></a></li>
 		

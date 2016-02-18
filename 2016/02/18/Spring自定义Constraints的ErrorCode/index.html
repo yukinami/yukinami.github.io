@@ -4,23 +4,12 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>为什么AMD | Jyong&#39;s Blog</title>
+    <title>Spring自定义Constraints的ErrorCode | Jyong&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Jyong">
     
-    <meta name="description" content="关于JS的模块化，阮一峰的博客上有篇很好的文章，请参考，模块的写法，AMD规范。
-本文翻译自RequireJS官方文档 WHY AMD?, 更为详细地阐述了为什么需要AMD。
-模块化的目的什么是JavaScript模块？它们的目的是什么？
-
-定义：如何将一段代码封装为一个有用的单元，并且怎么描述它的功能、怎样为这个模块导出一个值
-依赖参考：如何引用其他代码单元
-
-当今的WEB(function () {
-    var $ = this.jQuery;
-
-    this.myExample = function () {};
-}());">
+    <meta name="description" content="如果使用自定义Constraints，ErrorCode的是根据Constraints的名称按照优先度生成的{Constraints名}.{类名}.{字段名}、{Constraints名}.{字段名}、{Constraints名}.{字段类型}、{Constraints名}。 在注解中定义的mess">
     
     
     
@@ -81,14 +70,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/11/05/为什么AMD/" title="为什么AMD" itemprop="url">为什么AMD</a>
+      <a href="/2016/02/18/Spring自定义Constraints的ErrorCode/" title="Spring自定义Constraints的ErrorCode" itemprop="url">Spring自定义Constraints的ErrorCode</a>
   </h1>
   <p class="article-author">By
        
 		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
 		
   <p class="article-time">
-    <time datetime="2014-11-05T09:48:54.000Z" itemprop="datePublished"> 发表于 Nov 5 2014</time>
+    <time datetime="2016-02-18T09:40:31.000Z" itemprop="datePublished"> 发表于 Feb 18 2016</time>
     
   </p>
 </header>
@@ -97,85 +86,12 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#模块化的目的"><span class="toc-number">1.</span> <span class="toc-text">模块化的目的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#当今的WEB"><span class="toc-number">2.</span> <span class="toc-text">当今的WEB</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#COMMONJS"><span class="toc-number">3.</span> <span class="toc-text">COMMONJS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AMD"><span class="toc-number">4.</span> <span class="toc-text">AMD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#模块定义"><span class="toc-number">5.</span> <span class="toc-text">模块定义</span></a></li></ol>
+			
 		
 		</div>
 		
-		<p>关于JS的模块化，阮一峰的博客上有篇很好的文章，请参考，<a href="http://www.ruanyifeng.com/blog/2012/10/javascript_module.html" target="_blank" rel="external">模块的写法</a>，<a href="http://www.ruanyifeng.com/blog/2012/10/asynchronous_module_definition.html" target="_blank" rel="external">AMD规范</a>。</p>
-<p>本文翻译自RequireJS官方文档 <a href="http://requirejs.org/docs/whyamd.html" target="_blank" rel="external">WHY AMD?</a>, 更为详细地阐述了为什么需要AMD。</p>
-<h3 id="模块化的目的">模块化的目的</h3><p>什么是JavaScript模块？它们的目的是什么？</p>
-<ul>
-<li>定义：如何将一段代码封装为一个有用的单元，并且怎么描述它的功能、怎样为这个模块导出一个值</li>
-<li>依赖参考：如何引用其他代码单元</li>
-</ul>
-<h3 id="当今的WEB">当今的WEB</h3><pre class="crayon-plain-tag">(function () {
-    var $ = this.jQuery;
-
-    this.myExample = function () {};
-}());</pre>
-
-<a id="more"></a>
-<p>当今的JavasScript代码片段是如何定义的？</p>
-<ul>
-<li>通过立即执行函数定义</li>
-<li>通过HTML脚本标签加载的全局变量名来引用依赖</li>
-<li>依赖的描述非常脆弱：开发者需要知道正确的依赖顺序。比如说包含Backbone的文件不能出现在jQuery标签前面。</li>
-<li>它需要外部的工具来替换一系列的脚本标签为一个部署优化过的文件。</li>
-</ul>
-<p>这在大工程的管理上是非常困难的，特别是当脚本有很多重叠嵌套的依赖的时候。手写的Script标签扩展性差，并且它失去了根据需求加载脚本的能力。</p>
-<h3 id="COMMONJS">COMMONJS</h3><pre class="crayon-plain-tag">var $ = require('jquery');
-exports.myExample = function () {};</pre>
-
-<p>最初的 <a href="http://groups.google.com/group/commonjs" target="_blank" rel="external">CommonJS (CJS) list</a> 参与者决定为如今的JavaScript语言制定一种模块格式，但是没有必要局限于浏览器JS环境。希望在浏览器中使用一些权宜之计并且希望影响浏览器开发商开发一些能够使他们的模块格式在本地工作得更好的方案。</p>
-<p>这些权宜之计是：</p>
-<ul>
-<li>使用服务器将CJM模块翻译成能够在浏览器中使用的东西</li>
-<li>使用XMLHttpRequest (XHR) 来加载模块的文本内容，然后在浏览器中做一些转换</li>
-</ul>
-<p>CJS 模块只允许一个文件一个模块，所以需要一个传输格式来处理为了优化目的多个模块绑定到一个文件的情况。</p>
-<p>通过这种方式，CommonJS小组能够解决依赖引用，以及如何处理循环依赖，如何取得关于当前模块的一些属性。然而，他们没有完全接受一些在浏览器环境中无法被改变但是仍然影响模块设计的东西：</p>
-<ul>
-<li>网络加载</li>
-<li>固有的异步</li>
-</ul>
-<p>这意味着他们更多地把压力负担给web开发者来实现这个格式，并且上述权宜之计意味着更难的调试。基于eval调试或者调试一个由多个文件合并的文件有实用上的弱点。这些弱点可能会某一天在浏览器工具中得到解决，但是最终的结果：在普通的JS环境中使用CommonJS模块，在今天的浏览器中，不是最佳的。</p>
-<h3 id="AMD">AMD</h3><pre class="crayon-plain-tag">define(['jquery'] , function ($) {
-    return function () {};
-});</pre>
-
-<p>AMD格式来源于对一种比当今的“写一堆有隐式依赖的并且必须手动控制的Script标签“更好的，并且在浏览器中容易直接使用的需求。它拥有更好的debug特性，并且不需要特定于服务器端的工具的。它的前身是Dojo的现实实际中的经验——使用XHR+eval并且想要避免它的弱点。</p>
-<p>它是对当前web的全局script标签的改进，体现在：</p>
-<ul>
-<li>使用CommonJS的字符串IDs作为依赖的实践。清晰的依赖声明并且避免使用全局的东西。</li>
-<li>IDs能够被映射为不同的路径。这允许替换具体的实现。这对于创建单元测试的mock对象是相当有利的。对于上面的样例代码，它只是期望实现了jQuery API和行为的东西，不是非得是jQuery。</li>
-<li>封装了模块的定义。给你一个避免污染全局命名空间的工具。</li>
-<li>定义模块值的清晰路径。要么使用“return value；”，或者使用CommonJS的对循环依赖非常有用的“export”的惯用语法。</li>
-</ul>
-<p>它是对CommonJS的模块的改进，体现在：</p>
-<ul>
-<li>它在浏览器中工作得更好，它有最少的陷阱。其他的方式有debug的问题，跨域/CDS使用的问题，file://的使用的问题，需要服务器工具的问题。</li>
-<li>定义了一种在一个文件中包含多个模块的方式。用CommonJS的术语来说，是“传输格式”，并且那个小组没有在传输格式上达成一致。</li>
-<li>允许将函数作为返回值。这对于构造函数非常有用。这点在CommonJS中更为笨拙，CommonJS中必须在输出的对象上定义一个属性。Node支持module.exports = function () {}，但是这不是CommonJS的规范。</li>
-</ul>
-<h3 id="模块定义">模块定义</h3><p>使用JavaScript的函数来封装模块在<a href="http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth" target="_blank" rel="external">module pattern</a>有写到：</p>
-<pre class="crayon-plain-tag">(function () {
-   this.myGlobal = function () {};
-}());</pre>
-
-<p>这种模块定义依赖于在全局对象是附加属性来导出模块值，并且在这个模型中很难声明依赖。依赖被认为是在函数执行是即刻可用的。这限制了对依赖的加载策略。</p>
-<p>AMD解决这些问题，通过：</p>
-<ul>
-<li>通过调用define()方法注册工厂方法，而不是立刻执行</li>
-<li>通过string数组传递依赖，而不是抓取全局的</li>
-<li>当所有的依赖加载并执行完后，工厂方法只会执行一次</li>
-<li><p>将依赖模块做为参数传给工厂方法</p>
-<pre class="crayon-plain-tag">//Calling define with a dependency array and a factory function
-define(['dep1', 'dep2'], function (dep1, dep2) {
-
-//Define the module value by returning a value.
-return function () {};
-});</pre></li>
-</ul>
+		<p>如果使用自定义Constraints，ErrorCode的是根据Constraints的名称按照优先度生成的<code>{Constraints名}.{类名}.{字段名}</code>、<code>{Constraints名}.{字段名}</code>、<code>{Constraints名}.{字段类型}</code>、<code>{Constraints名}</code>。 在注解中定义的message会优先给Bean Validation解析，然后使用解析的结果作为Default Message，ErrorCode作为key，到Spring的MessageSource中再进行一次解析，获得最终的message template。</p>
+<p>另外被验证字段本身的名称，再加上注解中除了<code>message</code>，<code>groups</code>，<code>payload</code>属性定义的其他属性的值，会作为key再次到MessageSource进行解析，结果的结果作为变量传入到上面的message template中。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -184,7 +100,7 @@ return function () {};
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/前端开发/">前端开发</a>
+  <span></span> <a href="/tags/Spring-Framework/">Spring Framework</a>
   </div>
 
 </div>
@@ -192,7 +108,7 @@ return function () {};
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yukinami.github.io/2014/11/05/为什么AMD/" data-title="为什么AMD | Jyong&#39;s Blog" data-tsina="null" class="share clearfix">
+  <div data-url="http://yukinami.github.io/2016/02/18/Spring自定义Constraints的ErrorCode/" data-title="Spring自定义Constraints的ErrorCode | Jyong&#39;s Blog" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -201,19 +117,11 @@ return function () {};
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2014/11/11/基于Spring的多租户系统的简单实现/" title="基于Spring的多租户系统的简单实现">
-  <strong>上一篇：</strong><br/>
-  <span>
-  基于Spring的多租户系统的简单实现</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2014/11/04/Spring-Framework-4-1-–-处理静态web资源/"  title="Spring Framework 4.1  – 处理静态web资源">
+<a href="/2016/02/17/JPA fetch join & N+1/"  title="JPA fetch join &amp; N+1">
  <strong>下一篇：</strong><br/> 
- <span>Spring Framework 4.1  – 处理静态web资源
+ <span>JPA fetch join &amp; N+1
 </span>
 </a>
 </div>
@@ -232,7 +140,7 @@ return function () {};
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#模块化的目的"><span class="toc-number">1.</span> <span class="toc-text">模块化的目的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#当今的WEB"><span class="toc-number">2.</span> <span class="toc-text">当今的WEB</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#COMMONJS"><span class="toc-number">3.</span> <span class="toc-text">COMMONJS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AMD"><span class="toc-number">4.</span> <span class="toc-text">AMD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#模块定义"><span class="toc-number">5.</span> <span class="toc-text">模块定义</span></a></li></ol>
+ 
  
   </div>
 
