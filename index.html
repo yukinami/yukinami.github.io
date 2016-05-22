@@ -70,6 +70,334 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2016/05/22/用Spring-data-rest开发基于HATEOAS的API/" title="用Spring data rest开发基于HATEOAS的API" itemprop="url">用Spring data rest开发基于HATEOAS的API</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-05-22T02:17:03.000Z" itemprop="datePublished"> 发表于 May 22 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="概念">概念</h2><p>首先，HATEOAS (Hypermedia as the Engine of Application State) 是REST应用架构的一个约束。一个<em>hypermedia-driven</em>的站点通过响应中的超媒体链接动态地提供了导航到站点的REST接口的信息。</p>
+<p>下面是一个基于HATEOAS的响应</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    "<span class="attribute">name</span>": <span class="value"><span class="string">"Alice"</span></span>,</span><br><span class="line">    "<span class="attribute">links</span>": <span class="value">[ &#123;</span><br><span class="line">        "<span class="attribute">rel</span>": <span class="value"><span class="string">"self"</span></span>,</span><br><span class="line">        "<span class="attribute">href</span>": <span class="value"><span class="string">"http://localhost:8080/customer/1"</span></span><br><span class="line">    </span>&#125; ]</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/05/22/用Spring-data-rest开发基于HATEOAS的API/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/05/21/Spring-AOP的实现/" title="Spring AOP的实现" itemprop="url">Spring AOP的实现</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-05-21T09:43:51.000Z" itemprop="datePublished"> 发表于 May 21 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="概念">概念</h2><ul>
+<li><p>Aspect 切面，指的是切分多个类的模块化的关注点，包括Pointcut或Advice</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Aspect</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NotVeryUsefulAspect</span> &#123;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/05/21/Spring-AOP的实现/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/05/21/Hibernate使用outer join fetch集合时返回重复的结果/" title="Hibernate使用outer join fetch集合时返回重复的结果" itemprop="url">Hibernate使用outer join fetch集合时返回重复的结果</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-05-21T09:00:37.000Z" itemprop="datePublished"> 发表于 May 21 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="问题">问题</h2><p>如果我们有一个订单关联三个订单项，当进行下面的查询时</p>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">List</span> <span class="literal">result</span> = session.createQuery(<span class="string">"select o from Order o left join fetch o.lineItems"</span>).list();</span><br></pre></td></tr></table></figure>
+<p>返回的结果集会是三个一样的订单对象，分别包含了三个订单项。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/05/21/Hibernate使用outer join fetch集合时返回重复的结果/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/05/21/Jackson转换TimeStamp时空字串的问题/" title="Jackson转换TimeStamp时空字串的问题" itemprop="url">Jackson转换TimeStamp时空字串的问题</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-05-21T07:45:59.000Z" itemprop="datePublished"> 发表于 May 21 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="问题">问题</h2><p>当使用Jackson进行json数据转换时，如果目标字段类型为TimeStamp并且要转换的值为空字串时会报空指针错误。</p>
+<h2 id="原因">原因</h2><p>下面是Timestamp反序列化器的代码</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public static <span class="class"><span class="keyword">class</span> <span class="title">TimestampDeserializer</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">DateBasedDeserializer&lt;Timestamp&gt;</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    public <span class="type">TimestampDeserializer</span>() &#123; <span class="keyword">super</span>(<span class="type">Timestamp</span>.<span class="keyword">class</span>); &#125;</span><br><span class="line">    public <span class="type">TimestampDeserializer</span>(<span class="type">TimestampDeserializer</span> src, <span class="type">DateFormat</span> df, <span class="type">String</span> formatString) &#123;</span><br><span class="line">        <span class="keyword">super</span>(src, df, formatString);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="type">TimestampDeserializer</span> withDateFormat(<span class="type">DateFormat</span> df, <span class="type">String</span> formatString) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">TimestampDeserializer</span>(<span class="keyword">this</span>, df, formatString);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    public java.sql.<span class="type">Timestamp</span> deserialize(<span class="type">JsonParser</span> jp, <span class="type">DeserializationContext</span> ctxt) <span class="keyword">throws</span> <span class="type">IOException</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">Timestamp</span>(_parseDate(jp, ctxt).getTime());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过<code>_parseDate</code>方法转换为Date后，并没有判断是否转换成功而直接调用了getTime方法。</p>
+<h2 id="解决">解决</h2><p>添加一个自定义的TimeStamp的Deserializer，然后通过SimpleModule来注册到ObjectMapper中。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/05/21/Hibernate-one-to-one-懒加载的问题/" title="Hibernate one-to-one 懒加载的问题" itemprop="url">Hibernate one-to-one 懒加载的问题</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-05-21T06:24:29.000Z" itemprop="datePublished"> 发表于 May 21 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="问题">问题</h2><p>Hibernate在使用OneToOne的反向关联或者使用主键关联（PrimaryKeyJoinColumn）时，会出来懒加载不起的作用的情况。究其原因，Hibernate的能够进行懒加载的前提是返回的关联对象是个代理对象。如果Hibernate不能确定关联的对象是否为空，那么他们不能直接返回代理对象，因为代理对象本身就是不为空的，它不得不去检查关联对象是否存在。但是用SELECT语句去检查存在性，还不如索性直接把查询结果返回，这也就导致了懒加载的失效。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/05/21/Hibernate-one-to-one-懒加载的问题/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/04/21/Hibernate的Fetch问题/" title="Hibernate的Fetch问题" itemprop="url">Hibernate的Fetch问题</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-21T07:40:04.000Z" itemprop="datePublished"> 发表于 Apr 21 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>下面的内容基于JPA的Hibernate实现进行讨论。</p>
+<p>JPA的关联关系中的single-ended的关联（也就是ToOne）的模式fetch类型是的eager的。 在使用<code>EntityMangerd#find</code>方法进行查找时，这些关联会通过JOIN的方式被查询出来。但是如果使用Criteria API或者JPQL进行查询时，会发现针对这些关联产生了额外的SELECT查询，也就是通常我们所说的N+1的问题。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/04/21/Hibernate的Fetch问题/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/03/19/如何高效的使用postman/" title="如何高效的使用postman" itemprop="url">如何高效的使用postman</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-03-19T05:59:46.000Z" itemprop="datePublished"> 发表于 Mar 19 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>POSTMAN目前在我们团队中一直作为一个调用API的测试工具，但是由于我们的一直深入的使用它，导致使用的过程中存在不少很低效的问题。POSTMAN本身提供很多强大的功能，用好了它完全可以成为开发过程中比不可少的开发工具。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/03/19/如何高效的使用postman/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/03/04/Spring-OAuth2的ResourceServerConfiguration匹配了所有资源路径/" title="Spring OAuth2的ResourceServerConfiguration匹配了所有资源路径" itemprop="url">Spring OAuth2的ResourceServerConfiguration匹配了所有资源路径</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-03-04T05:35:24.000Z" itemprop="datePublished"> 发表于 Mar 4 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="问题">问题</h2><p>通过继承<code>ResourceServerConfigurerAdapter</code>来配置ResourceServer的资源权限时，虽然使用了<code>HttpSecurity#requestMatchers</code>方法来匹配特定的资源，但是其他未匹配的资源依然会被匹配保护。</p>
+<p>github上同样的<a href="https://github.com/spring-projects/spring-security-oauth/issues/444">问题</a>。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/03/04/Spring-OAuth2的ResourceServerConfiguration匹配了所有资源路径/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/02/26/Spring-Boot-Auto-Configuration和HATEOAS、Data-REST/" title="Spring Boot Auto Configuration和HATEOAS、Data REST" itemprop="url">Spring Boot Auto Configuration和HATEOAS、Data REST</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-26T12:34:05.000Z" itemprop="datePublished"> 发表于 Feb 26 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="Spring_Boot集成HATEOAS">Spring Boot集成HATEOAS</h2><p><code>JacksonAutoConfiguration</code>会注册Primary ObjectMapper，这个ObjectMapper通过<code>spring.jackson.*</code>来配置。<br><code>JacksonAutoConfiguration</code>配置完后会注册<code>HypermediaAutoConfiguration</code>，<code>HypermediaAutoConfiguration</code>中会对Primary ObjectMapper注册<code>Jackson2HalModule</code>（由apply-to-primary-object-mapper决定）。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/02/26/Spring-Boot-Auto-Configuration和HATEOAS、Data-REST/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2016/02/18/Spring自定义Constraints的ErrorCode/" title="Spring自定义Constraints的ErrorCode" itemprop="url">Spring自定义Constraints的ErrorCode</a>
   </h1>
   <p class="article-author">By
@@ -99,339 +427,9 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/02/17/JPA fetch join & N+1/" title="JPA fetch join &amp; N+1" itemprop="url">JPA fetch join &amp; N+1</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2016-02-17T06:33:44.000Z" itemprop="datePublished"> 发表于 Feb 17 2016</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>JPA对于关联属性的加载时机，可以通过<code>FetchType</code>来定义<code>EAGER</code>或者<code>LAZY</code>，但是对于加载的方式，是使用SELECT、SUBSELEC、JOIN则是由provider来决定的。JPA并没有提供相关的定义。例如，在使用Hibernate作为proider时，即便定义OneToMany的<code>FetchType</code>为<code>EAGER</code>, Hibernate确实会在加载对象的时候同时加载关联对象，但是却是通过SELECT方式来实现的，也就是我们常说的N+1问题，对性能有较大的影响。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2016/02/17/JPA fetch join & N+1/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/02/15/Spring Data JPA & EntityManager/" title="Spring Data JPA &amp; EntityManager" itemprop="url">Spring Data JPA &amp; EntityManager</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2016-02-15T09:55:48.000Z" itemprop="datePublished"> 发表于 Feb 15 2016</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="核心术语">核心术语</h2><h3 id="Persistence_Contexts">Persistence Contexts</h3><p>Persistence Unit 是实体类的一个命名配置。Persistence Context是托管的实体实例的集合。 每个Persistence Context关联一个Persistence Unit，限制了托管的实例的类在Persistence Unit所定义的类的集合范围内。一个实体实例被托管的意思是说，它被包含在一个Persistence Context中并且能够通过Entity Manager来操纵它。 因此，我们说Entity Manager管理一个Persistence Context。</p>
-<p>如果一个Persistence Context参与到事务中，那么托管的实体的在内存中的状态将会同步到数据库。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2016/02/15/Spring Data JPA & EntityManager/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/02/15/Android使用HTTPS通信/" title="Android使用HTTPS通信" itemprop="url">Android使用HTTPS通信</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2016-02-15T07:34:25.000Z" itemprop="datePublished"> 发表于 Feb 15 2016</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>Android使用HTTPS通信首先需要告诉底层的HTTP客户端，对应https的Schema，使用什么端口，进行SSLSocket的通信。</p>
-<p>这里以Httpclient为例</p>
-<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">SSLSocketFactory  sf = <span class="keyword">new</span> SSLSocketFactory();</span><br><span class="line">sf.setHostnameVerifier(SSLSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);</span><br><span class="line"></span><br><span class="line">HttpParams <span class="keyword">params</span> = <span class="keyword">new</span> BasicHttpParams();</span><br><span class="line">HttpProtocolParams.setVersion(<span class="keyword">params</span>, HttpVersion.HTTP_1_1);</span><br><span class="line">HttpProtocolParams.setContentCharset(<span class="keyword">params</span>, HTTP.UTF_8);</span><br><span class="line"></span><br><span class="line">SchemeRegistry registry = <span class="keyword">new</span> SchemeRegistry();</span><br><span class="line">registry.register(<span class="keyword">new</span> Scheme(<span class="string">"http"</span>, PlainSocketFactory.getSocketFactory(), <span class="number">80</span>));</span><br><span class="line">registry.register(<span class="keyword">new</span> Scheme(<span class="string">"https"</span>, sf, <span class="number">443</span>));</span><br><span class="line"></span><br><span class="line">ClientConnectionManager ccm = <span class="keyword">new</span> ThreadSafeClientConnManager(<span class="keyword">params</span>, registry);</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> <span class="keyword">new</span> DefaultHttpClient(ccm, <span class="keyword">params</span>);</span><br></pre></td></tr></table></figure>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2016/02/15/Android使用HTTPS通信/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/02/15/了解HTTPS/" title="了解HTTPS" itemprop="url">了解HTTPS</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2016-02-15T05:53:56.000Z" itemprop="datePublished"> 发表于 Feb 15 2016</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>HTTPS是在基于TLS/SSL的安全套接字上的的应用层协议，除了传输层进行了加密外，其它与常规HTTP协议基本保持一致。</p>
-<h2 id="SSL通信原理">SSL通信原理</h2><p>当你的浏览器向服务器请求一个安全的网页(通常是 https://)<br><img src="http://cdn.yeeyan.org/upload/attached/2011-02/23/20110223210236_77545.png" alt=""></p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2016/02/15/了解HTTPS/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/02/15/Spring-Boot应用从main方法运行/" title="Spring Boot应用从main方法运行" itemprop="url">Spring Boot应用从main方法运行</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2016-02-15T01:45:37.000Z" itemprop="datePublished"> 发表于 Feb 15 2016</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>Spring Boot的应用是可以通过main方法中运行SpringApplication.run()来启动的。如果项目使用了gradle或者maven，则可以通过<code>gradle bootRun</code>或者<code>mvn spring-boot:run</code>等插件来运行。</p>
-<p>但是运行起来是有不同的，因为通过gradle或者maven运行，他们运行起来之后能够正确的处理一些runtime和provided的依赖，但是通过main方法运行的cp则是IDE中固定的。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2016/02/15/Spring-Boot应用从main方法运行/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/02/14/Spring-Boot-Use-Forward-Headers/" title="Spring Boot Use Forward Headers" itemprop="url">Spring Boot Use Forward Headers</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2016-02-14T11:38:04.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="Forward_Headers">Forward Headers</h2><p>应用有时候需要发送<code>302</code>重定向或者渲染指向自身的绝对链接。当应用运行在一个反向代理的后端，调用者想要获得的是指向代理的地址，而不是后面主机的物理地址。 通常这个这种情况，代理会通过添加HTTP头来告诉后端应用如何构建指向自己的链接。</p>
-<p>如果代理添加了通常约定的<code>X-Forwarded-For</code>，<code>X-Forwarded-Proto</code>， 设置<code>server.use-forward-headers</code>为<code>true</code>， 就能生成正确的链接。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2016/02/14/Spring-Boot-Use-Forward-Headers/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/02/14/Thymeleaf-spring-convert-format/" title="Thymeleaf spring convert/format" itemprop="url">Thymeleaf spring convert/format</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2016-02-14T09:35:39.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>Thymeleaf的双大括号语法，会调用Conversion Service来进行任何对象到String的转换。</p>
-<ul>
-<li>For variable expressions: ${&#123;…&#125;}</li>
-<li>For selection expressions: *{&#123;..&#125;}</li>
-</ul>
-<p>这对大多数的属性标签都是有用的，但是th:field是个例外。</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/02/14/Spring-Annotation-driven-Formatting/" title="Spring Annotation-driven Formatting" itemprop="url">Spring Annotation-driven Formatting</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2016-02-14T08:45:22.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>应用中可能设计很多不同格式的时间、数字的转换和显示。可以通过基于Annotation-driven Formatting来实现。 使用@NumberFormat来格式化java.lang.Number字段，使用@DateTimeFormat来格式化java.util.Date, java.util.Calendar, java.util.Long, 或者Joda Time字段。</p>
-<h2 id="AnnotationFormatterFactory">AnnotationFormatterFactory</h2><p>为了使用注解格式化，需要注册<code>AnnotationFormatterFactory</code>的实例，下面是个例子</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2016/02/14/Spring-Annotation-driven-Formatting/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/02/14/PropertySource-Environment/" title="PropertySource &amp; Environment" itemprop="url">PropertySource &amp; Environment</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2016-02-14T08:21:58.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>在Spring 3.1之前，注册一个配置文件的唯一方法就是</p>
-<figure class="highlight vhdl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="keyword">context</span>:<span class="keyword">property</span>-placeholder location=<span class="string">"some.properties"</span>/&gt;</span><br></pre></td></tr></table></figure>
-<p>Spring 3.1引入了<code>PropertySource</code>和<code>Environment</code>接口，可以通过@PropertySource注解来注册</p>
-<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">@Configuration</span></span><br><span class="line"><span class="variable">@PropertySource</span>(<span class="string">"classpath:some.properties"</span>)</span><br><span class="line">public class ApplicationConfiguration</span><br></pre></td></tr></table></figure>
-<p>并且从Spring 3.1之后，<code>&lt;context:property-placeholder&gt;</code>实际底层注册的是<code>PropertySourcesPlaceholderConfigurer</code>对象。 这个对象具有更好的扩展性并且和<code>Environment</code>，<code>PropertySource</code>接口交互。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2016/02/14/PropertySource-Environment/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
   </nav>
 
 </div>
@@ -450,43 +448,43 @@
 		
 			<li><a href="/tags/Android/" title="Android">Android<sup>12</sup></a></li>
 		
-			<li><a href="/tags/经验错误/" title="经验错误">经验错误<sup>7</sup></a></li>
+			<li><a href="/tags/经验错误/" title="经验错误">经验错误<sup>9</sup></a></li>
 		
 			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>7</sup></a></li>
 		
-			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>5</sup></a></li>
+			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>3</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
 		
-			<li><a href="/tags/API/" title="API">API<sup>2</sup></a></li>
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
+			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
 			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>2</sup></a></li>
-		
-			<li><a href="/tags/JPA/" title="JPA">JPA<sup>2</sup></a></li>
-		
 			<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
 		
-			<li><a href="/tags/gradle/" title="gradle">gradle<sup>1</sup></a></li>
+			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>2</sup></a></li>
+		
+			<li><a href="/tags/REST/" title="REST">REST<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>1</sup></a></li>
 		
 			<li><a href="/tags/摘录/" title="摘录">摘录<sup>1</sup></a></li>
 		
-			<li><a href="/tags/性能测试/" title="性能测试">性能测试<sup>1</sup></a></li>
-		
-			<li><a href="/tags/Thymeleaf/" title="Thymeleaf">Thymeleaf<sup>1</sup></a></li>
-		
-			<li><a href="/tags/OAuth2/" title="OAuth2">OAuth2<sup>1</sup></a></li>
+			<li><a href="/tags/git/" title="git">git<sup>1</sup></a></li>
 		
 		</ul>
 </div>

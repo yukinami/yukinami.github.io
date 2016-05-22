@@ -1,0 +1,492 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Hibernate one-to-one 懒加载的问题 | Jyong&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Jyong">
+    
+    <meta name="description" content="问题Hibernate在使用OneToOne的反向关联或者使用主键关联（PrimaryKeyJoinColumn）时，会出来懒加载不起的作用的情况。究其原因，Hibernate的能够进行懒加载的前提是返回的关联对象是个代理对象。如果Hibernate不能确定关联的对象是否为空，那么他们不能直接返回代理对象，因为代理对象本身就是不为空的，它不得不去检查关联对象是否存在。但是用SELECT语句去检查存在性，还不如索性直接把查询结果返回，这也就导致了懒加载的失效。">
+    
+    
+    
+    
+    <link rel="alternative" href="/atom.xml" title="Jyong&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/">
+    <link rel="apple-touch-icon-precomposed" href="/img/">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Jyong&#39;s Blog" title="Jyong&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Jyong&#39;s Blog">Jyong&#39;s Blog</a></h1>
+				<h2 class="blog-motto">人生の目的の一つは楽しむことです</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yukinami.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/05/21/Hibernate-one-to-one-懒加载的问题/" title="Hibernate one-to-one 懒加载的问题" itemprop="url">Hibernate one-to-one 懒加载的问题</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-05-21T06:24:29.000Z" itemprop="datePublished"> 发表于 May 21 2016</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题"><span class="toc-number">1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决"><span class="toc-number">2.</span> <span class="toc-text">解决</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#强制存在"><span class="toc-number">3.</span> <span class="toc-text">强制存在</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用OneToMany来替代OneToOne"><span class="toc-number">4.</span> <span class="toc-text">使用OneToMany来替代OneToOne</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用字节码织入"><span class="toc-number">5.</span> <span class="toc-text">使用字节码织入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#启用Spring’s_LTW"><span class="toc-number">5.1.</span> <span class="toc-text">启用Spring’s LTW</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#给EntityManagerFactory设置LoadTimeWeaver"><span class="toc-number">5.2.</span> <span class="toc-text">给EntityManagerFactory设置LoadTimeWeaver</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h2 id="问题">问题</h2><p>Hibernate在使用OneToOne的反向关联或者使用主键关联（PrimaryKeyJoinColumn）时，会出来懒加载不起的作用的情况。究其原因，Hibernate的能够进行懒加载的前提是返回的关联对象是个代理对象。如果Hibernate不能确定关联的对象是否为空，那么他们不能直接返回代理对象，因为代理对象本身就是不为空的，它不得不去检查关联对象是否存在。但是用SELECT语句去检查存在性，还不如索性直接把查询结果返回，这也就导致了懒加载的失效。</p>
+<a id="more"></a>
+<p>上面的两种情况都是无法确定关联对象是否存在的</p>
+<ul>
+<li>反向关联  由于关联的外键并不存在于当前表，而是在关联表，必须把当前记录的主键作为条件去关联表的外键中去匹配才能确定关联对象是否存在</li>
+<li>主键关联  由于关联的对象表的主键是使用的当前表的主键，单单查看当前表也无法确定关联对象的存在性</li>
+</ul>
+<p>所以也就导致这两种情况下的关联属性的懒加载是无法生效的。</p>
+<h2 id="解决">解决</h2><h2 id="强制存在">强制存在</h2><p>如果在映射文件中就明确定义出来关联对象不可能为空，那么Hibernate就没有必要去检查它的存在性，直接返回代理对象即可。 当前前提是业务的角度来说关联对象确实不可能为空。</p>
+<h2 id="使用OneToMany来替代OneToOne">使用OneToMany来替代OneToOne</h2><p>使用假的OneToMany来替代OneToOne，实际使用的时候始终取集合的第一个元素。因为Many端永远不会返回空，最多返回空集合。但是这个方式会对JPQL/HQL产生一定的影响</p>
+<h2 id="使用字节码织入">使用字节码织入</h2><p>不使用代理对象，而是使用字节码织入，最终调用关联对象的任何方法时才会触发懒加载。对于字节码的织入有编译时织入和运行时织入两种方式。编译时织入可以通过Hibernate提供的ant工具来实现。运行时织入则依赖的JavaEE环境或者使用Spring的运行时织入技术。</p>
+<p>无论哪种情况，最终都需要使用@LazyToOne(LazyToOneOption.NO_PROXY) 注解来显示的告诉框架不适用代理对象，以及把Hibernate的<code>hibernate.ejb.use_class_enhancer</code>参数设置为true。</p>
+<h3 id="启用Spring’s_LTW">启用Spring’s LTW</h3><p>Spring的LTW的核心组件是<code>LoadTimeWeaver</code>接口，<code>LoadTimeWeaver</code>的职责是负责在运行时添加一个和多个<code>java.lang.instrument.ClassFileTransformers</code>到<code>ClassLoader</code>中。</p>
+<p>要启用Spring的LTW支持，首先需要配置<code>LoadTimeWeaver</code></p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">@Configuration</span></span><br><span class="line"><span class="variable">@EnableLoadTimeWeaving</span></span><br><span class="line">public class AppConfig &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">`</span><br></pre></td></tr></table></figure>
+<p>上述的配置会定义并注册一系列的LTW相关的Bean。默认的<code>LoadTimeWeaver</code>的实现类<code>DefaultContextLoadTimeWeaver</code>，它是一个包装类，他会装饰自动检测到的<code>LoadTimeWeaver</code>的实现类。</p>
+<ul>
+<li>对于WebLogic, WebSphere, Resin, GlassFish, JBoss这些服务器的最近的一些版本提供的类加载器是支持本地织入的，所以只需要直接激活LTW即可。</li>
+<li><p>对于Tomcat6，默认的类加载器不支持<code>class transformation</code>，需要使用Spring提供的类加载器<code>TomcatInstrumentableClassLoader</code></p>
+  <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">Context</span> <span class="attribute">path</span>=<span class="value">"/myWebApp"</span> <span class="attribute">docBase</span>=<span class="value">"/my/webApp/location"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">Loader</span></span><br><span class="line">    <span class="attribute">loaderClass</span>=<span class="value">"org.springframework.instrument.classloading.tomcat.TomcatInstrumentableClassLoader"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">Context</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>对于普通的Java应用，JDK agent是唯一的解决办法。Spring提供了<code>InstrumentationLoadTimeWeaver</code>，但是需要Spring特定的VM agent。</p>
+  <figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-javaagent:/path/<span class="keyword">to</span>/org.springframework.instrument-&#123;<span class="property">version</span>&#125;.jar</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="给EntityManagerFactory设置LoadTimeWeaver">给EntityManagerFactory设置LoadTimeWeaver</h3><p>Spring 4.3之前可能需要手动的设置LoadTimeWeaver，<a href="https://jira.spring.io/browse/SPR-10856" target="_blank" rel="external">这里</a>是相关的问题。手动设置的方法是调用<code>LocalContainerEntityManagerFactoryBean#setLoadTimeWeaver</code>方法。对于Spring Boot，可以用下面的方式来设置</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">@Bean</span><br><span class="line">    @<span class="function">ConditionalOnMissingBean</span><br><span class="line">    <span class="keyword">public</span> EntityManagerFactoryBuilder <span class="title">entityManagerFactoryBuilder</span><span class="params">(</span><br><span class="line">            JpaVendorAdapter jpaVendorAdapter)</span> </span>&#123;</span><br><span class="line">        EntityManagerFactoryBuilder builder = <span class="keyword">new</span> EntityManagerFactoryBuilder(</span><br><span class="line">                jpaVendorAdapter, <span class="keyword">this</span>.jpaProperties.getProperties(),</span><br><span class="line">                <span class="keyword">this</span>.persistenceUnitManager);</span><br><span class="line">        builder.setCallback(getVendorCallback());</span><br><span class="line">        <span class="keyword">return</span> builder;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> EntityManagerFactoryBuilder.<span class="function">EntityManagerFactoryBeanCallback <span class="title">getVendorCallback</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> factory -&gt; factory.setLoadTimeWeaver(loadTimeWeaver);</span><br><span class="line">    &#125;</span><br><span class="line">```    </span><br><span class="line"></span><br><span class="line"><span class="preprocessor">### 使用bytecode instrumentation后对Jackson带来的影响</span></span><br><span class="line"></span><br><span class="line">使用织入后，实体对象会包含额外的FieldHandler属性，Jackson进行序列化时会出错，需要忽略掉这行属性。</span><br></pre></td></tr></table></figure>
+<p>@JsonIgnoreType<br>private class MixInForFieldInterceptor {<br>}</p>
+<p>objectMapper.addMixIn(FieldHandler.class, MixInForFieldInterceptor.class);<br>```   </p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Hibernate/">Hibernate</a>
+  </div>
+
+</div>
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yukinami.github.io/2016/05/21/Hibernate-one-to-one-懒加载的问题/" data-title="Hibernate one-to-one 懒加载的问题 | Jyong&#39;s Blog" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/05/21/Jackson转换TimeStamp时空字串的问题/" title="Jackson转换TimeStamp时空字串的问题">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Jackson转换TimeStamp时空字串的问题</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/04/21/Hibernate的Fetch问题/"  title="Hibernate的Fetch问题">
+ <strong>下一篇：</strong><br/> 
+ <span>Hibernate的Fetch问题
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题"><span class="toc-number">1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决"><span class="toc-number">2.</span> <span class="toc-text">解决</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#强制存在"><span class="toc-number">3.</span> <span class="toc-text">强制存在</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用OneToMany来替代OneToOne"><span class="toc-number">4.</span> <span class="toc-text">使用OneToMany来替代OneToOne</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用字节码织入"><span class="toc-number">5.</span> <span class="toc-text">使用字节码织入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#启用Spring’s_LTW"><span class="toc-number">5.1.</span> <span class="toc-text">启用Spring’s LTW</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#给EntityManagerFactory设置LoadTimeWeaver"><span class="toc-number">5.2.</span> <span class="toc-text">给EntityManagerFactory设置LoadTimeWeaver</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/Android/" title="Android">Android<sup>12</sup></a></li>
+		
+			<li><a href="/tags/经验错误/" title="经验错误">经验错误<sup>9</sup></a></li>
+		
+			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>7</sup></a></li>
+		
+			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
+		
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+		
+			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
+		
+			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
+			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
+		
+			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>2</sup></a></li>
+		
+			<li><a href="/tags/REST/" title="REST">REST<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>1</sup></a></li>
+		
+			<li><a href="/tags/摘录/" title="摘录">摘录<sup>1</sup></a></li>
+		
+			<li><a href="/tags/git/" title="git">git<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            <a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+          </li>
+        
+          <li>
+            <a href="http://hexo.io" target="_blank" title="Hexo">Hexo</a>
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I&#39;m Jyong, a web developer. <br/>
+			And hope you enjoy this blog.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2100171710" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yukinami" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="https://plus.google.com/100215768199802928787?rel=author" target="_blank" class="icon-google_plus" title="Google+"></a>
+		
+		
+		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		
+		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"yukinami"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+  </body>
+</html>
+
+
+<a href="https://github.com/yukinami"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?ec2d95a543c1245fcad501b5484af450";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>

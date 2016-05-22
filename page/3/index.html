@@ -70,6 +70,343 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2016/02/14/Spring-Security-CSRF/" title="Spring Security CSRF" itemprop="url">Spring Security CSRF</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-14T06:54:43.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>Spring Security可以保护应用免收Cross Site Request Forgery (CSRF)的攻击。</p>
+<h2 id="什么是CSRF">什么是CSRF</h2><p>假设你的银行网站提供如下的表单进行转账</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="request">POST <span class="string">/transfer</span> HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span>: <span class="string">bank.example.com</span></span><br><span class="line"><span class="attribute">Cookie</span>: <span class="string">JSESSIONID=randomid; Domain=bank.example.com; Secure; HttpOnly</span></span><br><span class="line"><span class="attribute">Content-Type</span>: <span class="string">application/x-www-form-urlencoded</span></span><br><span class="line"></span><br><span class="line"><span class="cpp">amount=<span class="number">100.00</span>&amp;routingNumber=<span class="number">1234</span>&amp;account=<span class="number">9876</span></span></span><br></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/02/14/Spring-Security-CSRF/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/02/14/Spring-Security-RememberMe/" title="Spring Security RememberMe" itemprop="url">Spring Security RememberMe</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-14T06:25:55.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="Remember-Me接口和实现">Remember-Me接口和实现</h2><figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Authentication autoLogin<span class="list">(<span class="keyword">HttpServletRequest</span> request, HttpServletResponse response)</span><span class="comment">;</span></span><br><span class="line"></span><br><span class="line">void loginFail<span class="list">(<span class="keyword">HttpServletRequest</span> request, HttpServletResponse response)</span><span class="comment">;</span></span><br><span class="line"></span><br><span class="line">void loginSuccess<span class="list">(<span class="keyword">HttpServletRequest</span> request, HttpServletResponse response,</span><br><span class="line">	Authentication successfulAuthentication)</span><span class="comment">;</span></span><br></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/02/14/Spring-Security-RememberMe/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/02/14/Spring-Security的WebSecurityConfiguration配置及初始化流程/" title="Spring Security的WebSecurityConfiguration配置及初始化流程" itemprop="url">Spring Security的WebSecurityConfiguration配置及初始化流程</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-14T03:26:31.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="基于源码的流程分析">基于源码的流程分析</h2><p>下面的源码基于<code>Spring Security 4.0.3</code>版本。</p>
+<h3 id="入口_WebSecurityConfiguration">入口 WebSecurityConfiguration</h3><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Autowired</span>(required = <span class="literal">false</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="typename">void</span> setFilterChainProxySecurityConfigurer(</span><br><span class="line">		ObjectPostProcessor&lt;Object&gt; objectPostProcessor,</span><br><span class="line">		<span class="annotation">@Value</span>(<span class="string">"#&#123;@autowiredWebSecurityConfigurersIgnoreParents.getWebSecurityConfigurers()&#125;"</span>) List&lt;SecurityConfigurer&lt;Filter, WebSecurity&gt;&gt; webSecurityConfigurers)</span><br><span class="line">		<span class="keyword">throws</span> Exception &#123;</span><br><span class="line">	webSecurity = objectPostProcessor</span><br><span class="line">			.postProcess(<span class="keyword">new</span> WebSecurity(objectPostProcessor));</span><br><span class="line">	<span class="keyword">if</span> (debugEnabled != <span class="literal">null</span>) &#123;</span><br><span class="line">		webSecurity.debug(debugEnabled);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	Collections.sort(webSecurityConfigurers, AnnotationAwareOrderComparator.INSTANCE);</span><br><span class="line"></span><br><span class="line">	Integer previousOrder = <span class="literal">null</span>;</span><br><span class="line">	<span class="keyword">for</span> (SecurityConfigurer&lt;Filter, WebSecurity&gt; <span class="string">config :</span> webSecurityConfigurers) &#123;</span><br><span class="line">		Integer order = AnnotationAwareOrderComparator.lookupOrder(config);</span><br><span class="line">		<span class="keyword">if</span> (previousOrder != <span class="literal">null</span> &amp;&amp; previousOrder.equals(order)) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(</span><br><span class="line">					<span class="string">"@Order on WebSecurityConfigurers must be unique. Order of "</span></span><br><span class="line">							+ order + <span class="string">" was already used, so it cannot be used on "</span></span><br><span class="line">							+ config + <span class="string">" too."</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		previousOrder = order;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> (SecurityConfigurer&lt;Filter, WebSecurity&gt; <span class="string">webSecurityConfigurer :</span> webSecurityConfigurers) &#123;</span><br><span class="line">		webSecurity.apply(webSecurityConfigurer);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">this</span>.webSecurityConfigurers = webSecurityConfigurers;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/02/14/Spring-Security的WebSecurityConfiguration配置及初始化流程/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/02/14/The-last-packet-successfully-received-from-the-server-was-xxx-ago/" title="The last packet successfully received from the server was xxx ago" itemprop="url">The last packet successfully received from the server was xxx ago</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-14T02:32:05.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="问题">问题</h2><p>系统长时间运行，但是没有人使用后，再次使用时会无法连接上数据库，会报类似这样的错误</p>
+<blockquote>
+<p>org.hibernate.util.JDBCExceptionReporter: The last packet successfully received from the server was 56697 seconds ago. The last packet sent successfully to the server was 56697 seconds ago, which  is longer than the server configured value of ‘wait_timeout’. You should consider either expiring and/or testing connection validity before use in your application, increasing the server configured values for client timeouts, or using the Connector/J connection property ‘autoReconnect=true’ to avoid this problem.</p>
+</blockquote>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/02/14/The-last-packet-successfully-received-from-the-server-was-xxx-ago/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/02/14/Mysql联合唯一索引和空值/" title="Mysql联合唯一索引和空值" itemprop="url">Mysql联合唯一索引和空值</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-14T02:05:39.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="问题">问题</h2><p>当Mysql中建立的联合索引， 只要索引中的某一列的值为空时(NULL)，即便其他的字段完全相同，也不会引起唯一索引冲突。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/02/14/Mysql联合唯一索引和空值/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/01/18/Spring-Boot-DevTools/" title="Spring Boot DevTools" itemprop="url">Spring Boot DevTools</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-01-18T08:26:17.000Z" itemprop="datePublished"> 发表于 Jan 18 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>Java相对于其他的一些开发语言来说，修改代码后经常需要重新编译代码，重启服务器等等，这些动作非常的耗时间，降低了不少生产效率，所以热部署一直是Java的开发人员所追求的。从JRebel到Spring Loader，它们都可以达到JVM的Hot Swapping的目的。但是针对类似Spring这样需要在服务器启动时初始化一些容器配置的项目，还是不得不把大量的时间花在重启服务器上。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/01/18/Spring-Boot-DevTools/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/12/02/Work-Flow/" title="Work Flow" itemprop="url">Work Flow</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-02T14:24:50.000Z" itemprop="datePublished"> 发表于 Dec 2 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="Work_Flow">Work Flow</h1><h2 id="Git_Flow">Git Flow</h2><p><img src="https://about.gitlab.com/images/git_flow/gitdashflow.png" alt=""></p>
+<h3 id="主要分支">主要分支</h3><p>核心库应该有两个无限生命周期的分支：</p>
+<ul>
+<li>master</li>
+<li>develop</li>
+</ul>
+<p><img src="http://nvie.com/img/main-branches@2x.png" alt="main-branches"></p>
+<p>我们把<code>origin/master</code>分支作为production主分支，它的HEAD版本的代码总是处于随时可以release的状态。  </p>
+<p>我们把<code>origin/develop</code>分支作为develop主分支，它的HEAD版本的代码总是处于最新的交付的开发状态。有时候也称之为<strong>集成分支</strong>。这也分支也是构建每日的晚间快照版本的来源。</p>
+<p>当<code>develop</code>分支的源码达到一个稳定的状态并且准备release的时候，所有的修改应该合并回<code>master</code>分支，然后做一个release序号的标记(tag)。</p>
+<p>所以，当每次修改合并回<code>master</code>的时候，就是一个新的production release版本。所以理论上，我们可以使用一个Git钩子脚本来进行自动构建然后发布到我们的生产环境。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/12/02/Work-Flow/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/26/性能测试指南/" title="性能测试指南" itemprop="url">性能测试指南</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-26T08:53:51.000Z" itemprop="datePublished"> 发表于 Nov 26 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="性能测试指南">性能测试指南</h1><h2 id="概念">概念</h2><p>性能测试是通过自动化的测试工具模拟多种正常、峰值以及异常负载条件来对系统的各项性能指标进行测试。负载测试和压力测试都属于性能测试，两者可以结合进行。</p>
+<ul>
+<li>负载测试是模拟实际软件系统所承受的负载条件的系统负荷，通过不断加载（如逐渐增加模拟用户的数量）或其它加载方式来观察不同负载下系统的响应时间和数据吞吐量、系统占用的资源（如CPU、内存）等，以检验系统的行为和特性，以发现系统可能存在的性能瓶颈、内存泄漏、不能实时同步等问题。负载测试更多地体现了一种方法或一种技术。</li>
+<li>压力测试是在强负载（大数据量、大量并发用户等）下的测试，查看应用系统在峰值使用情况下操作行为，从而有效地发现系统的某项功能隐患、系统是否具有良好的容错能力和可恢复能力。压力测试分为高负载下的长时间（如24小时以上）的稳定性压力测试和极限负载情况下导致系统崩溃的破坏性压力测试。</li>
+</ul>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/11/26/性能测试指南/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/26/Docker-CI/" title="Docker CI" itemprop="url">Docker CI</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-26T08:50:42.000Z" itemprop="datePublished"> 发表于 Nov 26 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="Docker_CI">Docker CI</h1><h2 id="构建私有_Docker_Registry">构建私有 Docker Registry</h2><h3 id="启动_registry">启动 registry</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p <span class="number">5000</span>:<span class="number">5000</span> --name registry registry:<span class="number">2</span></span><br></pre></td></tr></table></figure>
+<h3 id="Insecure_Registry">Insecure Registry</h3><p>当尝试从配有配置TLS的Registry会报如下错</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FATA[<span class="number">0000</span>] Error response <span class="built_in">from</span> daemon: v1 ping attempt failed <span class="operator">with</span> error: Get <span class="keyword">https</span>://<span class="number">121.42</span><span class="number">.160</span><span class="number">.161</span>:<span class="number">5000</span>/v1/<span class="title">_ping</span>: tls: oversized record received <span class="operator">with</span> <span class="built_in">length</span> <span class="number">20527.</span> If this <span class="keyword">private</span> registry supports only HTTP <span class="operator">or</span> HTTPS <span class="operator">with</span> <span class="operator">an</span> unknown CA certificate, please <span class="built_in">add</span> `<span class="comment">--insecure-registry 121.42.160.161:5000` to the daemon's arguments. In the case of HTTPS, if you have access to the registry's CA certificate, no need for the flag; simply place the CA certificate at /etc/docker/certs.d/121.42.160.161:5000/ca.crt</span></span><br></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/11/26/Docker-CI/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/09/29/Property-managedObjectStore-not-found-on-object-of-type-RKObjectManager/" title="Property &#39;managedObjectStore&#39; not found on object of type&#39;RKObjectManager *&#39;" itemprop="url">Property &#39;managedObjectStore&#39; not found on object of type&#39;RKObjectManager *&#39;</a>
   </h1>
   <p class="article-author">By
@@ -102,333 +439,9 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/08/03/基于Java的Web敏捷开发/" title="基于Java的Web敏捷开发" itemprop="url">基于Java的Web敏捷开发</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2015-08-03T13:48:49.000Z" itemprop="datePublished"> 发表于 Aug 3 2015</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>敏捷的Web框架，应该至少做到开箱即用，开发时不依赖任何外部数据库和外部的服务器是最理想的。</p>
-<h2 id="Web框架">Web框架</h2><p>Spring Boot基于Spring平台，涉及到了构建一个Java Web项目的大部分方面，是一个非常好的选择。只要简单的声明依赖，便可支持基于Spring各种特性。Web层基于Spring MVC，持久层支持JPA，Spring Data JPA，View层支持Freemarker等模板语言，支持Message、Application properties，支持日志，支持多个环境的Profile，安全方面支持Spring Security等等。Spring Boot把Spring的各个项目无缝的结合在一起，可以统一的使用Application properties对它们进行配置。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/08/03/基于Java的Web敏捷开发/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/29/gradle-tomcat-plugin-404/" title="gradle-tomcat-plugin 404" itemprop="url">gradle-tomcat-plugin 404</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-29T07:30:50.000Z" itemprop="datePublished"> 发表于 Jul 29 2015</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="问题">问题</h1><p>执行gradle-tomcat-plugin的tomcatRun任务时，服务器正常启动，没有任何异常，输出的log也没有异常，但是访问时返回404页面</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/07/29/gradle-tomcat-plugin-404/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/14/JVM热部署/" title="JVM热部署" itemprop="url">JVM热部署</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-14T08:30:56.000Z" itemprop="datePublished"> 发表于 Jul 14 2015</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="JVM_Hot_Swapping">JVM Hot Swapping</h1><p>从Java1.4启，JVM引入了HotSwap，能够在Debug的时候更新类的字节码，所有新式的IDE（包括Eclipse、IDEA和NetBeans）都支持这一技术。但是它只能用来更新方法体，这一定程度上限制了它的实用性。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/07/14/JVM热部署/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/07/使用springfox生成springmvc项目的swagger的文档/" title="使用springfox生成springmvc项目的swagger的文档" itemprop="url">使用springfox生成springmvc项目的swagger的文档</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-07T05:29:20.000Z" itemprop="datePublished"> 发表于 Jul 7 2015</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="介绍">介绍</h1><h2 id="Swagger">Swagger</h2><p><code>Swagger</code>是用来描述和文档化RESTful API的一个项目。<a href="https://github.com/swagger-api/swagger-spec/blob/master/versions/2.0.md">Swagger Spec</a>是一套规范，定义了该如何去描述一个<code>RESTful API</code>。类似的项目还有<code>RAML</code>、<code>API Blueprint</code>。 根据<code>Swagger Spec</code>来描述RESTful API的文件称之为<code>Swagger specification file</code>，它使用JSON来表述，也支持作为JSON支持的YAML。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/07/07/使用springfox生成springmvc项目的swagger的文档/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/01/关于AsyncTaskLoader/" title="关于AsyncTaskLoader" itemprop="url">关于AsyncTaskLoader</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-01T03:14:47.000Z" itemprop="datePublished"> 发表于 Jul 1 2015</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="Concurrency基础">Concurrency基础</h1><h2 id="Executor">Executor</h2><p><code>Executor</code>是一个用来执行<code>Runable</code>实例的对象，接口定义如下</p>
-<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">/<span class="keyword">*</span><span class="keyword">*</span></span><br><span class="line"> <span class="keyword">*</span> An object that executes submitted &#123;<span class="comment">@link Runnable&#125; tasks. This</span></span><br><span class="line"> <span class="keyword">*</span> interface provides a way of decoupling task submission from the</span><br><span class="line"> <span class="keyword">*</span> mechanics of how each task will be run, including details of thread</span><br><span class="line"> <span class="keyword">*</span> use, scheduling, etc.  An &#123;<span class="comment">@code Executor&#125; is normally used</span></span><br><span class="line"> <span class="keyword">*</span> instead of explicitly creating threads.</span><br><span class="line"> <span class="keyword">*</span>/</span><br><span class="line">public interface Executor &#123;</span><br><span class="line"></span><br><span class="line">    /<span class="keyword">*</span><span class="keyword">*</span></span><br><span class="line">     <span class="keyword">*</span> Executes the given command at some time in the future.  The command</span><br><span class="line">     <span class="keyword">*</span> may execute in a new thread, in a pooled thread, or in the calling</span><br><span class="line">     <span class="keyword">*</span> thread, at the discretion of the &#123;<span class="comment">@code Executor&#125; implementation.</span></span><br><span class="line">     <span class="keyword">*</span></span><br><span class="line">     <span class="keyword">*</span> <span class="comment">@param command the runnable task</span></span><br><span class="line">     <span class="keyword">*</span> <span class="comment">@throws RejectedExecutionException if this task cannot be</span></span><br><span class="line">     <span class="keyword">*</span> accepted for execution</span><br><span class="line">     <span class="keyword">*</span> <span class="comment">@throws NullPointerException if command is null</span></span><br><span class="line">     <span class="keyword">*</span>/</span><br><span class="line">    void execute(Runnable command);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/07/01/关于AsyncTaskLoader/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/01/FLAG-ACTIVITY-CLEAR-TOP-launches-new-instance/" title="FLAG_ACTIVITY_CLEAR_TOP launches new instance" itemprop="url">FLAG_ACTIVITY_CLEAR_TOP launches new instance</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-01T01:40:53.000Z" itemprop="datePublished"> 发表于 Jul 1 2015</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="错误">错误</h1><p>在使用<code>NavUtils.navigateUpFromSameTask(this)</code>导航到父Activity时，页面切换的动画是从右往左滑动，这样的动画看起来不像是返回动画，而是打开了一个新的页面的动画。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/07/01/FLAG-ACTIVITY-CLEAR-TOP-launches-new-instance/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/21/Junit-Rules/" title="Junit Rules" itemprop="url">Junit Rules</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-21T02:41:28.000Z" itemprop="datePublished"> 发表于 Apr 21 2015</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="Interceptors">Interceptors</h1><p>Junit4.7引入了一个新功能叫做”Interceptors”，旨在以一个更为清晰简单的API，带回JUnit<code>meta-testing</code>的能力。但是之后又被重新命名为”Rule”。</p>
-<h2 id="Meta-testing">Meta-testing</h2><p>Junit擅长表达尽量少的测试逻辑。在Junit3中，你能够以不同的方式控制测试运行过程。Junit4简化的代价就是失去了这个“meta-testing”。这不影响简单测试，但是限制了更为强大的测试。现在Junit4重新把meta-testing带了回来。</p>
-<p>比如说，你想输出一个log当每个测试失败的时候。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/04/21/Junit-Rules/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/20/Same-Origin-Policy/" title="同源策略" itemprop="url">同源策略</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-20T02:19:08.000Z" itemprop="datePublished"> 发表于 Apr 20 2015</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="同源策略">同源策略</h1><p><code>Same-Origin Policy</code>根据<code>origin</code>限制浏览器通过脚本或者文档执行特定的动作。<code>origin</code>指的是URL的path之前的所有的部分(比如说，<a href="http://www.example.com">http://www.example.com</a> )。对于一些动作，浏览器会比较origins，如果它们不匹配，则不运行继续执行。比如说：</p>
-<ul>
-<li>一个父document不能访问来自不同origin的&lt;iframe&gt;的内容。这可以阻止恶意网站打开你们的银行网站，偷取你的安全秘钥</li>
-<li>一个document可以通过表单post发送信息，但是跨域AJAX请求通常是不允许的</li>
-</ul>
-<p>针对同源策略，有两个方案可以解决这个问题。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/04/20/Same-Origin-Policy/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/03/16/Fatal-signal-11/" title="Fatal signal 11" itemprop="url">Fatal signal 11</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2015-03-16T05:23:02.000Z" itemprop="datePublished"> 发表于 Mar 16 2015</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="错误">错误</h1><p>多个<code>AsyncTask</code>、<code>Loader</code>同时执行的时候，偶尔会闪退。 错误信息大致如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@@@ ABORTING: INVALID HEAP ADDRESS IN dlfree</span><br><span class="line">Fatal signal <span class="number">11</span> (SIGSEGV) at <span class="number">0xdeadbaad</span> (code=<span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/03/16/Fatal-signal-11/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
-    <a class="extend prev" rel="prev" href="/page/2/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">Next<span></span></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/4/">Next<span></span></a>
   </nav>
 
 </div>
@@ -447,43 +460,43 @@
 		
 			<li><a href="/tags/Android/" title="Android">Android<sup>12</sup></a></li>
 		
-			<li><a href="/tags/经验错误/" title="经验错误">经验错误<sup>7</sup></a></li>
+			<li><a href="/tags/经验错误/" title="经验错误">经验错误<sup>9</sup></a></li>
 		
 			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>7</sup></a></li>
 		
-			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>5</sup></a></li>
+			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>3</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
 		
-			<li><a href="/tags/API/" title="API">API<sup>2</sup></a></li>
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
+			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
 			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>2</sup></a></li>
-		
-			<li><a href="/tags/JPA/" title="JPA">JPA<sup>2</sup></a></li>
-		
 			<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
 		
-			<li><a href="/tags/gradle/" title="gradle">gradle<sup>1</sup></a></li>
+			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>2</sup></a></li>
+		
+			<li><a href="/tags/REST/" title="REST">REST<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>1</sup></a></li>
 		
 			<li><a href="/tags/摘录/" title="摘录">摘录<sup>1</sup></a></li>
 		
-			<li><a href="/tags/性能测试/" title="性能测试">性能测试<sup>1</sup></a></li>
-		
-			<li><a href="/tags/Thymeleaf/" title="Thymeleaf">Thymeleaf<sup>1</sup></a></li>
-		
-			<li><a href="/tags/OAuth2/" title="OAuth2">OAuth2<sup>1</sup></a></li>
+			<li><a href="/tags/git/" title="git">git<sup>1</sup></a></li>
 		
 		</ul>
 </div>

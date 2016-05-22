@@ -70,6 +70,331 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/02/17/ScrollView/" title="ScrollView" itemprop="url">ScrollView</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-02-17T06:44:05.000Z" itemprop="datePublished"> 发表于 Feb 17 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>ScrollView 用来包裹一个视图，通过滚动页面使它能够超出物理的显示。ScrollView 本身是一个 FrameLayout, 以为着它只能包含一个子视图。子视图通常使用垂直方向的LinearLayout。</p>
+<p>ScrollView 绝不应该和ListView一起使用，应为ListView会自己处理垂直方向的滚动。TextView也会处理自己的滚动，所以通常也不需要ScrollView，但是一起使用可以达到TextView在一个大容器中的效果</p>
+<p>默认情况下，子视图的的layout_height的wrap_content，对子视图设定任何的高度都是无效的。如果fillViewport设置为true，那么子视图会填满整个ScollView。这在一些页面的按钮需要在最下方显示的时候是很有用的。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/02/04/spring-android-auth-ClientHttpRequest/" title="spring-android-auth ClientHttpRequest" itemprop="url">spring-android-auth ClientHttpRequest</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-02-04T13:56:48.000Z" itemprop="datePublished"> 发表于 Feb 4 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="问题">问题</h1><p>使用spring-android-auth时，其使用的<code>RestTemplate</code>是依赖包spring-android-rest-template<code>中的，而是spring-web-mvc中的。该</code>RestTemplate`使用http request默认的逻辑如下</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">boolean</span> HTTP_COMPONENTS_AVAILABLE = ClassUtils.isPresent(<span class="string">"org.apache.http.client.HttpClient"</span>, ClientHttpRequestFactory.<span class="keyword">class</span>.getClassLoader());</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.GINGERBREAD) &#123;</span><br><span class="line">	<span class="keyword">this</span>.requestFactory = <span class="keyword">new</span> SimpleClientHttpRequestFactory();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	<span class="keyword">this</span>.requestFactory = <span class="keyword">new</span> HttpComponentsClientHttpRequestFactory();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/02/04/spring-android-auth-ClientHttpRequest/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/02/04/Error-duplicate-files-during-packaging-of-APK/" title="Error: duplicate files during packaging of APK" itemprop="url">Error: duplicate files during packaging of APK</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-02-04T13:37:35.000Z" itemprop="datePublished"> 发表于 Feb 4 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="错误">错误</h1><p>Android项目构建时报如下错</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">Error:</span> duplicate files during packaging of APK <span class="regexp">/Users/</span>snowblink<span class="regexp">/workspace/</span>NoodlesMobile<span class="regexp">/app-stu/</span>build<span class="regexp">/outputs/</span>apk/xxx-debug-unaligned.apk</span><br></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/02/04/Error-duplicate-files-during-packaging-of-APK/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/02/04/failed-to-complete-gradle-execution-Cause/" title="Failed to complete gradle execution Cause" itemprop="url">Failed to complete gradle execution Cause</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-02-04T12:32:08.000Z" itemprop="datePublished"> 发表于 Feb 4 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="错误">错误</h1><p>Android Studio 构建时报错 <code>failed to complete gradle execution Cause</code><br>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/02/04/failed-to-complete-gradle-execution-Cause/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/02/02/Guice-Account-Scope/" title="Guice Account Scope" itemprop="url">Guice Account Scope</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-02-02T14:43:52.000Z" itemprop="datePublished"> 发表于 Feb 2 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>Google Guice 支持自定义Scope，当然通常情况下我们不需要自己实现Scope。RoboGuice作为Android的IOC容器，实现了基于当前Context的ContextScope。我们可以根据自己需求自定义Scope，实现一些特殊的需求。GitHub的Android客户端定义了一个AccountScope，实现了基于当前账户的上下文对象的注入。<br>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/02/02/Guice-Account-Scope/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/02/02/gradle-plugin/" title="Gradle plugin" itemprop="url">Gradle plugin</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-02-02T05:23:15.000Z" itemprop="datePublished"> 发表于 Feb 2 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>Gradle plugin packages up reusable pieces of build logic, which can be used across many different projects and builds.</p>
+<h1 id="Packaging_a_plugin">Packaging a plugin</h1><h2 id="Build_script">Build script</h2><p>You can include the source for the plugin directly in the build script. This has the benefit that the plugin is automatically compiled and included in the classpath of the build script without you having to do anything. However, the plugin is not visible outside the build script, and so you cannot reuse the plugin outside the build script it is defined in.</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/02/02/gradle-plugin/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/02/02/Android-Authenticator/" title="Android Authenticator" itemprop="url">Android Authenticator</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-02-02T05:22:52.000Z" itemprop="datePublished"> 发表于 Feb 2 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>对用Android的Authenticator，官方的API Guides是似乎没有很好的介绍文档，Reference中也只是简单地介绍了一下。虽然<a href="https://udinic.wordpress.com/2013/04/24/write-your-own-android-authenticator/">sync-adapters</a>中对于Authenticator有提及，但是对于其用法也没有一个完整的认识，所以对其进行一定的学习并且记录了下来。</p>
+<h1 id="为什么需要Account_Manager">为什么需要Account Manager</h1><p>我们完全可以自己自己的账户管理机制，提交一个登录表单到服务器然后返回一个认证token。但是通常覆盖不到一些细节，如果用户在另外一客户端修改了密码怎么办；认证token的过期处理；单点登录的实现。这些东西实现起来还是挺麻烦的，但是如果Android的认证框架已经实现了这些功能，并且额外提供了用户数据同步等额外的功能，那还有理由不使用它吗？Stop Trying to Reinvent the Wheel.</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/02/02/Android-Authenticator/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/01/13/Spring-XD-Type-Conversion/" title="Spring XD Type Conversion" itemprop="url">Spring XD Type Conversion</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-01-13T14:12:06.000Z" itemprop="datePublished"> 发表于 Jan 13 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="Spring_Integration_的_Type_Conversion">Spring Integration 的 Type Conversion</h1><h2 id="Datatype_Channel">Datatype Channel</h2><p>Datatype Channel 可以指定Channel接收的数据的数据类型<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="keyword">int</span>:channel <span class="keyword">id</span>=<span class="string">"numberChannel"</span> datatype=<span class="string">"java.lang.Number"</span>/&gt;</span><br><span class="line">&lt;<span class="keyword">int</span>:channel <span class="keyword">id</span>=<span class="string">"stringOrNumberChannel"</span> datatype=<span class="string">"java.lang.String,java.lang.Number"</span>/&gt;</span><br></pre></td></tr></table></figure></p>
+<p>指定了<code>datatype</code>之后，如果Channel收到了类型不是指定的类型，会如下进行：</p>
+<ol>
+<li>查找是否定义了一个叫做”integrationConversionService”的Bean，该Bean是Spring’s <a href="http://docs.spring.io/spring/docs/current/spring-framework-reference/html/validation.html#core-convert-ConversionService-API">Conversion Service</a>的实例。如果没有，则会抛出异常。</li>
+<li>如果存在，则会尝试使用它将Message的Payload类型转换为Channel的<code>datatype</code></li>
+</ol>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/01/13/Spring-XD-Type-Conversion/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/01/06/用spring-social构建API的client端/" title="用spring social构建API的client端" itemprop="url">用spring social构建API的client端</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-01-06T13:26:02.000Z" itemprop="datePublished"> 发表于 Jan 6 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="介绍">介绍</h1><p>Spring Social可以用来连接Software-as-a-Service (SaaS) 服务商提供了REST API，Spring的项目本身已经提供了对Facebook, Twitter, Linkedin, Github等服务商的REST API的连接。<br>实际在开发app的过程中，通常是需要本地app连接到后台服务器的REST API的。客户端的开发本身可能还会涉及相对复杂的验证机制，比如<code>OAuth Dance</code>（客户端和服务器来回交互获取access token的过程），Spring Social为客户端的开发提供了一套框架，包括连接的建立，对API的强类型绑定，应用可以直接通过客户端访问需要的API。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/01/06/用spring-social构建API的client端/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/01/06/对于OAuth2-0的理解/" title="对于OAuth2.0授权方式的理解" itemprop="url">对于OAuth2.0授权方式的理解</a>
   </h1>
   <p class="article-author">By
@@ -106,223 +431,9 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2014/12/18/RESTful API Versioning/" title="RESTful API Versioning" itemprop="url">RESTful API Versioning</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2014-12-18T06:23:06.000Z" itemprop="datePublished"> 发表于 Dec 18 2014</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>关于RESTful API Versioning，有很多讨论 <a href="http://blog.steveklabnik.com/posts/2011-07-03-nobody-understands-rest-or-http#i_want_my_api_to_be_versioned">Nobody Understands REST or HTTP</a>, <a href="http://www.informit.com/articles/article.aspx?p=1566460">Versioning REST Services</a>, <a href="http://stackoverflow.com/questions/389169/best-practices-for-api-versioning">best-practices-for-api-versioning</a>, <a href="http://www.lexicalscope.com/blog/2012/03/12/how-are-rest-apis-versioned/">How are REST APIs versioned?</a>， 总结如下。</p>
-<h1 id="为什么需要Versioning">为什么需要Versioning</h1><p>尽管设计API的时候，我们尽可能设计完美的API，尽可能的避免修改API。但是随着业务需求的变更，API接口的变化几乎是无法避免的。</p>
-<p>当业务需求变更的时候，可以这样选择：</p>
-<ol>
-<li>保持接口的兼容性。这是一种方式，但是并非能切实做到的，为了兼容必定会损失一些新特性，或者牺牲良好的代码为代价。</li>
-<li>修改API接口的同时，修改客户端。除非自己维护少量的客户端，否则这几乎是不现实的。</li>
-<li>保留旧的接口，通过版本来实现API接口的变更。</li>
-</ol>
-<p>通常情况下，我们会选择第三种方式来实现API接口的变更。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2014/12/18/RESTful API Versioning/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2014/12/07/基于Grunt的前端项目的完整构建/" title="基于Grunt的前端项目的完整构建" itemprop="url">基于Grunt的前端项目的完整构建</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2014-12-07T06:25:54.000Z" itemprop="datePublished"> 发表于 Dec 7 2014</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>本文主要简述一个前端项目使用grunt来进行构建的过程。项目本身是基于<code>RequireJS</code>的，样式则使用了<code>Less</code>来书写。</p>
-<h1 id="项目结构">项目结构</h1><p>先来看一下项目整体的目录结构。</p>
-<p><img src="/img/CE761032-FAA5-4FFE-9FC7-F87BA7DFF423.jpeg" alt="项目结构"></p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2014/12/07/基于Grunt的前端项目的完整构建/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2014/11/11/基于Spring的多租户系统的简单实现/" title="基于Spring的多租户系统的简单实现" itemprop="url">基于Spring的多租户系统的简单实现</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2014-11-11T09:44:39.000Z" itemprop="datePublished"> 发表于 Nov 11 2014</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h3 id="前言">前言</h3><p>对于一个完整的将web 应用程序转换为 SaaS 应用程序的过程而言，需要满足以下7个条件：</p>
-<ol>
-<li>应用程序必须支持多租户</li>
-<li>应用程序必须具备某种程度的自助注册功能。</li>
-<li>必须具备订阅/记账机制。</li>
-<li>应用程序必须能够有效地扩展。</li>
-<li>必须能够监视、配置和管理应用程序和租户。</li>
-<li>必须有一种机制能够支持惟一的用户标识和身份验证。</li>
-<li>必须有一种机制能够支持对每个租户进行某种程度的自定义。</li>
-</ol>
-<p>本文主要讨论的是实现SaaS的核心，支持多租户。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2014/11/11/基于Spring的多租户系统的简单实现/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2014/11/05/为什么AMD/" title="为什么AMD" itemprop="url">为什么AMD</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2014-11-05T09:48:54.000Z" itemprop="datePublished"> 发表于 Nov 5 2014</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>关于JS的模块化，阮一峰的博客上有篇很好的文章，请参考，<a href="http://www.ruanyifeng.com/blog/2012/10/javascript_module.html">模块的写法</a>，<a href="http://www.ruanyifeng.com/blog/2012/10/asynchronous_module_definition.html">AMD规范</a>。</p>
-<p>本文翻译自RequireJS官方文档 <a href="http://requirejs.org/docs/whyamd.html">WHY AMD?</a>, 更为详细地阐述了为什么需要AMD。</p>
-<h3 id="模块化的目的">模块化的目的</h3><p>什么是JavaScript模块？它们的目的是什么？</p>
-<ul>
-<li>定义：如何将一段代码封装为一个有用的单元，并且怎么描述它的功能、怎样为这个模块导出一个值</li>
-<li>依赖参考：如何引用其他代码单元</li>
-</ul>
-<h3 id="当今的WEB">当今的WEB</h3><pre class="crayon-plain-tag">(function () {
-    var $ = this.jQuery;
-
-    this.myExample = function () {};
-}());</pre>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2014/11/05/为什么AMD/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2014/11/04/Spring-Framework-4-1-–-处理静态web资源/" title="Spring Framework 4.1  – 处理静态web资源" itemprop="url">Spring Framework 4.1  – 处理静态web资源</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2014-11-04T13:00:59.000Z" itemprop="datePublished"> 发表于 Nov 4 2014</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>Spring Framework 4.1 的release已经有一阵子了，今天终于有点时间，看了下新特性中对于静态资源的灵活处理和转换，同时基于这种处理也提供了一种体验更好的开发方式，让我觉得非常兴奋。 先来看下对于这个新特性中的核心功能， <a href="http://docs.spring.io/spring-framework/docs/4.1.0.RC1/javadoc-api/org/springframework/web/servlet/resource/ResourceResolver.html">ResourceResolvers</a> 和 <a href="http://docs.spring.io/spring-framework/docs/4.1.0.RC1/javadoc-api/org/springframework/web/servlet/resource/ResourceTransformer.html">ResourceTransformers</a> 。</p>
-<ol>
-<li>ResourceResolvers用来将内部的URL解析为用户能够访问的外部公共的URL（ResourceResolver接口定义的是双向的解析）。</li>
-<li>ResourceTransformers用来修改资源的内容。</li>
-</ol>
-<p>这两个功能相结合，不禁让我想起了Rails的Sprockets。Sprockets主要进行三项工作，资源文件的合并，压缩，以及对高级语言的预编译（coffeescript，sass）。那么Spring的这个特性是另外一个pipeline吗？ 官方博客给出的解释是这样的，</p>
-<blockquote>
-<p>在Spring Framework 4.1中，我们使用依赖于优化的路径，这种优化在构件时使用最好的外部工具，在运行时使用Resolvers 和和Transformers 。</p>
-</blockquote>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2014/11/04/Spring-Framework-4-1-–-处理静态web资源/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
-    <a class="extend prev" rel="prev" href="/page/4/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span>
+    <a class="extend prev" rel="prev" href="/page/4/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/">Next<span></span></a>
   </nav>
 
 </div>
@@ -341,43 +452,43 @@
 		
 			<li><a href="/tags/Android/" title="Android">Android<sup>12</sup></a></li>
 		
-			<li><a href="/tags/经验错误/" title="经验错误">经验错误<sup>7</sup></a></li>
+			<li><a href="/tags/经验错误/" title="经验错误">经验错误<sup>9</sup></a></li>
 		
 			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>7</sup></a></li>
 		
-			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>5</sup></a></li>
+			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>3</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
 		
-			<li><a href="/tags/API/" title="API">API<sup>2</sup></a></li>
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
+			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
 			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>2</sup></a></li>
-		
-			<li><a href="/tags/JPA/" title="JPA">JPA<sup>2</sup></a></li>
-		
 			<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
 		
-			<li><a href="/tags/gradle/" title="gradle">gradle<sup>1</sup></a></li>
+			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>2</sup></a></li>
+		
+			<li><a href="/tags/REST/" title="REST">REST<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>1</sup></a></li>
 		
 			<li><a href="/tags/摘录/" title="摘录">摘录<sup>1</sup></a></li>
 		
-			<li><a href="/tags/性能测试/" title="性能测试">性能测试<sup>1</sup></a></li>
-		
-			<li><a href="/tags/Thymeleaf/" title="Thymeleaf">Thymeleaf<sup>1</sup></a></li>
-		
-			<li><a href="/tags/OAuth2/" title="OAuth2">OAuth2<sup>1</sup></a></li>
+			<li><a href="/tags/git/" title="git">git<sup>1</sup></a></li>
 		
 		</ul>
 </div>

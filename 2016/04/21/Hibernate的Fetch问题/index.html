@@ -1,0 +1,493 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Hibernate的Fetch问题 | Jyong&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Jyong">
+    
+    <meta name="description" content="下面的内容基于JPA的Hibernate实现进行讨论。
+JPA的关联关系中的single-ended的关联（也就是ToOne）的模式fetch类型是的eager的。 在使用EntityMangerd#find方法进行查找时，这些关联会通过JOIN的方式被查询出来。但是如果使用Criteria API或者JPQL进行查询时，会发现针对这些关联产生了额外的SELECT查询，也就是通常我们所说的N+1的问题。">
+    
+    
+    
+    
+    <link rel="alternative" href="/atom.xml" title="Jyong&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/">
+    <link rel="apple-touch-icon-precomposed" href="/img/">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Jyong&#39;s Blog" title="Jyong&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Jyong&#39;s Blog">Jyong&#39;s Blog</a></h1>
+				<h2 class="blog-motto">人生の目的の一つは楽しむことです</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yukinami.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/04/21/Hibernate的Fetch问题/" title="Hibernate的Fetch问题" itemprop="url">Hibernate的Fetch问题</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-21T07:40:04.000Z" itemprop="datePublished"> 发表于 Apr 21 2016</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Hibernate_Fetching_strategies"><span class="toc-number">1.</span> <span class="toc-text">Hibernate Fetching strategies</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Hibernate对JPA_Criteria接口的实现"><span class="toc-number">1.1.</span> <span class="toc-text">Hibernate对JPA Criteria接口的实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Eager对HQL的影响"><span class="toc-number">1.2.</span> <span class="toc-text">Eager对HQL的影响</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EntityGraph"><span class="toc-number">2.</span> <span class="toc-text">EntityGraph</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EAGER_fetching不一致"><span class="toc-number">3.</span> <span class="toc-text">EAGER fetching不一致</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring_Data_JPA中的实现"><span class="toc-number">4.</span> <span class="toc-text">Spring Data JPA中的实现</span></a></li></ol>
+		
+		</div>
+		
+		<p>下面的内容基于JPA的Hibernate实现进行讨论。</p>
+<p>JPA的关联关系中的single-ended的关联（也就是ToOne）的模式fetch类型是的eager的。 在使用<code>EntityMangerd#find</code>方法进行查找时，这些关联会通过JOIN的方式被查询出来。但是如果使用Criteria API或者JPQL进行查询时，会发现针对这些关联产生了额外的SELECT查询，也就是通常我们所说的N+1的问题。</p>
+<a id="more"></a>
+<h2 id="Hibernate_Fetching_strategies">Hibernate Fetching strategies</h2><p>这里需要先讨论下Hibernate的fetch策略的问题。在Hibernate的映射文件（或者注解）中可以通过fetch属性来告诉Hibernate如何fetch关联对象。</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="keyword">set</span> <span class="property">name</span>=<span class="string">"permissions"</span></span><br><span class="line">            fetch=<span class="string">"join"</span>&gt;</span><br><span class="line">    &lt;key column=<span class="string">"userId"</span>/&gt;</span><br><span class="line">    &lt;one-<span class="keyword">to</span>-many <span class="type">class</span>=<span class="string">"Permission"</span>/&gt;</span><br><span class="line">&lt;/<span class="keyword">set</span></span><br><span class="line">&lt;many-<span class="keyword">to</span>-one <span class="property">name</span>=<span class="string">"mother"</span> <span class="type">class</span>=<span class="string">"Cat"</span> fetch=<span class="string">"join"</span>/&gt;</span><br></pre></td></tr></table></figure>
+<p>上面的例子中，使用join的方式来fetch mother属性，也间接的表明mother关联是eager的。 但是这里声明的fetch策略仅仅对下面几种情况有效</p>
+<ul>
+<li>通过<code>get()</code>或者<code>load()</code>方法获取<br>— 当被作为关联引用到的时候产生的隐式获取</li>
+<li><code>Criteria</code>查询</li>
+<li>使用HQL查询并且声明的是subselect fetching</li>
+</ul>
+<p>既然映射文件中声明的fetch策略对Criteria查询有效，但是为何使用JPA的Criteria接口时又没有使用JOIN来关联呢？</p>
+<h3 id="Hibernate对JPA_Criteria接口的实现">Hibernate对JPA Criteria接口的实现</h3><p>Hibernate对JPA的Criteria接口返回的<code>TypedQuery</code>实现类是<code>CriteriaQueryTypeQueryAdapter</code>，可以看到Hibernate对JPA返回的Criteria对象的编译的过程实际是转换成JPQL的查询。</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;X&gt; getResultList() &#123;</span><br><span class="line">	<span class="function"><span class="keyword">return</span> jpqlQuery.<span class="title">getResultList</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而Hibernate对于JPQL的实现则最终又是通过HQL来实现了。这就可以解释其原因了。那么对于使用JPA接口的情况下，只有3中情况可以使用到映射文件中定义的fetch策略。</p>
+<h3 id="Eager对HQL的影响">Eager对HQL的影响</h3><p>对于声明成eager的关联，那么他们最终一定会去获取到这个关联。使用HQL的情况，如果HQL中通过FETCH JOIN来进行了关联，那并没有什么问题。 但是如果没有关联，那么Hibernate则会额外产生一条SELECT语句来对eager的关联进行进行查找。 也就是说如果实体中有eager关联的属性，为了避免产生N+1问题，不管我们是否需要这个关联属性必须显示的FETCH这个关联。</p>
+<h2 id="EntityGraph">EntityGraph</h2><p>EntityGraph可以运行时动态的覆盖映射文件中定义的FetchType。实际加载EntityGraph有两种方式</p>
+<ul>
+<li>FETCH 对于EntityGraph声明的属性使用eager，未声明的属性使用lazy</li>
+<li>LOAD  对于EntityGraph声明的属性使用eager，未声明的属性使用他们在映射文件中声明的默认的fetch类型</li>
+</ul>
+<p>Hibernate对于EntityGraph的实现是使用了FetchProfile。但是FetchProfile本身实在EntityGraph之前诞生的，它用于覆盖映射文件的中fetchMode，而不是fetchType。 也就导致了使用Hibernate作为JPA实现时，FETCH和LOAD两种方式是一样的，并不能覆盖原来在映射文件中的eager为lazy。作为原因就是上面提到的JPQ中无论是Criteria API还是JPQL都是使用HQL来实现的，而HQL是无法实现覆盖eager关联的。 <a href="https://hibernate.atlassian.net/browse/HHH-8776" target="_blank" rel="external">这里</a>是相关问题的讨论。</p>
+<p>最终在EntityGraph中声明的属性相当于声明了它需要使用JOIN来进行fetch。</p>
+<h2 id="EAGER_fetching不一致">EAGER fetching不一致</h2><p>通过上面的内容我们可以发现，对于eager的关联，在不用的使用场景下（find，JPQL），会产生不一致的结果。所以eager join看起来是一个代码中的<a href="https://dzone.com/articles/eager-fetching-code-smell" target="_blank" rel="external">坏味道</a>。 所以推荐在global fetch plan（映射文件）中，定义所有的关联为lazy，而在每个具体的查询中来定义fetch策略。</p>
+<p>下面是用Hibernate官方文档中的一段引用</p>
+<blockquote>
+<p>Usually, the mapping document is not used to customize fetching. Instead, we keep the default behavior, and override it for a particular transaction, using left join fetch in HQL.</p>
+</blockquote>
+<h2 id="Spring_Data_JPA中的实现">Spring Data JPA中的实现</h2><p>Spring Data JPA可以通过接口的Query Method方法签名自动的来实现JPA的调用逻辑，它的调用是通过JPA Criteria API来实现的，所以最终也是无法使用映射文件文件的fetch策略的。推荐的方式是使用@Query的话直接在JPQL的声明需要fetch的关联；使用Spring Data JPA自动生成的时候使用EntityGraph来fetch。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Hibernate/">Hibernate</a><a href="/tags/JPA/">JPA</a><a href="/tags/Spring-Data-JPA/">Spring Data JPA</a>
+  </div>
+
+</div>
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yukinami.github.io/2016/04/21/Hibernate的Fetch问题/" data-title="Hibernate的Fetch问题 | Jyong&#39;s Blog" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/05/21/Hibernate-one-to-one-懒加载的问题/" title="Hibernate one-to-one 懒加载的问题">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Hibernate one-to-one 懒加载的问题</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/03/19/如何高效的使用postman/"  title="如何高效的使用postman">
+ <strong>下一篇：</strong><br/> 
+ <span>如何高效的使用postman
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Hibernate_Fetching_strategies"><span class="toc-number">1.</span> <span class="toc-text">Hibernate Fetching strategies</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Hibernate对JPA_Criteria接口的实现"><span class="toc-number">1.1.</span> <span class="toc-text">Hibernate对JPA Criteria接口的实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Eager对HQL的影响"><span class="toc-number">1.2.</span> <span class="toc-text">Eager对HQL的影响</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EntityGraph"><span class="toc-number">2.</span> <span class="toc-text">EntityGraph</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EAGER_fetching不一致"><span class="toc-number">3.</span> <span class="toc-text">EAGER fetching不一致</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring_Data_JPA中的实现"><span class="toc-number">4.</span> <span class="toc-text">Spring Data JPA中的实现</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/Android/" title="Android">Android<sup>12</sup></a></li>
+		
+			<li><a href="/tags/经验错误/" title="经验错误">经验错误<sup>9</sup></a></li>
+		
+			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>7</sup></a></li>
+		
+			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
+		
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+		
+			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
+		
+			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
+			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
+		
+			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>2</sup></a></li>
+		
+			<li><a href="/tags/REST/" title="REST">REST<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>1</sup></a></li>
+		
+			<li><a href="/tags/摘录/" title="摘录">摘录<sup>1</sup></a></li>
+		
+			<li><a href="/tags/git/" title="git">git<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            <a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+          </li>
+        
+          <li>
+            <a href="http://hexo.io" target="_blank" title="Hexo">Hexo</a>
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I&#39;m Jyong, a web developer. <br/>
+			And hope you enjoy this blog.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2100171710" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yukinami" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="https://plus.google.com/100215768199802928787?rel=author" target="_blank" class="icon-google_plus" title="Google+"></a>
+		
+		
+		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		
+		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"yukinami"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+  </body>
+</html>
+
+
+<a href="https://github.com/yukinami"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?ec2d95a543c1245fcad501b5484af450";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>

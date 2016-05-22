@@ -1,0 +1,490 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Spring Boot Auto Configuration和HATEOAS、Data REST | Jyong&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Jyong">
+    
+    <meta name="description" content="Spring Boot集成HATEOASJacksonAutoConfiguration会注册Primary ObjectMapper，这个ObjectMapper通过spring.jackson.*来配置。JacksonAutoConfiguration配置完后会注册HypermediaAutoConfiguration，HypermediaAutoConfiguration中会对Primary ObjectMapper注册Jackson2HalModule（由apply-to-primary-object-mapper决定）。">
+    
+    
+    
+    
+    <link rel="alternative" href="/atom.xml" title="Jyong&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/">
+    <link rel="apple-touch-icon-precomposed" href="/img/">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Jyong&#39;s Blog" title="Jyong&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Jyong&#39;s Blog">Jyong&#39;s Blog</a></h1>
+				<h2 class="blog-motto">人生の目的の一つは楽しむことです</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yukinami.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/02/26/Spring-Boot-Auto-Configuration和HATEOAS、Data-REST/" title="Spring Boot Auto Configuration和HATEOAS、Data REST" itemprop="url">Spring Boot Auto Configuration和HATEOAS、Data REST</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-26T12:34:05.000Z" itemprop="datePublished"> 发表于 Feb 26 2016</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring_Boot集成HATEOAS"><span class="toc-number">1.</span> <span class="toc-text">Spring Boot集成HATEOAS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring_Boot集成Sring_Data_Rest"><span class="toc-number">2.</span> <span class="toc-text">Spring Boot集成Sring Data Rest</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自定义MediaType的问题"><span class="toc-number">3.</span> <span class="toc-text">自定义MediaType的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#解决方案"><span class="toc-number">3.1.</span> <span class="toc-text">解决方案</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h2 id="Spring_Boot集成HATEOAS">Spring Boot集成HATEOAS</h2><p><code>JacksonAutoConfiguration</code>会注册Primary ObjectMapper，这个ObjectMapper通过<code>spring.jackson.*</code>来配置。<br><code>JacksonAutoConfiguration</code>配置完后会注册<code>HypermediaAutoConfiguration</code>，<code>HypermediaAutoConfiguration</code>中会对Primary ObjectMapper注册<code>Jackson2HalModule</code>（由apply-to-primary-object-mapper决定）。</p>
+<a id="more"></a>
+<p>HypermediaConfiguration</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">void</span> <span class="title">registerHalModule</span><span class="params">(ObjectMapper objectMapper)</span> </span>&#123;</span><br><span class="line">	objectMapper.registerModule(<span class="keyword">new</span> Jackson2HalModule());</span><br><span class="line">	Jackson2HalModule.HalHandlerInstantiator instantiator = <span class="keyword">new</span> Jackson2HalModule.HalHandlerInstantiator(</span><br><span class="line">			HalObjectMapperConfiguration.<span class="keyword">this</span>.relProvider,</span><br><span class="line">			HalObjectMapperConfiguration.<span class="keyword">this</span>.curieProvider);</span><br><span class="line">	objectMapper.setHandlerInstantiator(instantiator);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Spring Boot使用<code>Jackson2HalModule</code>来把HAL相关的ObjectMapper配置适用到上下文环境中的Primary ObjectMapper中。 这允许HAL格式的响应能够发送给<em>application/json</em>的请求。这就导致了一个副作用，HAL特定的功能污染了Primary ObjectMapper。</p>
+<p>Spring Boot 1.3.0中作了一系列修改来简化ObjectMapper的配置。</p>
+<p>需改中提到</p>
+<blockquote>
+<p>Previously, Boot used Jackson2HalModule to apply the HAL-related<br>ObjectMapper configuration to the context’s primary ObjectMapper. This<br>was to allow HAL-formatted responses to be sent for requests accepted<br>application/json (see gh-2147). This had the unwanted side-effect of<br>polluting the primary ObjectMapper with HAL-specific functionality.<br>Furthermore, Jackson2HalModule is an internal of Spring HATEOAS that<br>@olivergierke has asked us to avoid using.</p>
+<p>This commit replaces the use of Jackson2HalModule with a new approach.<br>Now, the message converters of any RequestMappingHandlerAdapter beans<br>are examined and any TypeConstrainedMappingJackson2HttpMessageConverter<br>instances are modified to support application/json in addition to their<br>default support for application/hal+json. This behaviour can be disabled<br>by setting spring.hateoas.use-hal-as-default-json-media-type to false.<br>This property is named after Spring Data REST’s configuration option<br>which has the same effect when using Spring Data REST. The new property<br>replaces the old spring.hateoas.apply-to-primary-object-mapper property.</p>
+</blockquote>
+<p>这次提交使用了一个新方法来替换<code>Jackson2HalModule</code>的使用。现在所有的RequestMappingHandlerAdapter的message converters会被检查，并且任何<code>TypeConstrainedMappingJackson2HttpMessageConverter</code>实例会被修改来支持<em>application/json</em>以及它们默认支持的<em>application/hal+json</em>。 这个行为可以通过设置<code>spring.hateoas.use-hal-as-default-json-media-type</code>为<code>false</code>来关闭。这个属性根据Spring Data REST的配置选项来命名，并且和使用Spring Data REST时有相同的作用。</p>
+<p>Spring Data Rest中注册的<code>TypeConstrainedMappingJackson2HttpMessageConverter</code>也是这样的逻辑</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">@<span class="function">Bean</span><br><span class="line"><span class="keyword">public</span> TypeConstrainedMappingJackson2HttpMessageConverter <span class="title">halJacksonHttpMessageConverter</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	ArrayList&lt;MediaType&gt; mediaTypes = <span class="keyword">new</span> ArrayList&lt;MediaType&gt;();</span><br><span class="line">	mediaTypes.add(MediaTypes.HAL_JSON);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Enable returning HAL if application/json is asked if it's configured to be the default type</span></span><br><span class="line">	<span class="keyword">if</span> (config().useHalAsDefaultJsonMediaType()) &#123;</span><br><span class="line">		mediaTypes.add(MediaType.APPLICATION_JSON);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> order = config().useHalAsDefaultJsonMediaType() ? Ordered.LOWEST_PRECEDENCE - <span class="number">10</span></span><br><span class="line">			: Ordered.LOWEST_PRECEDENCE - <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">	TypeConstrainedMappingJackson2HttpMessageConverter converter = <span class="keyword">new</span> ResourceSupportHttpMessageConverter(order);</span><br><span class="line">	converter.setObjectMapper(halObjectMapper());</span><br><span class="line">	converter.setSupportedMediaTypes(mediaTypes);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> converter;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样的话默认的ObjectMapper就不会被HAL特性污染。<code>TypeConstrainedMappingJackson2HttpMessageConverter</code>支持转换的HAL对象（Resource）不管请求的是<em>application/json</em>还是<em>application/hal+json</em>都能够被正确的转换。</p>
+<h2 id="Spring_Boot集成Sring_Data_Rest">Spring Boot集成Sring Data Rest</h2><p>另外，此次修改中还提到</p>
+<blockquote>
+<p>Previously, when Spring Data REST was on the classpath,<br>JacksonAutoConfiguration would be switched off resulting in the context<br>containing multiple ObjectMappers, none of which was primary.</p>
+<p>This commit configures RepositoryRestMvcAutoConfiguration to run after<br>JacksonAutoConfiguration. This gives the latter a chance to create its<br>primary ObjectMapper before the former adds its ObjectMapper beans to<br>the context.</p>
+</blockquote>
+<p>之前当Spring Data REST在classpath中时，JacksonAutoConfiguration会被自动关闭，导致上下文环境包含多个ObjectMapper，并且没有一个是primary的。也就是说<code>RepositoryRestMvcConfiguration</code>中注册的ObjectMapper同样也会被<code>JacksonHttpMessageConvertersConfiguration</code>中配置的MessageConverter使用，同样可能会导致HAL污染的问题。</p>
+<p>这次提交修改成配置<code>RepositoryRestMvcAutoConfiguration</code>在<code>JacksonAutoConfiguration</code>之后执行。这给了后者在前者添加它的ObjectMapper之前，创建primary ObjectMapper的机会。最终达到了隔离ObjectMapper的目录。</p>
+<p>另外Spring Boot中对于ObjectMapper配置的属性也会套用到<code>RepositoryRestMvcAutoConfiguration</code>中定义的ObjectMapper</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SpringBootRepositoryRestConfigurer</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">RepositoryRestConfigurerAdapter</span> &#123;</span></span><br><span class="line"></span><br><span class="line">	<span class="annotation">@Autowired</span>(required = <span class="literal">false</span>)</span><br><span class="line">	<span class="keyword">private</span> <span class="type">Jackson2ObjectMapperBuilder</span> objectMapperBuilder;</span><br><span class="line"></span><br><span class="line">	<span class="annotation">@Override</span></span><br><span class="line">	public void configureJacksonObjectMapper(<span class="type">ObjectMapper</span> objectMapper) &#123;</span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">this</span>.objectMapperBuilder != <span class="literal">null</span>) &#123;</span><br><span class="line">			<span class="keyword">this</span>.objectMapperBuilder.configure(objectMapper);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="自定义MediaType的问题">自定义MediaType的问题</h2><p>在1.3.0之前，请求<em>application/vnd.xxx.v2.5.hal+json</em>这样的自定义头，由于HAL污染的原因，并且<code>MappingJackson2HttpMessageConverter</code>默认支持<em>application/json</em>以及<em>application/\</em>+json<em>是能够正确返回HAL格式的。 现在虽然<code>TypeConstrainedMappingJackson2HttpMessageConverter</code>也支持</em>application/json*，但是由于自定义的头并不符合，所以并不能正确返回HAL格式的响应。</p>
+<h3 id="解决方案">解决方案</h3><p>注册一个带有通配符的MediaType到<code>TypeConstrainedMappingJackson2HttpMessageConverter</code>中，让其能够处理自定义版本头。另外，由于<code>HalMessageConverterSupportedMediaTypeCustomizer</code>会添加<em>application/json</em>的头兼容JSON请求，需要再其之后添加，否则会被覆盖。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Bean</span></span><br><span class="line"><span class="annotation">@DependsOn</span>(<span class="string">"halMessageConverterSupportedMediaTypeCustomizer"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> HalVersionMessageConverterSupportedMediaTypesCustomizer <span class="title">registerCustomMediaType</span><span class="params">(@Qualifier(<span class="string">"halJacksonHttpMessageConverter"</span>)</span> TypeConstrainedMappingJackson2HttpMessageConverter halJacksonHttpMessageConverter) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> HalVersionMessageConverterSupportedMediaTypesCustomizer();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">HalVersionMessageConverterSupportedMediaTypesCustomizer</span> <span class="keyword">implements</span> <span class="title">BeanFactoryAware</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String HAL_JACKSON_HTTP_MESSAGE_CONVERTER_BEAN_NAME = <span class="string">"halJacksonHttpMessageConverter"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> BeanFactory beanFactory;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@PostConstruct</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">customizedSupportedMediaTypes</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        TypeConstrainedMappingJackson2HttpMessageConverter halJacksonHttpMessageConverter = beanFactory.getBean(HAL_JACKSON_HTTP_MESSAGE_CONVERTER_BEAN_NAME, TypeConstrainedMappingJackson2HttpMessageConverter.class);</span><br><span class="line">        List&lt;MediaType&gt; supportedMediaTypes = <span class="keyword">new</span> ArrayList&lt;&gt;(halJacksonHttpMessageConverter.getSupportedMediaTypes());</span><br><span class="line">        supportedMediaTypes.add(<span class="keyword">new</span> MediaType(<span class="string">"application"</span>, <span class="string">"*+hal+json"</span>));</span><br><span class="line">        halJacksonHttpMessageConverter.setSupportedMediaTypes(supportedMediaTypes);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setBeanFactory</span><span class="params">(BeanFactory beanFactory)</span> <span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.beanFactory = beanFactory;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/REST/">REST</a><a href="/tags/Spring-Boot/">Spring Boot</a>
+  </div>
+
+</div>
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yukinami.github.io/2016/02/26/Spring-Boot-Auto-Configuration和HATEOAS、Data-REST/" data-title="Spring Boot Auto Configuration和HATEOAS、Data REST | Jyong&#39;s Blog" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/03/04/Spring-OAuth2的ResourceServerConfiguration匹配了所有资源路径/" title="Spring OAuth2的ResourceServerConfiguration匹配了所有资源路径">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Spring OAuth2的ResourceServerConfiguration匹配了所有资源路径</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/02/18/Spring自定义Constraints的ErrorCode/"  title="Spring自定义Constraints的ErrorCode">
+ <strong>下一篇：</strong><br/> 
+ <span>Spring自定义Constraints的ErrorCode
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring_Boot集成HATEOAS"><span class="toc-number">1.</span> <span class="toc-text">Spring Boot集成HATEOAS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring_Boot集成Sring_Data_Rest"><span class="toc-number">2.</span> <span class="toc-text">Spring Boot集成Sring Data Rest</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自定义MediaType的问题"><span class="toc-number">3.</span> <span class="toc-text">自定义MediaType的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#解决方案"><span class="toc-number">3.1.</span> <span class="toc-text">解决方案</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/Android/" title="Android">Android<sup>12</sup></a></li>
+		
+			<li><a href="/tags/经验错误/" title="经验错误">经验错误<sup>9</sup></a></li>
+		
+			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>7</sup></a></li>
+		
+			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
+		
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+		
+			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
+		
+			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
+			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
+		
+			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>2</sup></a></li>
+		
+			<li><a href="/tags/REST/" title="REST">REST<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>1</sup></a></li>
+		
+			<li><a href="/tags/摘录/" title="摘录">摘录<sup>1</sup></a></li>
+		
+			<li><a href="/tags/git/" title="git">git<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            <a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+          </li>
+        
+          <li>
+            <a href="http://hexo.io" target="_blank" title="Hexo">Hexo</a>
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I&#39;m Jyong, a web developer. <br/>
+			And hope you enjoy this blog.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2100171710" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yukinami" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="https://plus.google.com/100215768199802928787?rel=author" target="_blank" class="icon-google_plus" title="Google+"></a>
+		
+		
+		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		
+		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"yukinami"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+  </body>
+</html>
+
+
+<a href="https://github.com/yukinami"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?ec2d95a543c1245fcad501b5484af450";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
