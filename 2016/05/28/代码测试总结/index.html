@@ -1,0 +1,557 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>代码测试总结 | Jyong&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Jyong">
+    
+    <meta name="description" content="基本概念单元测试一些单元测试中设计的基本概念
+
+Stub 指的是以可控的方式对对象方法进行模拟，使其按照预期的行为返回结果或抛出异常等的过程。
+Mock Object 整个对象都是模拟对象，所有方法在模拟之前进行调用都是空方法。
+Spy Object 对真实对象的部分方法进行模拟，除了模拟的方法外调用的都是真实的方法。">
+    
+    
+    
+    
+    <link rel="alternative" href="/atom.xml" title="Jyong&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/">
+    <link rel="apple-touch-icon-precomposed" href="/img/">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Jyong&#39;s Blog" title="Jyong&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Jyong&#39;s Blog">Jyong&#39;s Blog</a></h1>
+				<h2 class="blog-motto">人生の目的の一つは楽しむことです</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yukinami.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/05/28/代码测试总结/" title="代码测试总结" itemprop="url">代码测试总结</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-05-28T09:44:10.000Z" itemprop="datePublished"> 发表于 May 28 2016</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本概念"><span class="toc-number">1.</span> <span class="toc-text">基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#单元测试"><span class="toc-number">1.1.</span> <span class="toc-text">单元测试</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#如何进行Mock"><span class="toc-number">1.1.1.</span> <span class="toc-text">如何进行Mock</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#集成测试"><span class="toc-number">1.2.</span> <span class="toc-text">集成测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#功能测试"><span class="toc-number">1.3.</span> <span class="toc-text">功能测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试方法"><span class="toc-number">2.</span> <span class="toc-text">测试方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Behavior-driven_development(BDD)"><span class="toc-number">2.1.</span> <span class="toc-text">Behavior-driven development(BDD)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Cucumber"><span class="toc-number">2.1.1.</span> <span class="toc-text">Cucumber</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#业务描述"><span class="toc-number">2.1.1.1.</span> <span class="toc-text">业务描述</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#步骤实现"><span class="toc-number">2.1.1.2.</span> <span class="toc-text">步骤实现</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试框架"><span class="toc-number">3.</span> <span class="toc-text">测试框架</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Test_Runner"><span class="toc-number">3.1.</span> <span class="toc-text">Test Runner</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BDD"><span class="toc-number">3.2.</span> <span class="toc-text">BDD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mock库"><span class="toc-number">3.3.</span> <span class="toc-text">Mock库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#断言&匹配库"><span class="toc-number">3.4.</span> <span class="toc-text">断言&匹配库</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h2 id="基本概念">基本概念</h2><h3 id="单元测试">单元测试</h3><p>一些单元测试中设计的基本概念</p>
+<ul>
+<li>Stub 指的是以可控的方式对对象方法进行模拟，使其按照预期的行为返回结果或抛出异常等的过程。</li>
+<li>Mock Object 整个对象都是模拟对象，所有方法在模拟之前进行调用都是空方法。</li>
+<li>Spy Object 对真实对象的部分方法进行模拟，除了模拟的方法外调用的都是真实的方法。 </li>
+</ul>
+<a id="more"></a>
+<p>单元测试的主体对象是方法，目的是测试目标方法的执行是否符合预期的行为，包括执行路径、返回值等。实施单元测试的主要目标是应用的POJOs。测试这些对象应该通过new来进行初始化，而不是通过从容器中获取的对象。目标方法中调用的过程中会调用其他的对象方法，可能基于下面的这些原因</p>
+<ul>
+<li>真实对象的行为是不确定的（例如，当前的时间或当前的温度）；</li>
+<li>真实对象很难搭建起来；</li>
+<li>真实对象的行为很难触发（例如，网络错误）；</li>
+<li>真实对象速度很慢（例如，一个完整的数据库，在测试之前可能需要初始化）；</li>
+<li>真实的对象是用户界面，或包括用户界面在内；</li>
+<li>真实的对象使用了回调机制；</li>
+<li>真实对象可能还不存在；</li>
+<li>真实对象可能包含不能用作测试（而不是为实际工作）的信息和方法。</li>
+</ul>
+<p>不能够或者不应该使用真实的对象方法。使用Mock对象，可以避免其他方法执行结果对目标方法执行的干扰，同时能够更好的控制方法的执行路径。</p>
+<p>实施单元测试的好处不仅仅在于它能保证代码的正确性，更大的好处在于它的高效，因为它是通过new初始化的，调用的对象也可以进行mock，并不依赖于难以控制的外部环境。另外的好处是可以间接地提高代码的品质要求，如果你想实施单元测试，那么你得要求你的类尽可能的是一个POJO，代码应该应有较好的分层结构以及松散的耦合，一段品质很差的代码要实施单元测试是非常苦难的。</p>
+<h4 id="如何进行Mock">如何进行Mock</h4><p>下面是基本的mock准则</p>
+<ul>
+<li>不要什么都mock</li>
+<li>不要mock不是你的类</li>
+<li>不要mock值对象</li>
+</ul>
+<p>针对大多数的mock框架，使用mock对象的步骤大致是一致的</p>
+<ol>
+<li>创建mock对象</li>
+<li>录制需要mock的方法行为</li>
+<li>调用mock对象</li>
+<li>验证</li>
+</ol>
+<p>下面是<a href="http://mockito.org/" target="_blank" rel="external">Mocktio</a>的示例代码</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// you can mock concrete classes, not only interfaces</span></span><br><span class="line">LinkedList mockedList = mock(LinkedList.class);</span><br><span class="line"></span><br><span class="line"><span class="comment">// stubbing appears before the actual execution</span></span><br><span class="line"><span class="keyword">when</span>(mockedList.<span class="keyword">get</span>(<span class="number">0</span>)).thenReturn(<span class="string">"first"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// the following prints "first"</span></span><br><span class="line">System.<span class="keyword">out</span>.println(mockedList.<span class="keyword">get</span>(<span class="number">0</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// the following prints "null" because get(999) was not stubbed</span></span><br><span class="line">System.<span class="keyword">out</span>.println(mockedList.<span class="keyword">get</span>(<span class="number">999</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// virify get(0) is called</span></span><br><span class="line">verify(mockedList.<span class="keyword">get</span>).<span class="keyword">get</span>(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="集成测试">集成测试</h3><p>集成测试主要针对是测试多个组件组合在一起工作的情况。 例如Repository接口和Spring Data JPA集成的情况下，生成的查询接口测试；Web框架和Controller集成的情况下，请求参数的绑定、转换、验证是否正常；和消息中间件集成时，消息的收发是否正常等等。</p>
+<h3 id="功能测试">功能测试</h3><p>功能测试有时候也叫E2E测试，功能测试以系统的功能点为测试对象。以Web应用为例，功能测试的主要应该是测试页面的功能是否正常，例如测试</p>
+<ul>
+<li>请求是否成功</li>
+<li>重定向是否正确</li>
+<li>用户是否成功授权</li>
+<li>页面的元素是否正常显示</li>
+<li>页面的表单的验证是否正确，提交后的跳转是否正确</li>
+</ul>
+<p>功能测试最常用的工具<a href="http://www.seleniumhq.org/" target="_blank" rel="external">Selenium</a>。当然有些框架也提供应用内的功能测试，例如Rails的Functional Test，但是这些测试不属于E2E测试的范畴，因为他们是基于容器内的测试，而不是完全独立的端到端的测试。</p>
+<p>测试逻辑</p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CreateMessagePage page = CreateMessagePage.to<span class="comment">(driver)</span>;</span><br><span class="line">ViewMessagePage viewMessagePage =</span><br><span class="line">    page.createMessage<span class="comment">(ViewMessagePage.class, expectedSummary, expectedText)</span>;</span><br><span class="line">    </span><br><span class="line">assertThat<span class="comment">(viewMessagePage.getMessage()</span>).isEqualTo<span class="comment">(expectedMessage)</span>;</span><br><span class="line">assertThat<span class="comment">(viewMessagePage.getSuccess()</span>).isEqualTo<span class="comment">("Successfully created a new message")</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="测试方法">测试方法</h2><h3 id="Behavior-driven_development(BDD)">Behavior-driven development(BDD)</h3><p>行为驱动开发是一种敏捷软件开发的技术，它鼓励软件项目中的开发者、QA和非技术人员或商业参与者之间的协作。 BDD是一种开发方式，但是它和测试紧密相关。BDD用它的DSL来描述系统的功能的，测试用例则则相当于对功能描述一个实现。</p>
+<h4 id="Cucumber">Cucumber</h4><p><a href="https://cucumber.io/" target="_blank" rel="external">Cucumber</a>是一个BDD的框架，它支持各种语言的实现。</p>
+<h5 id="业务描述">业务描述</h5><p>Cucumber使用<a href="https://github.com/cucumber/cucumber/wiki/Gherkin" target="_blank" rel="external">Gherkin</a>语言来作为DSL来对业务规则进行描述，下面是一个<a href="https://github.com/cucumber/cucumber/wiki/Gherkin" target="_blank" rel="external">Gherkin</a>的文档</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Feature</span>: <span class="string">Refund item</span></span><br><span class="line"></span><br><span class="line"><span class="xquery">  Scenario: Jeff returns a faulty microwave</span><br><span class="line">    Given Jeff has bought a microwave <span class="keyword">for</span> <span class="variable">$100</span></span><br><span class="line">    And he has a receipt</span><br><span class="line">    When he returns the microwave</span><br><span class="line">    Then Jeff should be refunded <span class="variable">$100</span></span></span><br></pre></td></tr></table></figure>
+<p>一个Scenario指的是一个业务规则的演示、描述。其中包括Give、And、When、Then等多个Step。</p>
+<p>上面的文档就是非技术人员或商业参与者需要做的，使用DSL语言对系统功能进行描述。</p>
+<h5 id="步骤实现">步骤实现</h5><p>开发人员则需要对上面的文档中的描述进行实现，调用实际的功能代码，以达到测试代码的目的。</p>
+<p>例如，针对下面的Step</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Scenario: Some cukes</span><br><span class="line">  Given I have <span class="number">48</span> cukes <span class="keyword">in</span> <span class="keyword">my</span> belly</span><br></pre></td></tr></table></figure>
+<p>进行实现</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Given</span>(<span class="string">"I have (\\d+) cukes in my belly"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">I_have_cukes_in_my_bellt</span><span class="params">(<span class="keyword">int</span> cukes)</span> </span>&#123;</span><br><span class="line">	System.out.format(<span class="string">"Cukes: %n\n"</span>, cukes)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>实现方法是应该调用实际的业务代码，对于Given来说，应该是类似<code>setUp</code>来初始化测试上下文环境的。</p>
+<h2 id="测试框架">测试框架</h2><p>下面主要介绍下各个平台中较为广泛的使用的测试框架</p>
+<h3 id="Test_Runner">Test Runner</h3><p>Test Runner是用来启动测试，调用测试代码，反馈测试结果的。它本身可能作为一个测试框架还包括了断言、Mock等其他额外的功能</p>
+<ul>
+<li><a href="http://karma-runner.github.io/" target="_blank" rel="external">Karama</a> 它作为JS的Test Runner，仅负责测试的运行。它是一个Node.js的模块，能够在本地启动浏览器执行测试用例，并将测试结果输出到本地控制台。</li>
+<li>Junit Java平台的测试框架，它是一个完整的测试框架，除了负责运行测试用例，它还包括测试方法定义，断言的书写等功能。</li>
+<li><a href="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/testing_with_xcode/chapters/01-introduction.html" target="_blank" rel="external">XCTest</a> 从Xcode5，使用XCtest作为OS X和iOS平台的完整测试框架。 </li>
+</ul>
+<h3 id="BDD">BDD</h3><p>即便开发团队不使用完整的BDD框架进行开发，使用BDD风格的测试用例描述方式，仍然有诸多的有点，测试用例具有良好的可读性。</p>
+<p>下面是一些BDD测试框架，其中一部分虽然是测试框架，但也创建拥有功能描述文档的功能</p>
+<ul>
+<li><a href="http://jasmine.github.io/edge/introduction.html" target="_blank" rel="external">Jasmine</a> 基于JS的完整BDD测试框架，包括断言、mock的功能。</li>
+<li><a href="https://code.google.com/archive/p/spock/" target="_blank" rel="external">Spock</a> 基于Groovy的BDD测试框架，有用自己特有的断言方式，也支持使用groovy-test的断言。</li>
+<li><a href="https://github.com/specta/specta" target="_blank" rel="external">Specta</a> 基于Object-C和Cocoa的BDD测试框架，它不提供断言、mock的功能。</li>
+<li><a href="https://github.com/kiwi-bdd/Kiwi" target="_blank" rel="external">Kiwi</a> iOS平台的完整BDD测试框架，包括了断言、mock的功能。</li>
+</ul>
+<h3 id="Mock库">Mock库</h3><ul>
+<li><a href="http://jasmine.github.io/edge/introduction.html" target="_blank" rel="external">Jasmine</a> Jasmine包括了mock功能</li>
+<li><a href="http://mockito.org/" target="_blank" rel="external">Mocktio</a> Java平台的著名的Mock的库</li>
+<li><a href="https://github.com/jonreid/OCMockito" target="_blank" rel="external">OCMockito</a> Mocktio的OC版本</li>
+</ul>
+<p>除了针对对象方法的mock库，还有一些实现了类似mock功能的库。</p>
+<ul>
+<li>[OHHTTPStubs] iOS平台的HTTP请求的Stub库。它可以Stub所有通过NSURLConnection接口进行的请求，模拟数据的返回，模拟网速慢的情况的请求等。 除了可以用于更高效的测试外，还可以用于开发阶段，API等尚未完成时的接口模拟等。</li>
+</ul>
+<h3 id="断言&amp;匹配库">断言&amp;匹配库</h3><p>匹配库本身并不是测试必要的一部分，但是有了匹配库可以让断言的书写更为简洁和高效</p>
+<ul>
+<li><a href="http://jasmine.github.io/edge/introduction.html" target="_blank" rel="external">Jasmine</a> Jasmine包括了断言的功能</li>
+<li><a href="http://joel-costigliola.github.io/assertj/" target="_blank" rel="external">AssertJ</a> 具有fluent API的Java断言库</li>
+<li><a href="https://code.google.com/archive/p/hamcrest/wikis/Tutorial.wiki" target="_blank" rel="external">Hamcrest</a> assertThat风格Java断言库，它同时是个匹配库，拥有很多非常实用的匹配器，能够和AssertJ集成</li>
+<li><a href="https://github.com/specta/expecta" target="_blank" rel="external">Expecta</a> 基于Object-C和Cocoa的断言库，同时也是Specta的兄弟库</li>
+</ul>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/测试/">测试</a>
+  </div>
+
+</div>
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yukinami.github.io/2016/05/28/代码测试总结/" data-title="代码测试总结 | Jyong&#39;s Blog" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/05/28/用Spring-Test进行页面的功能测试/" title="用Spring Test进行页面的功能测试">
+  <strong>上一篇：</strong><br/>
+  <span>
+  用Spring Test进行页面的功能测试</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/05/27/使用coveralls统计测试覆盖率/"  title="使用coveralls统计测试覆盖率">
+ <strong>下一篇：</strong><br/> 
+ <span>使用coveralls统计测试覆盖率
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本概念"><span class="toc-number">1.</span> <span class="toc-text">基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#单元测试"><span class="toc-number">1.1.</span> <span class="toc-text">单元测试</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#如何进行Mock"><span class="toc-number">1.1.1.</span> <span class="toc-text">如何进行Mock</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#集成测试"><span class="toc-number">1.2.</span> <span class="toc-text">集成测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#功能测试"><span class="toc-number">1.3.</span> <span class="toc-text">功能测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试方法"><span class="toc-number">2.</span> <span class="toc-text">测试方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Behavior-driven_development(BDD)"><span class="toc-number">2.1.</span> <span class="toc-text">Behavior-driven development(BDD)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Cucumber"><span class="toc-number">2.1.1.</span> <span class="toc-text">Cucumber</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#业务描述"><span class="toc-number">2.1.1.1.</span> <span class="toc-text">业务描述</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#步骤实现"><span class="toc-number">2.1.1.2.</span> <span class="toc-text">步骤实现</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试框架"><span class="toc-number">3.</span> <span class="toc-text">测试框架</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Test_Runner"><span class="toc-number">3.1.</span> <span class="toc-text">Test Runner</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BDD"><span class="toc-number">3.2.</span> <span class="toc-text">BDD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mock库"><span class="toc-number">3.3.</span> <span class="toc-text">Mock库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#断言&匹配库"><span class="toc-number">3.4.</span> <span class="toc-text">断言&匹配库</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/Android/" title="Android">Android<sup>12</sup></a></li>
+		
+			<li><a href="/tags/经验错误/" title="经验错误">经验错误<sup>9</sup></a></li>
+		
+			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>7</sup></a></li>
+		
+			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
+		
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+		
+			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
+		
+			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
+		
+			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Sring-Data-Rest/" title="Sring Data Rest">Sring Data Rest<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Agile/" title="Agile">Agile<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            <a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+          </li>
+        
+          <li>
+            <a href="http://hexo.io" target="_blank" title="Hexo">Hexo</a>
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I&#39;m Jyong, a web developer. <br/>
+			And hope you enjoy this blog.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2100171710" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yukinami" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="https://plus.google.com/100215768199802928787?rel=author" target="_blank" class="icon-google_plus" title="Google+"></a>
+		
+		
+		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		
+		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"yukinami"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+  </body>
+</html>
+
+
+<a href="https://github.com/yukinami"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?ec2d95a543c1245fcad501b5484af450";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>

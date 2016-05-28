@@ -70,6 +70,120 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/11/26/性能测试指南/" title="性能测试指南" itemprop="url">性能测试指南</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-26T08:53:51.000Z" itemprop="datePublished"> 发表于 Nov 26 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="性能测试指南">性能测试指南</h1><h2 id="概念">概念</h2><p>性能测试是通过自动化的测试工具模拟多种正常、峰值以及异常负载条件来对系统的各项性能指标进行测试。负载测试和压力测试都属于性能测试，两者可以结合进行。</p>
+<ul>
+<li>负载测试是模拟实际软件系统所承受的负载条件的系统负荷，通过不断加载（如逐渐增加模拟用户的数量）或其它加载方式来观察不同负载下系统的响应时间和数据吞吐量、系统占用的资源（如CPU、内存）等，以检验系统的行为和特性，以发现系统可能存在的性能瓶颈、内存泄漏、不能实时同步等问题。负载测试更多地体现了一种方法或一种技术。</li>
+<li>压力测试是在强负载（大数据量、大量并发用户等）下的测试，查看应用系统在峰值使用情况下操作行为，从而有效地发现系统的某项功能隐患、系统是否具有良好的容错能力和可恢复能力。压力测试分为高负载下的长时间（如24小时以上）的稳定性压力测试和极限负载情况下导致系统崩溃的破坏性压力测试。</li>
+</ul>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/11/26/性能测试指南/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/26/Docker-CI/" title="Docker CI" itemprop="url">Docker CI</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-26T08:50:42.000Z" itemprop="datePublished"> 发表于 Nov 26 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="Docker_CI">Docker CI</h1><h2 id="构建私有_Docker_Registry">构建私有 Docker Registry</h2><h3 id="启动_registry">启动 registry</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p <span class="number">5000</span>:<span class="number">5000</span> --name registry registry:<span class="number">2</span></span><br></pre></td></tr></table></figure>
+<h3 id="Insecure_Registry">Insecure Registry</h3><p>当尝试从配有配置TLS的Registry会报如下错</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FATA[<span class="number">0000</span>] Error response <span class="built_in">from</span> daemon: v1 ping attempt failed <span class="operator">with</span> error: Get <span class="keyword">https</span>://<span class="number">121.42</span><span class="number">.160</span><span class="number">.161</span>:<span class="number">5000</span>/v1/<span class="title">_ping</span>: tls: oversized record received <span class="operator">with</span> <span class="built_in">length</span> <span class="number">20527.</span> If this <span class="keyword">private</span> registry supports only HTTP <span class="operator">or</span> HTTPS <span class="operator">with</span> <span class="operator">an</span> unknown CA certificate, please <span class="built_in">add</span> `<span class="comment">--insecure-registry 121.42.160.161:5000` to the daemon's arguments. In the case of HTTPS, if you have access to the registry's CA certificate, no need for the flag; simply place the CA certificate at /etc/docker/certs.d/121.42.160.161:5000/ca.crt</span></span><br></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/11/26/Docker-CI/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/09/29/Property-managedObjectStore-not-found-on-object-of-type-RKObjectManager/" title="Property &#39;managedObjectStore&#39; not found on object of type&#39;RKObjectManager *&#39;" itemprop="url">Property &#39;managedObjectStore&#39; not found on object of type&#39;RKObjectManager *&#39;</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-29T06:34:03.000Z" itemprop="datePublished"> 发表于 Sep 29 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="问题">问题</h2><p>使用Restkit时，访问<code>RKObjectManger</code>的<code>managedObjectStore</code>属性是提示</p>
+<blockquote>
+<p>Property ‘managedObjectStore’ not found on object of type’RKObjectManager *’</p>
+</blockquote>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/09/29/Property-managedObjectStore-not-found-on-object-of-type-RKObjectManager/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/08/03/基于Java的Web敏捷开发/" title="基于Java的Web敏捷开发" itemprop="url">基于Java的Web敏捷开发</a>
   </h1>
   <p class="article-author">By
@@ -313,117 +427,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/20/Same-Origin-Policy/" title="同源策略" itemprop="url">同源策略</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-20T02:19:08.000Z" itemprop="datePublished"> 发表于 Apr 20 2015</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="同源策略">同源策略</h1><p><code>Same-Origin Policy</code>根据<code>origin</code>限制浏览器通过脚本或者文档执行特定的动作。<code>origin</code>指的是URL的path之前的所有的部分(比如说，<a href="http://www.example.com">http://www.example.com</a> )。对于一些动作，浏览器会比较origins，如果它们不匹配，则不运行继续执行。比如说：</p>
-<ul>
-<li>一个父document不能访问来自不同origin的&lt;iframe&gt;的内容。这可以阻止恶意网站打开你们的银行网站，偷取你的安全秘钥</li>
-<li>一个document可以通过表单post发送信息，但是跨域AJAX请求通常是不允许的</li>
-</ul>
-<p>针对同源策略，有两个方案可以解决这个问题。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/04/20/Same-Origin-Policy/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/03/16/Fatal-signal-11/" title="Fatal signal 11" itemprop="url">Fatal signal 11</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2015-03-16T05:23:02.000Z" itemprop="datePublished"> 发表于 Mar 16 2015</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="错误">错误</h1><p>多个<code>AsyncTask</code>、<code>Loader</code>同时执行的时候，偶尔会闪退。 错误信息大致如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@@@ ABORTING: INVALID HEAP ADDRESS IN dlfree</span><br><span class="line">Fatal signal <span class="number">11</span> (SIGSEGV) at <span class="number">0xdeadbaad</span> (code=<span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/03/16/Fatal-signal-11/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/02/17/SwipeRefreshLayout/" title="SwipeRefreshLayout" itemprop="url">SwipeRefreshLayout</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2015-02-17T07:02:57.000Z" itemprop="datePublished"> 发表于 Feb 17 2015</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>SwipeRefreshLayout 可以用于通过下滑的手势刷新View内容的情况。使用起来很简单，用SwipeRefreshLayout包裹需要刷新的View即可。</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;android<span class="class">.support</span><span class="class">.v4</span><span class="class">.widget</span><span class="class">.SwipeRefreshLayout</span></span><br><span class="line">        xmlns:android=<span class="string">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">        android:id=<span class="string">"@+id/swipe_container"</span></span><br><span class="line">        android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">        android:layout_height=<span class="string">"match_parent"</span>&gt;</span><br><span class="line"></span><br><span class="line">    &lt;LinearLayout android:orientation=<span class="string">"vertical"</span></span><br><span class="line">        android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">        android:layout_height=<span class="string">"match_parent"</span>&gt;</span><br><span class="line"></span><br><span class="line">        &lt;ListView</span><br><span class="line">            android:id=<span class="string">"@android:id/list"</span></span><br><span class="line">            style=<span class="string">"@style/ListView"</span></span><br><span class="line">            android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">            android:layout_height=<span class="string">"match_parent"</span> /&gt;</span><br><span class="line">    &lt;/LinearLayout&gt;</span><br><span class="line"></span><br><span class="line">&lt;/android<span class="class">.support</span><span class="class">.v4</span><span class="class">.widget</span><span class="class">.SwipeRefreshLayout</span>&gt;</span><br></pre></td></tr></table></figure>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/02/17/SwipeRefreshLayout/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/page/3/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/5/">Next<span></span></a>
@@ -451,37 +454,37 @@
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
+			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>2</sup></a></li>
 		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
+			<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+			<li><a href="/tags/Sring-Data-Rest/" title="Sring Data Rest">Sring Data Rest<sup>1</sup></a></li>
 		
-			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>2</sup></a></li>
-		
-			<li><a href="/tags/REST/" title="REST">REST<sup>1</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>1</sup></a></li>
-		
-			<li><a href="/tags/摘录/" title="摘录">摘录<sup>1</sup></a></li>
-		
-			<li><a href="/tags/git/" title="git">git<sup>1</sup></a></li>
+			<li><a href="/tags/Agile/" title="Agile">Agile<sup>1</sup></a></li>
 		
 		</ul>
 </div>

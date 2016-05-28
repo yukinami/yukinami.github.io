@@ -70,6 +70,117 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/04/20/Same-Origin-Policy/" title="同源策略" itemprop="url">同源策略</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-20T02:19:08.000Z" itemprop="datePublished"> 发表于 Apr 20 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="同源策略">同源策略</h1><p><code>Same-Origin Policy</code>根据<code>origin</code>限制浏览器通过脚本或者文档执行特定的动作。<code>origin</code>指的是URL的path之前的所有的部分(比如说，<a href="http://www.example.com">http://www.example.com</a> )。对于一些动作，浏览器会比较origins，如果它们不匹配，则不运行继续执行。比如说：</p>
+<ul>
+<li>一个父document不能访问来自不同origin的&lt;iframe&gt;的内容。这可以阻止恶意网站打开你们的银行网站，偷取你的安全秘钥</li>
+<li>一个document可以通过表单post发送信息，但是跨域AJAX请求通常是不允许的</li>
+</ul>
+<p>针对同源策略，有两个方案可以解决这个问题。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/04/20/Same-Origin-Policy/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/03/16/Fatal-signal-11/" title="Fatal signal 11" itemprop="url">Fatal signal 11</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-03-16T05:23:02.000Z" itemprop="datePublished"> 发表于 Mar 16 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="错误">错误</h1><p>多个<code>AsyncTask</code>、<code>Loader</code>同时执行的时候，偶尔会闪退。 错误信息大致如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@@@ ABORTING: INVALID HEAP ADDRESS IN dlfree</span><br><span class="line">Fatal signal <span class="number">11</span> (SIGSEGV) at <span class="number">0xdeadbaad</span> (code=<span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/03/16/Fatal-signal-11/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/02/17/SwipeRefreshLayout/" title="SwipeRefreshLayout" itemprop="url">SwipeRefreshLayout</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-02-17T07:02:57.000Z" itemprop="datePublished"> 发表于 Feb 17 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>SwipeRefreshLayout 可以用于通过下滑的手势刷新View内容的情况。使用起来很简单，用SwipeRefreshLayout包裹需要刷新的View即可。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;android<span class="class">.support</span><span class="class">.v4</span><span class="class">.widget</span><span class="class">.SwipeRefreshLayout</span></span><br><span class="line">        xmlns:android=<span class="string">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">        android:id=<span class="string">"@+id/swipe_container"</span></span><br><span class="line">        android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">        android:layout_height=<span class="string">"match_parent"</span>&gt;</span><br><span class="line"></span><br><span class="line">    &lt;LinearLayout android:orientation=<span class="string">"vertical"</span></span><br><span class="line">        android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">        android:layout_height=<span class="string">"match_parent"</span>&gt;</span><br><span class="line"></span><br><span class="line">        &lt;ListView</span><br><span class="line">            android:id=<span class="string">"@android:id/list"</span></span><br><span class="line">            style=<span class="string">"@style/ListView"</span></span><br><span class="line">            android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">            android:layout_height=<span class="string">"match_parent"</span> /&gt;</span><br><span class="line">    &lt;/LinearLayout&gt;</span><br><span class="line"></span><br><span class="line">&lt;/android<span class="class">.support</span><span class="class">.v4</span><span class="class">.widget</span><span class="class">.SwipeRefreshLayout</span>&gt;</span><br></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/02/17/SwipeRefreshLayout/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/02/17/ScrollView/" title="ScrollView" itemprop="url">ScrollView</a>
   </h1>
   <p class="article-author">By
@@ -314,123 +425,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/01/13/Spring-XD-Type-Conversion/" title="Spring XD Type Conversion" itemprop="url">Spring XD Type Conversion</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2015-01-13T14:12:06.000Z" itemprop="datePublished"> 发表于 Jan 13 2015</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="Spring_Integration_的_Type_Conversion">Spring Integration 的 Type Conversion</h1><h2 id="Datatype_Channel">Datatype Channel</h2><p>Datatype Channel 可以指定Channel接收的数据的数据类型<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="keyword">int</span>:channel <span class="keyword">id</span>=<span class="string">"numberChannel"</span> datatype=<span class="string">"java.lang.Number"</span>/&gt;</span><br><span class="line">&lt;<span class="keyword">int</span>:channel <span class="keyword">id</span>=<span class="string">"stringOrNumberChannel"</span> datatype=<span class="string">"java.lang.String,java.lang.Number"</span>/&gt;</span><br></pre></td></tr></table></figure></p>
-<p>指定了<code>datatype</code>之后，如果Channel收到了类型不是指定的类型，会如下进行：</p>
-<ol>
-<li>查找是否定义了一个叫做”integrationConversionService”的Bean，该Bean是Spring’s <a href="http://docs.spring.io/spring/docs/current/spring-framework-reference/html/validation.html#core-convert-ConversionService-API">Conversion Service</a>的实例。如果没有，则会抛出异常。</li>
-<li>如果存在，则会尝试使用它将Message的Payload类型转换为Channel的<code>datatype</code></li>
-</ol>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/01/13/Spring-XD-Type-Conversion/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/01/06/用spring-social构建API的client端/" title="用spring social构建API的client端" itemprop="url">用spring social构建API的client端</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2015-01-06T13:26:02.000Z" itemprop="datePublished"> 发表于 Jan 6 2015</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="介绍">介绍</h1><p>Spring Social可以用来连接Software-as-a-Service (SaaS) 服务商提供了REST API，Spring的项目本身已经提供了对Facebook, Twitter, Linkedin, Github等服务商的REST API的连接。<br>实际在开发app的过程中，通常是需要本地app连接到后台服务器的REST API的。客户端的开发本身可能还会涉及相对复杂的验证机制，比如<code>OAuth Dance</code>（客户端和服务器来回交互获取access token的过程），Spring Social为客户端的开发提供了一套框架，包括连接的建立，对API的强类型绑定，应用可以直接通过客户端访问需要的API。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/01/06/用spring-social构建API的client端/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/01/06/对于OAuth2-0的理解/" title="对于OAuth2.0授权方式的理解" itemprop="url">对于OAuth2.0授权方式的理解</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2015-01-06T13:23:21.000Z" itemprop="datePublished"> 发表于 Jan 6 2015</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="概述">概述</h1><p>OAuth2.0的最好的文档，莫过于<a href="http://www.rfcreader.com/#rfc6749">RFC 6749</a>。OAuth2.0本身是一个比较灵活的标准，能够适配应用到各种场景。本文主要是对文档的翻译以及加上部分个人的理解。</p>
-<h1 id="角色">角色</h1><p>OAuth定义了4个角色</p>
-<ul>
-<li>resource owner<br>  能够对受保护的资源进行授权的实体。当<code>resource owner</code>是人的时候，它是指终端用户</li>
-<li>resource server<br>  持有受保护的资源的服务器，使用<code>access tokens</code>能够接收和响应对受保护资源的请求</li>
-<li>client<br>  在resource <code>owner</code>的行为和授权下，请求受保护资源的应用。“client”没有特指任何实现特性（比如，无论应用执行在服务器，桌面或者其他设备上）</li>
-<li>authorization server<br>  当成功认证了<code>resource owner</code>并且获得授权后，分发<code>access tokens</code>给<code>client</code>的服务器。</li>
-</ul>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/01/06/对于OAuth2-0的理解/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/page/4/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/">Next<span></span></a>
@@ -458,37 +452,37 @@
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
+			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>2</sup></a></li>
 		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
+			<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+			<li><a href="/tags/Sring-Data-Rest/" title="Sring Data Rest">Sring Data Rest<sup>1</sup></a></li>
 		
-			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>2</sup></a></li>
-		
-			<li><a href="/tags/REST/" title="REST">REST<sup>1</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>1</sup></a></li>
-		
-			<li><a href="/tags/摘录/" title="摘录">摘录<sup>1</sup></a></li>
-		
-			<li><a href="/tags/git/" title="git">git<sup>1</sup></a></li>
+			<li><a href="/tags/Agile/" title="Agile">Agile<sup>1</sup></a></li>
 		
 		</ul>
 </div>

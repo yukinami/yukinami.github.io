@@ -1,0 +1,478 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>用Spring Test进行页面的功能测试 | Jyong&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Jyong">
+    
+    <meta name="description" content="Spring TestSpring Test框架提供的MockMvc可用于实现Controller的集成测试。
+例如
+1234567MockHttpServletRequestBuilder createMessage = post(&quot;/messages/&quot;)    .param(&quot;summary&quot;, &quot;Spring Rocks&quot;)    .param(&quot;text&quot;, &quot;In case you didn&#39;t know, Spring Rocks!&quot;);mockMvc.perform(createMessage)    .andExpect(status().is3xxRedirection())    .andExpect(redirectedUrl(&quot;/messages/123&quot;));">
+    
+    
+    
+    
+    <link rel="alternative" href="/atom.xml" title="Jyong&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/">
+    <link rel="apple-touch-icon-precomposed" href="/img/">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Jyong&#39;s Blog" title="Jyong&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Jyong&#39;s Blog">Jyong&#39;s Blog</a></h1>
+				<h2 class="blog-motto">人生の目的の一つは楽しむことです</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yukinami.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/05/28/用Spring-Test进行页面的功能测试/" title="用Spring Test进行页面的功能测试" itemprop="url">用Spring Test进行页面的功能测试</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-05-28T09:45:57.000Z" itemprop="datePublished"> 发表于 May 28 2016</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring_Test"><span class="toc-number">1.</span> <span class="toc-text">Spring Test</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#集成HtmlUnit"><span class="toc-number">2.</span> <span class="toc-text">集成HtmlUnit</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#集成Webdriver"><span class="toc-number">3.</span> <span class="toc-text">集成Webdriver</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#关于Page_Object_Pattern"><span class="toc-number">3.1.</span> <span class="toc-text">关于Page Object Pattern</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#集成Gab"><span class="toc-number">4.</span> <span class="toc-text">集成Gab</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结以及个人的一点看法"><span class="toc-number">5.</span> <span class="toc-text">总结以及个人的一点看法</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="Spring_Test">Spring Test</h2><p>Spring Test框架提供的MockMvc可用于实现Controller的集成测试。</p>
+<p>例如</p>
+<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">MockHttpServletRequestBuilder</span> create<span class="variable">Message</span> = post(<span class="string">"/messages/"</span>)</span><br><span class="line">    .param(<span class="string">"summary"</span>, <span class="string">"Spring Rocks"</span>)</span><br><span class="line">    .param(<span class="string">"text"</span>, <span class="string">"In case you didn't know, Spring Rocks!"</span>);</span><br><span class="line"></span><br><span class="line">mock<span class="variable">Mvc</span>.perform(create<span class="variable">Message</span>)</span><br><span class="line">    .<span class="keyword">and</span><span class="variable">Expect</span>(status().is3xx<span class="variable">Redirection</span>())</span><br><span class="line">    .<span class="keyword">and</span><span class="variable">Expect</span>(redirected<span class="variable">Url</span>(<span class="string">"/messages/123"</span>));</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>如果想更新一步，对页面的功能功能测试，也是可以的</p>
+<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">String</span> summary<span class="variable">ParamName</span> = <span class="string">"summary"</span>;</span><br><span class="line"><span class="variable">String</span> text<span class="variable">ParamName</span> = <span class="string">"text"</span>;</span><br><span class="line">mock<span class="variable">Mvc</span>.perform(get(<span class="string">"/messages/form"</span>))</span><br><span class="line">        .<span class="keyword">and</span><span class="variable">Expect</span>(xpath(<span class="string">"//input[@name='"</span> + summary<span class="variable">ParamName</span> + <span class="string">"']"</span>).exists())</span><br><span class="line">        .<span class="keyword">and</span><span class="variable">Expect</span>(xpath(<span class="string">"//textarea[@name='"</span> + text<span class="variable">ParamName</span> + <span class="string">"']"</span>).exists());</span><br><span class="line"></span><br><span class="line"><span class="variable">MockHttpServletRequestBuilder</span> create<span class="variable">Message</span> = post(<span class="string">"/messages/"</span>)</span><br><span class="line">        .param(summary<span class="variable">ParamName</span>, <span class="string">"Spring Rocks"</span>)</span><br><span class="line">        .param(text<span class="variable">ParamName</span>, <span class="string">"In case you didn't know, Spring Rocks!"</span>);</span><br><span class="line"></span><br><span class="line">mock<span class="variable">Mvc</span>.perform(create<span class="variable">Message</span>)</span><br><span class="line">        .<span class="keyword">and</span><span class="variable">Expect</span>(status().is3xx<span class="variable">Redirection</span>())</span><br><span class="line">        .<span class="keyword">and</span><span class="variable">Expect</span>(redirected<span class="variable">Url</span>(<span class="string">"/messages/123"</span>));</span><br></pre></td></tr></table></figure>
+<p>但是这样的测试代码的有不少缺点，代码重复性较高，可维护性较差，页面稍微变更，现有的代码的xpath也不得不修改。 所以说并不适合用于页面功能测试</p>
+<h2 id="集成HtmlUnit">集成HtmlUnit</h2><p>HtmlUnit是一个headless的浏览器，它可以由Webdriver来驱动。通过这种方式来进行页面功能测试，使测试更为充分，同时测试脚本可以给测试组复用，用[Selenium]进行完整的E2E测试。</p>
+<p>Spring Test可以和HtmlUnit集成，进行页面功能的测试，同时对于Controller依赖的其他对象，又可以注入Mock对象。</p>
+<figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">HtmlPage createMsgFormPage</span> = webClient.getPage(<span class="string">"http://localhost/messages/form"</span>);</span><br><span class="line"><span class="constant"></span><br><span class="line">HtmlForm form</span> = createMsgFormPage.getHtmlElementById(<span class="string">"messageForm"</span>);</span><br><span class="line"><span class="constant">HtmlTextInput summaryInput</span> = createMsgFormPage.getHtmlElementById(<span class="string">"summary"</span>);</span><br><span class="line">summaryInput.setValueAttribute(<span class="string">"Spring Rocks"</span>);</span><br><span class="line"><span class="constant">HtmlTextArea textInput</span> = createMsgFormPage.getHtmlElementById(<span class="string">"text"</span>);</span><br><span class="line">textInput.setText(<span class="string">"In case you didn't know, Spring Rocks!"</span>);</span><br><span class="line"><span class="constant">HtmlSubmitInput submit</span> = form.getOneHtmlElementByAttribute(<span class="string">"input"</span>, <span class="string">"type"</span>, <span class="string">"submit"</span>);</span><br><span class="line"><span class="constant">HtmlPage newMessagePage</span> = submit.click();</span><br><span class="line"></span><br><span class="line">assertThat(newMessagePage.getUrl().toString()).endsWith(<span class="string">"/messages/123"</span>);</span><br><span class="line"><span class="constant">String id</span> = newMessagePage.getHtmlElementById(<span class="string">"id"</span>).getTextContent();</span><br><span class="line">assertThat(id).isEqualTo(<span class="string">"123"</span>);</span><br><span class="line"><span class="constant">String summary</span> = newMessagePage.getHtmlElementById(<span class="string">"summary"</span>).getTextContent();</span><br><span class="line">assertThat(summary).isEqualTo(<span class="string">"Spring Rocks"</span>);</span><br><span class="line"><span class="constant">String text</span> = newMessagePage.getHtmlElementById(<span class="string">"text"</span>).getTextContent();</span><br><span class="line">assertThat(text).isEqualTo(<span class="string">"In case you didn't know, Spring Rocks!"</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="集成Webdriver">集成Webdriver</h2><p>由于Webdriver是支持HtmlUnit的，因此，可以使用Webdriver代码驱动，好处是测试脚本可以给E2E测试复用。</p>
+<p>下面是用了<em>Page Object Pattern</em>的测试页面</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CreateMessagePage</span></span><br><span class="line">        <span class="keyword">extends</span> <span class="title">AbstractPage</span> </span>&#123; </span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> WebElement summary;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> WebElement text;</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    <span class="annotation">@FindBy</span>(css = <span class="string">"input[type=submit]"</span>)</span><br><span class="line">    <span class="keyword">private</span> WebElement submit;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CreateMessagePage</span><span class="params">(WebDriver driver)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(driver);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> &lt;T&gt; <span class="function">T <span class="title">createMessage</span><span class="params">(Class&lt;T&gt; resultPage, String summary, String details)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.summary.sendKeys(summary);</span><br><span class="line">        <span class="keyword">this</span>.text.sendKeys(details);</span><br><span class="line">        <span class="keyword">this</span>.submit.click();</span><br><span class="line">        <span class="function"><span class="keyword">return</span> PageFactory.<span class="title">initElements</span><span class="params">(driver, resultPage)</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function">CreateMessagePage <span class="title">to</span><span class="params">(WebDriver driver)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// driver.get("http://localhost:8080/messages/form");</span></span><br><span class="line">        get(driver, <span class="string">"messages/form"</span>);</span><br><span class="line">        <span class="function"><span class="keyword">return</span> PageFactory.<span class="title">initElements</span><span class="params">(driver, CreateMessagePage.class)</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试逻辑</p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CreateMessagePage page = CreateMessagePage.to<span class="comment">(driver)</span>;</span><br><span class="line">ViewMessagePage viewMessagePage =</span><br><span class="line">    page.createMessage<span class="comment">(ViewMessagePage.class, expectedSummary, expectedText)</span>;</span><br><span class="line">    </span><br><span class="line">assertThat<span class="comment">(viewMessagePage.getMessage()</span>).isEqualTo<span class="comment">(expectedMessage)</span>;</span><br><span class="line">assertThat<span class="comment">(viewMessagePage.getSuccess()</span>).isEqualTo<span class="comment">("Successfully created a new message")</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="关于Page_Object_Pattern">关于<em>Page Object Pattern</em></h3><p>页面对象模式通过面向对象的方式把页面封装起来。无论是页面的元素，还是对页面的操作，都可以封装起来的，这大大提供了测试代码的复用率。 同时对页面的操作只需要通过调用方法即可实现，如同在浏览器页面上点选按钮一般简单，甚至对于一些复杂的流程操作，比直接在浏览器页面中操作更为高效。</p>
+<h2 id="集成Gab">集成Gab</h2><p>Geb是一个Groovy的浏览器自动测试框架。它使用webdriver来驱动对页面的操作。可以把它理解为针对<em>Page Object Pattern</em>对Webdriver进行了更高层次的封装。利用它，可以更为方便的操作页面对象。同时它能够集成spock，能够很大程度的提高测试代码的质量。</p>
+<p>下面是使用Geb进行页面功能测试的一个例子</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserIndexPage</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">Page</span> &#123;</span></span><br><span class="line"></span><br><span class="line">    static url = <span class="string">"/users"</span></span><br><span class="line">    static at = &#123; title == <span class="string">"My website - Users"</span> &#125;</span><br><span class="line">    static content = &#123;</span><br><span class="line">        menu &#123; $(<span class="string">"ul.nav.navbar-nav li"</span>, <span class="number">2</span>) &#125;</span><br><span class="line">        homeMenuButton &#123; $(<span class="string">"ul.nav.navbar-nav li:first-child a"</span>) &#125;</span><br><span class="line">        usersTable &#123; $(<span class="string">"table"</span>, <span class="number">0</span>) &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserIndexIntegrationTests</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">GebReportingSpec</span> &#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Autowired</span></span><br><span class="line">    <span class="type">WebApplicationContext</span> context</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">setup</span>(</span>) &#123;</span><br><span class="line">        browser.driver = <span class="type">MockMvcHtmlUnitDriverBuilder</span></span><br><span class="line">                .webAppContextSetup(context, springSecurity()).build()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> "<span class="title">go</span> <span class="title">to</span> <span class="title">users</span>"(</span>) &#123;</span><br><span class="line">        when:</span><br><span class="line">        to <span class="type">UserIndexPage</span></span><br><span class="line"></span><br><span class="line">        then:</span><br><span class="line">        at <span class="type">UserIndexPage</span></span><br><span class="line"></span><br><span class="line">        expect:</span><br><span class="line">        menu.hasClass(<span class="string">"active"</span>)</span><br><span class="line">        usersTable.find(<span class="string">"tbody tr"</span>).size() == <span class="number">3</span> <span class="comment">//check record count</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> "<span class="title">click</span> <span class="title">home</span> <span class="title">menu</span>"(</span>) &#123;</span><br><span class="line">        when:</span><br><span class="line">        to <span class="type">UserIndexPage</span></span><br><span class="line"></span><br><span class="line">        then:</span><br><span class="line">        homeMenuButton.click(<span class="type">HomePage</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="总结以及个人的一点看法">总结以及个人的一点看法</h2><p>无论是集成HtmlUnit还是Geb，他们都是基于Spring Test的MockMVC的，也就是容器内的测试，它们都不会启动Servlet容器，因而测试效率是很高的。由于它并没有启动Servlet容器，所以页面必须是通过模板引擎来渲染的，如果页面的渲染是通过JSP forward来实现，那么测试时无法进行的， 也正因如此，他们并不是完整E2E测试方案，虽然他们的脚本确实可以提供给E2E测试。</p>
+<p>Spring Test和HtmlUnit或者Geb的集成， 就可以当做Functional Test来做，不要对Controller的依赖对象进行Mock。如果需要，Controller的集成测试可以另外进行，然后注入mock对象。这样进行的功能测试对比完整的E2E测试有个很大的优势在于，每个页面的测试都会重新加载ApplicaitonContext初始化数据库环境，因而不同的页面测试的数据是互不影响的。不需要像E2E测试，额外地进行一些数据的准备工作。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/SpringFramework/">SpringFramework</a><a href="/tags/测试/">测试</a>
+  </div>
+
+</div>
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yukinami.github.io/2016/05/28/用Spring-Test进行页面的功能测试/" data-title="用Spring Test进行页面的功能测试 | Jyong&#39;s Blog" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2016/05/28/代码测试总结/"  title="代码测试总结">
+ <strong>下一篇：</strong><br/> 
+ <span>代码测试总结
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring_Test"><span class="toc-number">1.</span> <span class="toc-text">Spring Test</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#集成HtmlUnit"><span class="toc-number">2.</span> <span class="toc-text">集成HtmlUnit</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#集成Webdriver"><span class="toc-number">3.</span> <span class="toc-text">集成Webdriver</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#关于Page_Object_Pattern"><span class="toc-number">3.1.</span> <span class="toc-text">关于Page Object Pattern</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#集成Gab"><span class="toc-number">4.</span> <span class="toc-text">集成Gab</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结以及个人的一点看法"><span class="toc-number">5.</span> <span class="toc-text">总结以及个人的一点看法</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/Android/" title="Android">Android<sup>12</sup></a></li>
+		
+			<li><a href="/tags/经验错误/" title="经验错误">经验错误<sup>9</sup></a></li>
+		
+			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>7</sup></a></li>
+		
+			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
+		
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+		
+			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
+		
+			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
+		
+			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Sring-Data-Rest/" title="Sring Data Rest">Sring Data Rest<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Agile/" title="Agile">Agile<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            <a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+          </li>
+        
+          <li>
+            <a href="http://hexo.io" target="_blank" title="Hexo">Hexo</a>
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I&#39;m Jyong, a web developer. <br/>
+			And hope you enjoy this blog.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2100171710" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yukinami" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="https://plus.google.com/100215768199802928787?rel=author" target="_blank" class="icon-google_plus" title="Google+"></a>
+		
+		
+		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		
+		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"yukinami"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+  </body>
+</html>
+
+
+<a href="https://github.com/yukinami"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?ec2d95a543c1245fcad501b5484af450";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>

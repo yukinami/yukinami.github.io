@@ -4,13 +4,12 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Gradle plugin | Jyong&#39;s Blog</title>
+    <title>使用coveralls统计测试覆盖率 | Jyong&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Jyong">
     
-    <meta name="description" content="Gradle plugin packages up reusable pieces of build logic, which can be used across many different projects and builds.
-Packaging a pluginBuild scriptYou can include the source for the plugin directly in the build script. This has the benefit that the plugin is automatically compiled and included in the classpath of the build script without you having to do anything. However, the plugin is not visible outside the build script, and so you cannot reuse the plugin outside the build script it is defined in.">
+    <meta name="description" content="coveralls可以持续跟踪代码的测试覆盖率。 为了让它能够跟踪到测试覆盖率，需要测试的时候生成覆盖率数据，并提供给coveralls service。">
     
     
     
@@ -71,14 +70,14 @@ Packaging a pluginBuild scriptYou can include the source for the plugin directly
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/02/02/gradle-plugin/" title="Gradle plugin" itemprop="url">Gradle plugin</a>
+      <a href="/2016/05/27/使用coveralls统计测试覆盖率/" title="使用coveralls统计测试覆盖率" itemprop="url">使用coveralls统计测试覆盖率</a>
   </h1>
   <p class="article-author">By
        
 		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
 		
   <p class="article-time">
-    <time datetime="2015-02-02T05:23:15.000Z" itemprop="datePublished"> 发表于 Feb 2 2015</time>
+    <time datetime="2016-05-27T13:14:07.000Z" itemprop="datePublished"> 发表于 May 27 2016</time>
     
   </p>
 </header>
@@ -87,26 +86,27 @@ Packaging a pluginBuild scriptYou can include the source for the plugin directly
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Packaging_a_plugin"><span class="toc-number">1.</span> <span class="toc-text">Packaging a plugin</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Build_script"><span class="toc-number">1.1.</span> <span class="toc-text">Build script</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#buildSrc_project"><span class="toc-number">1.2.</span> <span class="toc-text">buildSrc project</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Standalone_project"><span class="toc-number">1.3.</span> <span class="toc-text">Standalone project</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Writing_a_simple_plugin"><span class="toc-number">2.</span> <span class="toc-text">Writing a simple plugin</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#A_standalone_project"><span class="toc-number">2.1.</span> <span class="toc-text">A standalone project</span></a></li></ol></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#生成测试覆盖率数据"><span class="toc-number">1.</span> <span class="toc-text">生成测试覆盖率数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#上传coveralls"><span class="toc-number">2.</span> <span class="toc-text">上传coveralls</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CI服务器"><span class="toc-number">3.</span> <span class="toc-text">CI服务器</span></a></li></ol>
 		
 		</div>
 		
-		<p>Gradle plugin packages up reusable pieces of build logic, which can be used across many different projects and builds.</p>
-<h1 id="Packaging_a_plugin">Packaging a plugin</h1><h2 id="Build_script">Build script</h2><p>You can include the source for the plugin directly in the build script. This has the benefit that the plugin is automatically compiled and included in the classpath of the build script without you having to do anything. However, the plugin is not visible outside the build script, and so you cannot reuse the plugin outside the build script it is defined in.</p>
+		<p><a href="https://coveralls.io/" target="_blank" rel="external">coveralls</a>可以持续跟踪代码的测试覆盖率。 为了让它能够跟踪到测试覆盖率，需要测试的时候生成覆盖率数据，并提供给coveralls service。</p>
 <a id="more"></a>
-<h2 id="buildSrc_project">buildSrc project</h2><p>You can put the source for the plugin in the rootProjectDir/buildSrc/src/main/groovy directory. Gradle will take care of compiling and testing the plugin and making it available on the classpath of the build script. The plugin is visible to every build script used by the build. However, it is not visible outside the build, and so you cannot reuse the plugin outside the build it is defined in.</p>
-<p>See Chapter 60, Organizing Build Logic for more details about the buildSrc project.</p>
-<h2 id="Standalone_project">Standalone project</h2><p>You can create a separate project for your plugin. This project produces and publishes a JAR which you can then use in multiple builds and share with others. Generally, this JAR might include some custom plugins, or bundle several related task classes into a single library. Or some combination of the two.</p>
-<h1 id="Writing_a_simple_plugin">Writing a simple plugin</h1><p>build.gradle<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">apply plugin: GreetingPlugin</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> GreetingPlugin <span class="keyword">implements</span> Plugin&lt;<span class="keyword">Project</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">void</span> apply(<span class="keyword">Project</span> <span class="keyword">project</span>) &#123;</span><br><span class="line">        <span class="keyword">project</span>.<span class="keyword">task</span>(<span class="string">'hello'</span>) &lt;&lt; &#123;</span><br><span class="line">            <span class="keyword">println</span> <span class="string">"Hello from the GreetingPlugin"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>Output of <strong><em>gradle -q hello</em></strong><br>`</p>
-<blockquote>
-<p>gradle -q hello<br>Hello from the GreetingPlugin<br>`</p>
-</blockquote>
-<h2 id="A_standalone_project">A standalone project</h2><p>Now we will move our plugin to a standalone project, so we can publish it and share it with others. This project is simply a Groovy project that produces a JAR containing the plugin classes.</p>
-<p>So how does Gradle find the Plugin implementation? The answer is you need to provide a properties file in the jar’s META-INF/gradle-plugins directory that matches the id of your plugin.</p>
-<p><strong><em>Example 59.6. Wiring for a custom plugin</em></strong></p>
-<p>src/main/resources/META-INF/gradle-plugins/org.samples.greeting.properties<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;&#10;Using your plugin in another project&#10;=====================================&#10;To use a plugin in a build script, you need to add the plugin classes to the build script&#39;s classpath. To do this, you use a &#8220;buildscript &#123; &#125;&#8221; block, as described in [Section 60.5, &#8220;External dependencies for the build script&#8221;][2].&#10;&#10;***Example 59.7. Using a custom plugin in another project***&#10;&#10;build.gradle</span><br></pre></td></tr></table></figure></p>
-<p>buildscript {<br>    repositories {<br>        maven {<br>            url uri(‘../repo’)<br>        }<br>    }<br>    dependencies {<br>        classpath group: ‘org.gradle’, name: ‘customPlugin’,<br>                  version: ‘1.0-SNAPSHOT’<br>    }<br>}<br>apply plugin: ‘org.samples.greeting’<br>```</p>
+<h2 id="生成测试覆盖率数据">生成测试覆盖率数据</h2><p>jacoco和cobertura都可以用来统计代码的测试覆盖率，并且各自都有gradle和maven的插件。下面以gradle为例进行讨论。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">apply</span> <span class="rule"><span class="attribute">plugin</span>:<span class="value"> <span class="string">"jacoco"</span></span></span></span><br></pre></td></tr></table></figure>
+<p>通过上述配置启用jacoco插件。启用后，按照官方文档说法，如果同时启用了Java插件的话，那么任务jacocoTestReport将会被创建并且它依赖于test任务，但是实际运行的时候发现它并没有依赖于test任务</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">:compileJava</span></span><br><span class="line"><span class="symbol">:compileGroovy</span></span><br><span class="line"><span class="symbol">:processResources</span></span><br><span class="line"><span class="symbol">:classes</span></span><br><span class="line"><span class="symbol">:jacocoTestReport</span> <span class="constant">SKIPPED</span></span><br></pre></td></tr></table></figure>
+<p>并且直接运行的话，它会被跳过。</p>
+<p>jacocoTestReport任务是用来发布jacoco报告的，它依赖于jacoco的测试覆盖率数据文件<code>text.exec</code>。 如果启用了jacoco插件，测试覆盖率数据文件会在test任务执行的时候生成，位于<code>build/jacoco</code>目录下。</p>
+<p>在生成这个文件的前提下，执行jacocoTestReport任务，就会在<code>build/reports/tests/jacoco</code>目录生成报告，默认生成HTML格式的报告。</p>
+<h2 id="上传coveralls">上传coveralls</h2><p>jacoco生成的报告需要上传给coveralls才能显示。Maven的话通过<a href="https://github.com/trautonen/coveralls-maven-plugin" target="_blank" rel="external">coveralls-maven-plugin</a>可以实现，gradle则使用插件<a href="https://github.com/kt3k/coveralls-gradle-plugin" target="_blank" rel="external">coveralls-gradle-plugin</a>。</p>
+<p>以<a href="https://github.com/kt3k/coveralls-gradle-plugin" target="_blank" rel="external">coveralls-gradle-plugin</a>为例</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">plugins</span> &#123;</span><br><span class="line">    <span class="title">id</span> <span class="string">'jacoco'</span></span><br><span class="line">    id <span class="string">'com.github.kt3k.coveralls'</span> version <span class="string">'2.6.3'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>它插件依赖于jacoco生成的XML报告，因此需要配置jacoco</p>
+<figure class="highlight puppet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="name">jacocoTestReport</span> &#123;</span><br><span class="line">	reports &#123;</span><br><span class="line">		xml.<span class="literal">enabled</span> = <span class="keyword">true</span></span><br><span class="line">		html.<span class="literal">enabled</span> = <span class="keyword">true</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="CI服务器">CI服务器</h2><p>最后coveralls需要配合一个CI服务器，持续地对代码的测试覆盖率进行统计，支持<a href="https://travis-ci.org/" target="_blank" rel="external">Travis CI</a>、Jenkins等多种CI服务器。</p>
+<p>以Travis为例，需要在构建的最后执行上面的提到的，生成测试覆盖率报告并上传的任务</p>
+<figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">after_success:</span><br><span class="line">-<span class="ruby"> ./gradlew jacocoTestReport coveralls</span><br><span class="line"></span>`</span><br></pre></td></tr></table></figure>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -115,7 +115,7 @@ Packaging a pluginBuild scriptYou can include the source for the plugin directly
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/gradle/">gradle</a><a href="/tags/摘录/">摘录</a>
+  <span></span> <a href="/tags/CI/">CI</a><a href="/tags/测试/">测试</a>
   </div>
 
 </div>
@@ -123,7 +123,7 @@ Packaging a pluginBuild scriptYou can include the source for the plugin directly
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yukinami.github.io/2015/02/02/gradle-plugin/" data-title="Gradle plugin | Jyong&#39;s Blog" data-tsina="null" class="share clearfix">
+  <div data-url="http://yukinami.github.io/2016/05/27/使用coveralls统计测试覆盖率/" data-title="使用coveralls统计测试覆盖率 | Jyong&#39;s Blog" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -133,18 +133,18 @@ Packaging a pluginBuild scriptYou can include the source for the plugin directly
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/02/02/Guice-Account-Scope/" title="Guice Account Scope">
+ <a href="/2016/05/28/代码测试总结/" title="代码测试总结">
   <strong>上一篇：</strong><br/>
   <span>
-  Guice Account Scope</span>
+  代码测试总结</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/02/02/Android-Authenticator/"  title="Android Authenticator">
+<a href="/2016/05/22/用Spring-data-rest开发基于HATEOAS的API/"  title="用Spring data rest开发基于HATEOAS的API">
  <strong>下一篇：</strong><br/> 
- <span>Android Authenticator
+ <span>用Spring data rest开发基于HATEOAS的API
 </span>
 </a>
 </div>
@@ -163,7 +163,7 @@ Packaging a pluginBuild scriptYou can include the source for the plugin directly
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Packaging_a_plugin"><span class="toc-number">1.</span> <span class="toc-text">Packaging a plugin</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Build_script"><span class="toc-number">1.1.</span> <span class="toc-text">Build script</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#buildSrc_project"><span class="toc-number">1.2.</span> <span class="toc-text">buildSrc project</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Standalone_project"><span class="toc-number">1.3.</span> <span class="toc-text">Standalone project</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Writing_a_simple_plugin"><span class="toc-number">2.</span> <span class="toc-text">Writing a simple plugin</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#A_standalone_project"><span class="toc-number">2.1.</span> <span class="toc-text">A standalone project</span></a></li></ol></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#生成测试覆盖率数据"><span class="toc-number">1.</span> <span class="toc-text">生成测试覆盖率数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#上传coveralls"><span class="toc-number">2.</span> <span class="toc-text">上传coveralls</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CI服务器"><span class="toc-number">3.</span> <span class="toc-text">CI服务器</span></a></li></ol>
  
   </div>
 

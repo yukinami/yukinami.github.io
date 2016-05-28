@@ -70,6 +70,123 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/01/13/Spring-XD-Type-Conversion/" title="Spring XD Type Conversion" itemprop="url">Spring XD Type Conversion</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-01-13T14:12:06.000Z" itemprop="datePublished"> 发表于 Jan 13 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="Spring_Integration_的_Type_Conversion">Spring Integration 的 Type Conversion</h1><h2 id="Datatype_Channel">Datatype Channel</h2><p>Datatype Channel 可以指定Channel接收的数据的数据类型<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="keyword">int</span>:channel <span class="keyword">id</span>=<span class="string">"numberChannel"</span> datatype=<span class="string">"java.lang.Number"</span>/&gt;</span><br><span class="line">&lt;<span class="keyword">int</span>:channel <span class="keyword">id</span>=<span class="string">"stringOrNumberChannel"</span> datatype=<span class="string">"java.lang.String,java.lang.Number"</span>/&gt;</span><br></pre></td></tr></table></figure></p>
+<p>指定了<code>datatype</code>之后，如果Channel收到了类型不是指定的类型，会如下进行：</p>
+<ol>
+<li>查找是否定义了一个叫做”integrationConversionService”的Bean，该Bean是Spring’s <a href="http://docs.spring.io/spring/docs/current/spring-framework-reference/html/validation.html#core-convert-ConversionService-API">Conversion Service</a>的实例。如果没有，则会抛出异常。</li>
+<li>如果存在，则会尝试使用它将Message的Payload类型转换为Channel的<code>datatype</code></li>
+</ol>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/01/13/Spring-XD-Type-Conversion/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/01/06/用spring-social构建API的client端/" title="用spring social构建API的client端" itemprop="url">用spring social构建API的client端</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-01-06T13:26:02.000Z" itemprop="datePublished"> 发表于 Jan 6 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="介绍">介绍</h1><p>Spring Social可以用来连接Software-as-a-Service (SaaS) 服务商提供了REST API，Spring的项目本身已经提供了对Facebook, Twitter, Linkedin, Github等服务商的REST API的连接。<br>实际在开发app的过程中，通常是需要本地app连接到后台服务器的REST API的。客户端的开发本身可能还会涉及相对复杂的验证机制，比如<code>OAuth Dance</code>（客户端和服务器来回交互获取access token的过程），Spring Social为客户端的开发提供了一套框架，包括连接的建立，对API的强类型绑定，应用可以直接通过客户端访问需要的API。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/01/06/用spring-social构建API的client端/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/01/06/对于OAuth2-0的理解/" title="对于OAuth2.0授权方式的理解" itemprop="url">对于OAuth2.0授权方式的理解</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-01-06T13:23:21.000Z" itemprop="datePublished"> 发表于 Jan 6 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="概述">概述</h1><p>OAuth2.0的最好的文档，莫过于<a href="http://www.rfcreader.com/#rfc6749">RFC 6749</a>。OAuth2.0本身是一个比较灵活的标准，能够适配应用到各种场景。本文主要是对文档的翻译以及加上部分个人的理解。</p>
+<h1 id="角色">角色</h1><p>OAuth定义了4个角色</p>
+<ul>
+<li>resource owner<br>  能够对受保护的资源进行授权的实体。当<code>resource owner</code>是人的时候，它是指终端用户</li>
+<li>resource server<br>  持有受保护的资源的服务器，使用<code>access tokens</code>能够接收和响应对受保护资源的请求</li>
+<li>client<br>  在resource <code>owner</code>的行为和授权下，请求受保护资源的应用。“client”没有特指任何实现特性（比如，无论应用执行在服务器，桌面或者其他设备上）</li>
+<li>authorization server<br>  当成功认证了<code>resource owner</code>并且获得授权后，分发<code>access tokens</code>给<code>client</code>的服务器。</li>
+</ul>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/01/06/对于OAuth2-0的理解/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2014/12/18/RESTful API Versioning/" title="RESTful API Versioning" itemprop="url">RESTful API Versioning</a>
   </h1>
   <p class="article-author">By
@@ -305,37 +422,37 @@
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
+			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>2</sup></a></li>
 		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
+			<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+			<li><a href="/tags/Sring-Data-Rest/" title="Sring Data Rest">Sring Data Rest<sup>1</sup></a></li>
 		
-			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>2</sup></a></li>
-		
-			<li><a href="/tags/REST/" title="REST">REST<sup>1</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>1</sup></a></li>
-		
-			<li><a href="/tags/摘录/" title="摘录">摘录<sup>1</sup></a></li>
-		
-			<li><a href="/tags/git/" title="git">git<sup>1</sup></a></li>
+			<li><a href="/tags/Agile/" title="Agile">Agile<sup>1</sup></a></li>
 		
 		</ul>
 </div>

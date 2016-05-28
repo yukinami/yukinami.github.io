@@ -70,6 +70,112 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2016/03/04/Spring-OAuth2的ResourceServerConfiguration匹配了所有资源路径/" title="Spring OAuth2的ResourceServerConfiguration匹配了所有资源路径" itemprop="url">Spring OAuth2的ResourceServerConfiguration匹配了所有资源路径</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-03-04T05:35:24.000Z" itemprop="datePublished"> 发表于 Mar 4 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="问题">问题</h2><p>通过继承<code>ResourceServerConfigurerAdapter</code>来配置ResourceServer的资源权限时，虽然使用了<code>HttpSecurity#requestMatchers</code>方法来匹配特定的资源，但是其他未匹配的资源依然会被匹配保护。</p>
+<p>github上同样的<a href="https://github.com/spring-projects/spring-security-oauth/issues/444">问题</a>。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/03/04/Spring-OAuth2的ResourceServerConfiguration匹配了所有资源路径/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/02/26/Spring-Boot-Auto-Configuration和HATEOAS、Data-REST/" title="Spring Boot Auto Configuration和HATEOAS、Data REST" itemprop="url">Spring Boot Auto Configuration和HATEOAS、Data REST</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-26T12:34:05.000Z" itemprop="datePublished"> 发表于 Feb 26 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="Spring_Boot集成HATEOAS">Spring Boot集成HATEOAS</h2><p><code>JacksonAutoConfiguration</code>会注册Primary ObjectMapper，这个ObjectMapper通过<code>spring.jackson.*</code>来配置。<br><code>JacksonAutoConfiguration</code>配置完后会注册<code>HypermediaAutoConfiguration</code>，<code>HypermediaAutoConfiguration</code>中会对Primary ObjectMapper注册<code>Jackson2HalModule</code>（由apply-to-primary-object-mapper决定）。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/02/26/Spring-Boot-Auto-Configuration和HATEOAS、Data-REST/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/02/18/Spring自定义Constraints的ErrorCode/" title="Spring自定义Constraints的ErrorCode" itemprop="url">Spring自定义Constraints的ErrorCode</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-18T09:40:31.000Z" itemprop="datePublished"> 发表于 Feb 18 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>如果使用自定义Constraints，ErrorCode的是根据Constraints的名称按照优先度生成的<code>{Constraints名}.{类名}.{字段名}</code>、<code>{Constraints名}.{字段名}</code>、<code>{Constraints名}.{字段类型}</code>、<code>{Constraints名}</code>。 在注解中定义的message会优先给Bean Validation解析，然后使用解析的结果作为Default Message，ErrorCode作为key，到Spring的MessageSource中再进行一次解析，获得最终的message template。</p>
+<p>另外被验证字段本身的名称，再加上注解中除了<code>message</code>，<code>groups</code>，<code>payload</code>属性定义的其他属性的值，会作为key再次到MessageSource进行解析，结果的结果作为变量传入到上面的message template中。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2016/02/17/JPA fetch join & N+1/" title="JPA fetch join &amp; N+1" itemprop="url">JPA fetch join &amp; N+1</a>
   </h1>
   <p class="article-author">By
@@ -319,118 +425,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/02/14/Spring-Annotation-driven-Formatting/" title="Spring Annotation-driven Formatting" itemprop="url">Spring Annotation-driven Formatting</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2016-02-14T08:45:22.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>应用中可能设计很多不同格式的时间、数字的转换和显示。可以通过基于Annotation-driven Formatting来实现。 使用@NumberFormat来格式化java.lang.Number字段，使用@DateTimeFormat来格式化java.util.Date, java.util.Calendar, java.util.Long, 或者Joda Time字段。</p>
-<h2 id="AnnotationFormatterFactory">AnnotationFormatterFactory</h2><p>为了使用注解格式化，需要注册<code>AnnotationFormatterFactory</code>的实例，下面是个例子</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2016/02/14/Spring-Annotation-driven-Formatting/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/02/14/PropertySource-Environment/" title="PropertySource &amp; Environment" itemprop="url">PropertySource &amp; Environment</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2016-02-14T08:21:58.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>在Spring 3.1之前，注册一个配置文件的唯一方法就是</p>
-<figure class="highlight vhdl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="keyword">context</span>:<span class="keyword">property</span>-placeholder location=<span class="string">"some.properties"</span>/&gt;</span><br></pre></td></tr></table></figure>
-<p>Spring 3.1引入了<code>PropertySource</code>和<code>Environment</code>接口，可以通过@PropertySource注解来注册</p>
-<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">@Configuration</span></span><br><span class="line"><span class="variable">@PropertySource</span>(<span class="string">"classpath:some.properties"</span>)</span><br><span class="line">public class ApplicationConfiguration</span><br></pre></td></tr></table></figure>
-<p>并且从Spring 3.1之后，<code>&lt;context:property-placeholder&gt;</code>实际底层注册的是<code>PropertySourcesPlaceholderConfigurer</code>对象。 这个对象具有更好的扩展性并且和<code>Environment</code>，<code>PropertySource</code>接口交互。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2016/02/14/PropertySource-Environment/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/02/14/spring-boot-error-handling/" title="spring boot error handling" itemprop="url">spring boot error handling</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2016-02-14T07:33:24.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="Spring_MVC的异常处理">Spring MVC的异常处理</h2><p><code>HandlerExceptionResolver</code>的实现用来处理意外的异常。</p>
-<h3 id="ExceptionHandlerExceptionResolver">ExceptionHandlerExceptionResolver</h3><p><code>ExceptionHandlerExceptionResolver</code>实现通常寻找@ExceptionHandler注解的方法来处理异常。</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleController</span> &#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// @RequestMapping methods omitted ...</span></span><br><span class="line"></span><br><span class="line">    <span class="annotation">@ExceptionHandler</span>(IOException.<span class="keyword">class</span>)</span><br><span class="line">    <span class="keyword">public</span> ResponseEntity&lt;String&gt; handleIOException(IOException ex) &#123;</span><br><span class="line">        <span class="comment">// prepare responseEntity</span></span><br><span class="line">        <span class="keyword">return</span> responseEntity;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2016/02/14/spring-boot-error-handling/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
@@ -458,37 +452,37 @@
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
+			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>2</sup></a></li>
 		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
+			<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+			<li><a href="/tags/Sring-Data-Rest/" title="Sring Data Rest">Sring Data Rest<sup>1</sup></a></li>
 		
-			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>2</sup></a></li>
-		
-			<li><a href="/tags/REST/" title="REST">REST<sup>1</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>1</sup></a></li>
-		
-			<li><a href="/tags/摘录/" title="摘录">摘录<sup>1</sup></a></li>
-		
-			<li><a href="/tags/git/" title="git">git<sup>1</sup></a></li>
+			<li><a href="/tags/Agile/" title="Agile">Agile<sup>1</sup></a></li>
 		
 		</ul>
 </div>
