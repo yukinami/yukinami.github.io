@@ -70,6 +70,86 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2016/01/18/Spring-Boot-DevTools/" title="Spring Boot DevTools" itemprop="url">Spring Boot DevTools</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-01-18T08:26:17.000Z" itemprop="datePublished"> 发表于 Jan 18 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>Java相对于其他的一些开发语言来说，修改代码后经常需要重新编译代码，重启服务器等等，这些动作非常的耗时间，降低了不少生产效率，所以热部署一直是Java的开发人员所追求的。从JRebel到Spring Loader，它们都可以达到JVM的Hot Swapping的目的。但是针对类似Spring这样需要在服务器启动时初始化一些容器配置的项目，还是不得不把大量的时间花在重启服务器上。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/01/18/Spring-Boot-DevTools/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/12/02/Work-Flow/" title="Work Flow" itemprop="url">Work Flow</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-02T14:24:50.000Z" itemprop="datePublished"> 发表于 Dec 2 2015</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="Work_Flow">Work Flow</h1><h2 id="Git_Flow">Git Flow</h2><p><img src="https://about.gitlab.com/images/git_flow/gitdashflow.png" alt=""></p>
+<h3 id="主要分支">主要分支</h3><p>核心库应该有两个无限生命周期的分支：</p>
+<ul>
+<li>master</li>
+<li>develop</li>
+</ul>
+<p><img src="http://nvie.com/img/main-branches@2x.png" alt="main-branches"></p>
+<p>我们把<code>origin/master</code>分支作为production主分支，它的HEAD版本的代码总是处于随时可以release的状态。  </p>
+<p>我们把<code>origin/develop</code>分支作为develop主分支，它的HEAD版本的代码总是处于最新的交付的开发状态。有时候也称之为<strong>集成分支</strong>。这也分支也是构建每日的晚间快照版本的来源。</p>
+<p>当<code>develop</code>分支的源码达到一个稳定的状态并且准备release的时候，所有的修改应该合并回<code>master</code>分支，然后做一个release序号的标记(tag)。</p>
+<p>所以，当每次修改合并回<code>master</code>的时候，就是一个新的production release版本。所以理论上，我们可以使用一个Git钩子脚本来进行自动构建然后发布到我们的生产环境。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/12/02/Work-Flow/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/11/26/性能测试指南/" title="性能测试指南" itemprop="url">性能测试指南</a>
   </h1>
   <p class="article-author">By
@@ -355,78 +435,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/01/FLAG-ACTIVITY-CLEAR-TOP-launches-new-instance/" title="FLAG_ACTIVITY_CLEAR_TOP launches new instance" itemprop="url">FLAG_ACTIVITY_CLEAR_TOP launches new instance</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-01T01:40:53.000Z" itemprop="datePublished"> 发表于 Jul 1 2015</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="错误">错误</h1><p>在使用<code>NavUtils.navigateUpFromSameTask(this)</code>导航到父Activity时，页面切换的动画是从右往左滑动，这样的动画看起来不像是返回动画，而是打开了一个新的页面的动画。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/07/01/FLAG-ACTIVITY-CLEAR-TOP-launches-new-instance/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/21/Junit-Rules/" title="Junit Rules" itemprop="url">Junit Rules</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-21T02:41:28.000Z" itemprop="datePublished"> 发表于 Apr 21 2015</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="Interceptors">Interceptors</h1><p>Junit4.7引入了一个新功能叫做”Interceptors”，旨在以一个更为清晰简单的API，带回JUnit<code>meta-testing</code>的能力。但是之后又被重新命名为”Rule”。</p>
-<h2 id="Meta-testing">Meta-testing</h2><p>Junit擅长表达尽量少的测试逻辑。在Junit3中，你能够以不同的方式控制测试运行过程。Junit4简化的代价就是失去了这个“meta-testing”。这不影响简单测试，但是限制了更为强大的测试。现在Junit4重新把meta-testing带了回来。</p>
-<p>比如说，你想输出一个log当每个测试失败的时候。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/04/21/Junit-Rules/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/page/3/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/5/">Next<span></span></a>
@@ -454,23 +462,25 @@
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
-		
-			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
+		
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
+			<li><a href="/tags/Java/" title="Java">Java<sup>3</sup></a></li>
+		
 			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
 		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
 		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
@@ -478,13 +488,11 @@
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>2</sup></a></li>
 		
+			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Sring-Data-Rest/" title="Sring Data Rest">Sring Data Rest<sup>1</sup></a></li>
-		
-			<li><a href="/tags/Agile/" title="Agile">Agile<sup>1</sup></a></li>
+			<li><a href="/tags/SpringFramework/" title="SpringFramework">SpringFramework<sup>1</sup></a></li>
 		
 		</ul>
 </div>

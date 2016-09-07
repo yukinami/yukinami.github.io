@@ -1,0 +1,486 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>实现后台长时间任务的监控 | Jyong&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Jyong">
+    
+    <meta name="description" content="后台长时间任务的监控，例如，处理进度的监控，可以通过客户端轮询拉或者服务器推技术来实现。这里主要讨论服务器推技术的实现。
+Comet基于HTTP 长连接、无须在浏览器端安装插件的“服务器推”技术为“Comet”。Comet主要有两种实现方式。
+基于 AJAX 的长轮询（long-polling）方式
+使用 AJAX 实现“服务器推”与传统的 AJAX 应用不同之处在于
+
+服务器端会阻塞请求直到有数据传递或超时才返回。
+客户端 JavaScript 响应处理函数会在处理完服务器返回的信息后，再次发出请求，重新建立连接。
+当客户端处理接收的数据、重新建立连接时，服务器端可能有新的数据到达；这些信息会被服务器端保存直到客户端重新建立连接，客户端会一次把当前服务器端所有的信息取回。">
+    
+    
+    
+    
+    <link rel="alternative" href="/atom.xml" title="Jyong&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/">
+    <link rel="apple-touch-icon-precomposed" href="/img/">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Jyong&#39;s Blog" title="Jyong&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Jyong&#39;s Blog">Jyong&#39;s Blog</a></h1>
+				<h2 class="blog-motto">人生の目的の一つは楽しむことです</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yukinami.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/09/05/实现后台长时间任务的监控/" title="实现后台长时间任务的监控" itemprop="url">实现后台长时间任务的监控</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-09-05T10:00:01.000Z" itemprop="datePublished"> 发表于 Sep 5 2016</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Comet"><span class="toc-number">1.</span> <span class="toc-text">Comet</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基于_AJAX_的长轮询（long-polling）方式"><span class="toc-number">1.1.</span> <span class="toc-text">基于 AJAX 的长轮询（long-polling）方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基于_Iframe_及_htmlfile_的流（streaming）方式"><span class="toc-number">1.2.</span> <span class="toc-text">基于 Iframe 及 htmlfile 的流（streaming）方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Server_Send_Event"><span class="toc-number">2.</span> <span class="toc-text">Server Send Event</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#客户端的实现"><span class="toc-number">2.1.</span> <span class="toc-text">客户端的实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#服务器端"><span class="toc-number">2.2.</span> <span class="toc-text">服务器端</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>后台长时间任务的监控，例如，处理进度的监控，可以通过客户端轮询拉或者服务器推技术来实现。这里主要讨论服务器推技术的实现。</p>
+<h2 id="Comet">Comet</h2><p>基于HTTP 长连接、无须在浏览器端安装插件的“服务器推”技术为“Comet”。Comet主要有两种实现方式。</p>
+<h3 id="基于_AJAX_的长轮询（long-polling）方式">基于 AJAX 的长轮询（long-polling）方式</h3><p><img src="http://www.ibm.com/developerworks/cn/web/wa-lo-comet/fig002.jpg" alt=""></p>
+<p>使用 AJAX 实现“服务器推”与传统的 AJAX 应用不同之处在于</p>
+<ol>
+<li>服务器端会阻塞请求直到有数据传递或超时才返回。</li>
+<li>客户端 JavaScript 响应处理函数会在处理完服务器返回的信息后，再次发出请求，重新建立连接。</li>
+<li>当客户端处理接收的数据、重新建立连接时，服务器端可能有新的数据到达；这些信息会被服务器端保存直到客户端重新建立连接，客户端会一次把当前服务器端所有的信息取回。</li>
+</ol>
+<a id="more"></a>
+<p>在这种长轮询方式下，客户端是在 XMLHttpRequest 的 readystate 为 4（即数据传输结束）时调用回调函数，进行信息处理。当 readystate 为 4 时，数据传输结束，连接已经关闭。Mozilla Firefox 提供了对 Streaming AJAX 的支持， 即 readystate 为 3 时（数据仍在传输中），客户端可以读取数据，从而无须关闭连接，就能读取处理服务器端返回的信息。</p>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> xhr = new <span class="type">XMLHttpRequest</span>();  </span><br><span class="line">xhr.previous_text = '';</span><br><span class="line"> </span><br><span class="line">//xhr.onload = function() &#123; log_message(<span class="string">"[XHR] Done. responseText: &lt;i&gt;"</span> + xhr.responseText + <span class="string">"&lt;/i&gt;"</span>); &#125;;</span><br><span class="line">xhr.onerror = function() &#123; log_message(<span class="string">"[XHR] Fatal Error."</span>); &#125;;</span><br><span class="line">xhr.onreadystatechange = function() </span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">try</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (xhr.readyState &gt; <span class="number">2</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">var</span> new_response = xhr.responseText.substring(xhr.previous_text.length);</span><br><span class="line">            <span class="keyword">var</span> <span class="literal">result</span> = <span class="type">JSON</span>.parse( new_response );</span><br><span class="line">            log_message(<span class="literal">result</span>.message);</span><br><span class="line">            //update the progressbar</span><br><span class="line">            document.getElementById('progressor').style.width = <span class="literal">result</span>.progress + <span class="string">"%"</span>;</span><br><span class="line">            xhr.previous_text = xhr.responseText;</span><br><span class="line">        &#125;   </span><br><span class="line">    &#125;</span><br><span class="line">    catch (e)</span><br><span class="line">    &#123;</span><br><span class="line">        //log_message(<span class="string">"&lt;b&gt;[XHR] Exception: "</span> + e + <span class="string">"&lt;/b&gt;"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">     </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">xhr.open(<span class="string">"GET"</span>, <span class="string">"ajax_stream.php"</span>, <span class="literal">true</span>);</span><br><span class="line">xhr.send(<span class="string">"Making request..."</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="基于_Iframe_及_htmlfile_的流（streaming）方式">基于 Iframe 及 htmlfile 的流（streaming）方式</h3><p><img src="http://www.ibm.com/developerworks/cn/web/wa-lo-comet/fig003.jpg" alt=""></p>
+<p>iframe 是很早就存在的一种HTML标记，通过在HTML页面里嵌入一个隐蔵帧，然后将这个隐蔵帧的SRC属性设为对一个长连接的请求，服务器端就能源源不断地往客户端输入数据。iframe 服务器端并不返回直接显示在页面的数据，而是返回对客户端 Javascript 函数的调用，如<code>&lt;script type=&quot;text/javascript&quot;&gt;js_func(“data from server ”)&lt;/script&gt;</code>。服务器端将返回的数据作为客户端JavaScript函数的参数传递；客户端浏览器的Javascript引擎在收到服务器返回的JavaScript调用时就会去执行代码。</p>
+<h2 id="Server_Send_Event">Server Send Event</h2><p>HTML5提供了很多新的特性，其中包括的<em>Server Send Event</em>和<em>Websockets</em>能够更方便的实现服务器端推。<em>Websockets</em>的接口实现的是客户端和服务器端之间的双向通信，对应的开销也会更大。 对于我们这里的应用场景来说，只需要单向的服务器端退即可，所以使用SSE来实现更为合适。</p>
+<h3 id="客户端的实现">客户端的实现</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!!<span class="built_in">window</span>.EventSource) </span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> source = <span class="keyword">new</span> EventSource(<span class="string">'task.php'</span>);</span><br><span class="line">     </span><br><span class="line">    source.addEventListener(<span class="string">'message'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(e.data);</span><br><span class="line">        <span class="comment">//Do whatever with e.data</span></span><br><span class="line">    &#125;, <span class="literal">false</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>客户端的实现很简单，只需要新建一个EventSource，参数为请求的地址，然后添加上listener即可。一旦添加完message listener之后，客户端就会发送请求，在这期间，如果服务器端长时间没有响应，那么，客户端会再次发送请求，直到调用<code>source.close()</code>方法。 所以客户端正常情况下，应该有个服务器端处理完，关闭source的逻辑。</p>
+<h3 id="服务器端">服务器端</h3><p>服务器端只需要在任务结束直接，不关闭response，然后然response中写符合特定格式的数据即可</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">id:</span>xxx</span><br><span class="line"><span class="label">data:</span>xxx</span><br></pre></td></tr></table></figure>
+<p>Spring有对SSE的封装，下面以Spring为例，完整地演示后台任务进度的反馈</p>
+<p>下面是Controller的代码，对SSE的调用需要在异步任务中进行，但是SSE并不属于应用层的逻辑，所以通过回调的方式传递给应用层。任务完成后需要调用complete方法，对应的客户端对complete之前返回的消息做特殊的响应，即关闭EventSource</p>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">SseEmitter</span> sseEmitter = new <span class="type">SseEmitter</span>();</span><br><span class="line">fooService.batch((<span class="type">String</span> id, <span class="type">String</span> <span class="literal">result</span>, <span class="type">String</span> message, boolean exception) -&gt; &#123;</span><br><span class="line">    <span class="type">String</span> data = <span class="type">String</span>.format(<span class="string">"%s,%s,%s"</span> , <span class="literal">result</span>, message, exception);</span><br><span class="line">    <span class="type">SseEmitter</span>.<span class="type">SseEventBuilder</span> eventBuilder = <span class="type">SseEmitter</span>.event().id(id).data(data);</span><br><span class="line">    sseEmitter.send(eventBuilder);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="type">BATCH_COMPLETE</span>.equals(<span class="literal">result</span>))&#123;</span><br><span class="line">        sseEmitter.complete();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;, error -&gt; &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        sseEmitter.send(<span class="type">BATCH_COMPLETE</span>);</span><br><span class="line">        sseEmitter.complete();</span><br><span class="line">    &#125; catch (<span class="type">IOException</span> e) &#123;</span><br><span class="line">        sseEmitter.completeWithError(e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> sseEmitter;</span><br></pre></td></tr></table></figure>
+<p>应用层方法中，应该对每条批处理数据进行异步。异步使用Spring的<code>@Async</code>注解即可，但是这里需要注意的是，如果通过this调用自己类方法AOP代理是会失效的，因此需要用另外一个Bean来封装异步方法</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> batch(FooController.SSEBatchConsumer replyStatus, Consumer&lt;String&gt; replyError) &#123;</span><br><span class="line"></span><br><span class="line">	AtomicInteger <span class="keyword">count</span> = <span class="keyword">new</span> AtomicInteger(<span class="number">0</span>); </span><br><span class="line">	List&lt;Foo&gt; foos = <span class="keyword">this</span>.fooRepository.<span class="keyword">findAll</span>();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (foos == <span class="keyword">null</span> || foos.<span class="keyword">size</span>() == <span class="number">0</span>) &#123;</span><br><span class="line">	    replyError.accept(<span class="keyword">null</span>);</span><br><span class="line">	    <span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (Foo foo : foos) &#123;</span><br><span class="line">	    <span class="keyword">this</span>.asyncService.doFoo(foo, foo.<span class="keyword">size</span>(), <span class="keyword">count</span>, replyStatus);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> AsyncService &#123;</span><br><span class="line">	@Async</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> asyncService(Foo fpp, <span class="keyword">int</span> total, AtomicInteger <span class="keyword">count</span>, RecruitmentsIndexController.SSEBatchConsumer replyStatus)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/HTML/">HTML</a>
+  </div>
+
+</div>
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yukinami.github.io/2016/09/05/实现后台长时间任务的监控/" data-title="实现后台长时间任务的监控 | Jyong&#39;s Blog" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2016/09/02/Java脚本调用/"  title="Java脚本调用">
+ <strong>下一篇：</strong><br/> 
+ <span>Java脚本调用
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Comet"><span class="toc-number">1.</span> <span class="toc-text">Comet</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基于_AJAX_的长轮询（long-polling）方式"><span class="toc-number">1.1.</span> <span class="toc-text">基于 AJAX 的长轮询（long-polling）方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基于_Iframe_及_htmlfile_的流（streaming）方式"><span class="toc-number">1.2.</span> <span class="toc-text">基于 Iframe 及 htmlfile 的流（streaming）方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Server_Send_Event"><span class="toc-number">2.</span> <span class="toc-text">Server Send Event</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#客户端的实现"><span class="toc-number">2.1.</span> <span class="toc-text">客户端的实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#服务器端"><span class="toc-number">2.2.</span> <span class="toc-text">服务器端</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/Android/" title="Android">Android<sup>12</sup></a></li>
+		
+			<li><a href="/tags/经验错误/" title="经验错误">经验错误<sup>9</sup></a></li>
+		
+			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>7</sup></a></li>
+		
+			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
+		
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+		
+			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
+		
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+		
+			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Java/" title="Java">Java<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
+		
+			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>2</sup></a></li>
+		
+			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/SpringFramework/" title="SpringFramework">SpringFramework<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            <a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+          </li>
+        
+          <li>
+            <a href="http://hexo.io" target="_blank" title="Hexo">Hexo</a>
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I&#39;m Jyong, a web developer. <br/>
+			And hope you enjoy this blog.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2100171710" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yukinami" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="https://plus.google.com/100215768199802928787?rel=author" target="_blank" class="icon-google_plus" title="Google+"></a>
+		
+		
+		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		
+		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"yukinami"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+  </body>
+</html>
+
+
+<a href="https://github.com/yukinami"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?ec2d95a543c1245fcad501b5484af450";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>

@@ -70,6 +70,86 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2016/09/05/实现后台长时间任务的监控/" title="实现后台长时间任务的监控" itemprop="url">实现后台长时间任务的监控</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-09-05T10:00:01.000Z" itemprop="datePublished"> 发表于 Sep 5 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>后台长时间任务的监控，例如，处理进度的监控，可以通过客户端轮询拉或者服务器推技术来实现。这里主要讨论服务器推技术的实现。</p>
+<h2 id="Comet">Comet</h2><p>基于HTTP 长连接、无须在浏览器端安装插件的“服务器推”技术为“Comet”。Comet主要有两种实现方式。</p>
+<h3 id="基于_AJAX_的长轮询（long-polling）方式">基于 AJAX 的长轮询（long-polling）方式</h3><p><img src="http://www.ibm.com/developerworks/cn/web/wa-lo-comet/fig002.jpg" alt=""></p>
+<p>使用 AJAX 实现“服务器推”与传统的 AJAX 应用不同之处在于</p>
+<ol>
+<li>服务器端会阻塞请求直到有数据传递或超时才返回。</li>
+<li>客户端 JavaScript 响应处理函数会在处理完服务器返回的信息后，再次发出请求，重新建立连接。</li>
+<li>当客户端处理接收的数据、重新建立连接时，服务器端可能有新的数据到达；这些信息会被服务器端保存直到客户端重新建立连接，客户端会一次把当前服务器端所有的信息取回。</li>
+</ol>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/09/05/实现后台长时间任务的监控/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/09/02/Java脚本调用/" title="Java脚本调用" itemprop="url">Java脚本调用</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-09-02T09:40:22.000Z" itemprop="datePublished"> 发表于 Sep 2 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="JSR223">JSR223</h2><p>Java中调用其他脚本语言可以通过JSR223来实现。JSR223规范定义了脚本调用的抽象，只要拥有对应脚本的JSR223的实现，即可实现Java对对应脚本的调用。</p>
+<p>例如，下面是对JS脚本的调用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.script.*;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloWorld</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ScriptException </span>&#123;</span><br><span class="line">        ScriptEngineManager manager = <span class="keyword">new</span> ScriptEngineManager();</span><br><span class="line">        ScriptEngine engine = manager.getEngineByName(<span class="string">"JavaScript"</span>);</span><br><span class="line">        engine.eval(<span class="string">"print ('Hello World')"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/09/02/Java脚本调用/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2016/05/28/用Spring-Test进行页面的功能测试/" title="用Spring Test进行页面的功能测试" itemprop="url">用Spring Test进行页面的功能测试</a>
   </h1>
   <p class="article-author">By
@@ -362,77 +442,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/04/21/Hibernate的Fetch问题/" title="Hibernate的Fetch问题" itemprop="url">Hibernate的Fetch问题</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2016-04-21T07:40:04.000Z" itemprop="datePublished"> 发表于 Apr 21 2016</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>下面的内容基于JPA的Hibernate实现进行讨论。</p>
-<p>JPA的关联关系中的single-ended的关联（也就是ToOne）的模式fetch类型是的eager的。 在使用<code>EntityMangerd#find</code>方法进行查找时，这些关联会通过JOIN的方式被查询出来。但是如果使用Criteria API或者JPQL进行查询时，会发现针对这些关联产生了额外的SELECT查询，也就是通常我们所说的N+1的问题。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2016/04/21/Hibernate的Fetch问题/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/03/19/如何高效的使用postman/" title="如何高效的使用postman" itemprop="url">如何高效的使用postman</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2016-03-19T05:59:46.000Z" itemprop="datePublished"> 发表于 Mar 19 2016</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>POSTMAN目前在我们团队中一直作为一个调用API的测试工具，但是由于我们的一直深入的使用它，导致使用的过程中存在不少很低效的问题。POSTMAN本身提供很多强大的功能，用好了它完全可以成为开发过程中比不可少的开发工具。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2016/03/19/如何高效的使用postman/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -460,23 +469,25 @@
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
-		
-			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
+		
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
+			<li><a href="/tags/Java/" title="Java">Java<sup>3</sup></a></li>
+		
 			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
 		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
 		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
@@ -484,13 +495,11 @@
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>2</sup></a></li>
 		
+			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Sring-Data-Rest/" title="Sring Data Rest">Sring Data Rest<sup>1</sup></a></li>
-		
-			<li><a href="/tags/Agile/" title="Agile">Agile<sup>1</sup></a></li>
+			<li><a href="/tags/SpringFramework/" title="SpringFramework">SpringFramework<sup>1</sup></a></li>
 		
 		</ul>
 </div>
