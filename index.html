@@ -70,6 +70,42 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2016/09/23/Nutch爬虫开发/" title="Nutch爬虫开发" itemprop="url">Nutch爬虫开发</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-09-23T06:22:35.000Z" itemprop="datePublished"> 发表于 Sep 23 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="Nutch爬虫开发">Nutch爬虫开发</h1><h2 id="介绍">介绍</h2><p>Nutch是一个用Java实现的搜索引擎，它包括全文搜索和网络爬虫。它支持针对不同的业务场景，使用本地运行模式或者基于Hadoop的分布式运行模式。</p>
+<p>Nutch目前主要由1.x和2.x两个分支，主要的不同在于数据存储的实现。这里的存储指的是，Nutch本身会保存关于爬取过程中的爬虫的各种状态到称为<em>crawldb</em>的存储中去。1.x是以SequenceFile结构的方式保存到本地或者分布式文件系统中去，而2.x则是把存储层抽象了出来，不再依赖特定的存储结构，而是使用<a href="https://gora.apache.org/">gora</a>来处理存储映射，所以最终可以保存到gora支持的RDBMS、NOSQL（Mongodb、HBase）等各种存储中去。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/09/23/Nutch爬虫开发/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2016/09/05/实现后台长时间任务的监控/" title="实现后台长时间任务的监控" itemprop="url">实现后台长时间任务的监控</a>
   </h1>
   <p class="article-author">By
@@ -407,44 +443,9 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/05/21/Hibernate-one-to-one-懒加载的问题/" title="Hibernate one-to-one 懒加载的问题" itemprop="url">Hibernate one-to-one 懒加载的问题</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2016-05-21T06:24:29.000Z" itemprop="datePublished"> 发表于 May 21 2016</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="问题">问题</h2><p>Hibernate在使用OneToOne的反向关联或者使用主键关联（PrimaryKeyJoinColumn）时，会出来懒加载不起的作用的情况。究其原因，Hibernate的能够进行懒加载的前提是返回的关联对象是个代理对象。如果Hibernate不能确定关联的对象是否为空，那么他们不能直接返回代理对象，因为代理对象本身就是不为空的，它不得不去检查关联对象是否存在。但是用SELECT语句去检查存在性，还不如索性直接把查询结果返回，这也就导致了懒加载的失效。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2016/05/21/Hibernate-one-to-one-懒加载的问题/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
   </nav>
 
 </div>

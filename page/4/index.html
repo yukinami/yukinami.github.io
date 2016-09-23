@@ -70,6 +70,41 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2016/02/14/Mysql联合唯一索引和空值/" title="Mysql联合唯一索引和空值" itemprop="url">Mysql联合唯一索引和空值</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-14T02:05:39.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="问题">问题</h2><p>当Mysql中建立的联合索引， 只要索引中的某一列的值为空时(NULL)，即便其他的字段完全相同，也不会引起唯一索引冲突。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/02/14/Mysql联合唯一索引和空值/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2016/01/18/Spring-Boot-DevTools/" title="Spring Boot DevTools" itemprop="url">Spring Boot DevTools</a>
   </h1>
   <p class="article-author">By
@@ -399,45 +434,9 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/01/关于AsyncTaskLoader/" title="关于AsyncTaskLoader" itemprop="url">关于AsyncTaskLoader</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-01T03:14:47.000Z" itemprop="datePublished"> 发表于 Jul 1 2015</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="Concurrency基础">Concurrency基础</h1><h2 id="Executor">Executor</h2><p><code>Executor</code>是一个用来执行<code>Runable</code>实例的对象，接口定义如下</p>
-<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">/<span class="keyword">*</span><span class="keyword">*</span></span><br><span class="line"> <span class="keyword">*</span> An object that executes submitted &#123;<span class="comment">@link Runnable&#125; tasks. This</span></span><br><span class="line"> <span class="keyword">*</span> interface provides a way of decoupling task submission from the</span><br><span class="line"> <span class="keyword">*</span> mechanics of how each task will be run, including details of thread</span><br><span class="line"> <span class="keyword">*</span> use, scheduling, etc.  An &#123;<span class="comment">@code Executor&#125; is normally used</span></span><br><span class="line"> <span class="keyword">*</span> instead of explicitly creating threads.</span><br><span class="line"> <span class="keyword">*</span>/</span><br><span class="line">public interface Executor &#123;</span><br><span class="line"></span><br><span class="line">    /<span class="keyword">*</span><span class="keyword">*</span></span><br><span class="line">     <span class="keyword">*</span> Executes the given command at some time in the future.  The command</span><br><span class="line">     <span class="keyword">*</span> may execute in a new thread, in a pooled thread, or in the calling</span><br><span class="line">     <span class="keyword">*</span> thread, at the discretion of the &#123;<span class="comment">@code Executor&#125; implementation.</span></span><br><span class="line">     <span class="keyword">*</span></span><br><span class="line">     <span class="keyword">*</span> <span class="comment">@param command the runnable task</span></span><br><span class="line">     <span class="keyword">*</span> <span class="comment">@throws RejectedExecutionException if this task cannot be</span></span><br><span class="line">     <span class="keyword">*</span> accepted for execution</span><br><span class="line">     <span class="keyword">*</span> <span class="comment">@throws NullPointerException if command is null</span></span><br><span class="line">     <span class="keyword">*</span>/</span><br><span class="line">    void execute(Runnable command);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/07/01/关于AsyncTaskLoader/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
-    <a class="extend prev" rel="prev" href="/page/3/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/5/">Next<span></span></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/5/">Next<span></span></a>
   </nav>
 
 </div>

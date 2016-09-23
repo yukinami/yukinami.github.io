@@ -70,6 +70,41 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2016/05/21/Hibernate-one-to-one-懒加载的问题/" title="Hibernate one-to-one 懒加载的问题" itemprop="url">Hibernate one-to-one 懒加载的问题</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-05-21T06:24:29.000Z" itemprop="datePublished"> 发表于 May 21 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="问题">问题</h2><p>Hibernate在使用OneToOne的反向关联或者使用主键关联（PrimaryKeyJoinColumn）时，会出来懒加载不起的作用的情况。究其原因，Hibernate的能够进行懒加载的前提是返回的关联对象是个代理对象。如果Hibernate不能确定关联的对象是否为空，那么他们不能直接返回代理对象，因为代理对象本身就是不为空的，它不得不去检查关联对象是否存在。但是用SELECT语句去检查存在性，还不如索性直接把查询结果返回，这也就导致了懒加载的失效。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/05/21/Hibernate-one-to-one-懒加载的问题/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2016/04/21/Hibernate的Fetch问题/" title="Hibernate的Fetch问题" itemprop="url">Hibernate的Fetch问题</a>
   </h1>
   <p class="article-author">By
@@ -385,45 +420,9 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/02/15/Spring-Boot应用从main方法运行/" title="Spring Boot应用从main方法运行" itemprop="url">Spring Boot应用从main方法运行</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2016-02-15T01:45:37.000Z" itemprop="datePublished"> 发表于 Feb 15 2016</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>Spring Boot的应用是可以通过main方法中运行SpringApplication.run()来启动的。如果项目使用了gradle或者maven，则可以通过<code>gradle bootRun</code>或者<code>mvn spring-boot:run</code>等插件来运行。</p>
-<p>但是运行起来是有不同的，因为通过gradle或者maven运行，他们运行起来之后能够正确的处理一些runtime和provided的依赖，但是通过main方法运行的cp则是IDE中固定的。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2016/02/15/Spring-Boot应用从main方法运行/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
-    <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
+    <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
   </nav>
 
 </div>
