@@ -4,12 +4,14 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Mysql联合唯一索引和空值 | Jyong&#39;s Blog</title>
+    <title>Spring circular dependency | Jyong&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Jyong">
     
-    <meta name="description" content="问题当Mysql中建立的联合索引， 只要索引中的某一列的值为空时(NULL)，即便其他的字段完全相同，也不会引起唯一索引冲突。">
+    <meta name="description" content="当发生类似 Bean#1 -&amp;gt; Bean#2 -&amp;gt; Bean#1 的依赖时，Spring框架通常能够自动的进行处理
+
+You can generally trust Spring to do the right thing. It detects configuration problems, such as references to non-existent beans and circular dependencies, at container load-time. Spring sets properties and resolves dependencies as late as possible, when the bean is actually created.">
     
     
     
@@ -70,14 +72,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/02/14/Mysql联合唯一索引和空值/" title="Mysql联合唯一索引和空值" itemprop="url">Mysql联合唯一索引和空值</a>
+      <a href="/2016/12/06/Spring-circular-dependency/" title="Spring circular dependency" itemprop="url">Spring circular dependency</a>
   </h1>
   <p class="article-author">By
        
 		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
 		
   <p class="article-time">
-    <time datetime="2016-02-14T02:05:39.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
+    <time datetime="2016-12-06T03:22:02.000Z" itemprop="datePublished"> 发表于 Dec 6 2016</time>
     
   </p>
 </header>
@@ -86,22 +88,21 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题"><span class="toc-number">1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原因"><span class="toc-number">2.</span> <span class="toc-text">原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决"><span class="toc-number">3.</span> <span class="toc-text">解决</span></a></li></ol>
+			
 		
 		</div>
 		
-		<h2 id="问题">问题</h2><p>当Mysql中建立的联合索引， 只要索引中的某一列的值为空时(NULL)，即便其他的字段完全相同，也不会引起唯一索引冲突。</p>
-<a id="more"></a>
-<h2 id="原因">原因</h2><p>Mysql官方文档中有这样的解释</p>
+		<p>当发生类似 <code>Bean#1 -&gt; Bean#2 -&gt; Bean#1</code> 的依赖时，Spring框架通常能够自动的进行处理</p>
 <blockquote>
-<p>A UNIQUE index creates a constraint such that all values in the index must be distinct. An error occurs if you try to add a new row with a key value that matches an existing row. This constraint does not apply to NULL values except for the BDB storage engine. For other engines, a UNIQUE index allows multiple NULL values for columns that can contain NULL.</p>
+<p>You can generally trust Spring to do the right thing. It detects configuration problems, such as references to non-existent beans and circular dependencies, at container load-time. Spring sets properties and resolves dependencies as late as possible, when the bean is actually created.</p>
 </blockquote>
-<p>唯一约束对NULL值不适用。原因可以这样解释： 比如我们有一个单列的唯一索引，既然实际会有空置的情况，那么这列一定不是<code>NOT NULL</code>的，如果唯一约束对空值也有起作用，就会导致仅有一行数据可以为空，这可能会和实际的业务需求想冲突的，所以通常Mysql的存储引擎的唯一索引对NULL值是不适用的。 这也就倒是联合唯一索引的情况下，只要某一列为空，就不会报唯一索引冲突。</p>
-<h2 id="解决">解决</h2><ol>
-<li>使用BDB引擎。 这个方式牺牲太大了，通常不是个好选择。</li>
-<li>给会为空的列定义一个为空的特殊值来表示<code>NULL VALUE</code>。</li>
-</ol>
-<p>或者可以重新审视下业务需求，某列可能为空，那么空值本身就不具有可比性，是不是就可以认为两行就是不一样的数据。</p>
+<a id="more"></a>
+<p>如果出现<code>BeanCurrentlyInCreationException</code>异常，通常时因为使用了构造方法注入而产生的“鸡生蛋”的问题。解决方法就是使用setter方法注入。</p>
+<p>如果使用setter方法依然产生这个问题，例如下面的错误</p>
+<blockquote>
+<p>Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCurrentlyInCreationException: Error creating bean with name ‘asyncVerifyServiceImpl’: Bean with name ‘asyncVerifyServiceImpl’ has been injected into other beans [verifyServiceImpl] in its raw version as part of a circular reference, but has eventually been wrapped. This means that said other beans do not use the final version of the bean. This is often the result of over-eager type matching - consider using ‘getBeanNamesOfType’ with the ‘allowEagerInit’ flag turned off, for example.</p>
+</blockquote>
+<p>如果循环依赖的中的一个对象最终还会被代理（例如这里包含@Async方法的Bean），就会出这个错。解决方法是在这个Bean上使用@Lazy在延迟这个对象的初始化。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -110,7 +111,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Mysql/">Mysql</a>
+  <span></span> <a href="/tags/Spring-Framework/">Spring Framework</a>
   </div>
 
 </div>
@@ -118,7 +119,7 @@
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yukinami.github.io/2016/02/14/Mysql联合唯一索引和空值/" data-title="Mysql联合唯一索引和空值 | Jyong&#39;s Blog" data-tsina="null" class="share clearfix">
+  <div data-url="http://yukinami.github.io/2016/12/06/Spring-circular-dependency/" data-title="Spring circular dependency | Jyong&#39;s Blog" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -128,18 +129,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2016/02/14/The-last-packet-successfully-received-from-the-server-was-xxx-ago/" title="The last packet successfully received from the server was xxx ago">
+ <a href="/2016/12/06/Spring-MVC-模型类绑定/" title="Spring MVC 模型类绑定">
   <strong>上一篇：</strong><br/>
   <span>
-  The last packet successfully received from the server was xxx ago</span>
+  Spring MVC 模型类绑定</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2016/01/18/Spring-Boot-DevTools/"  title="Spring Boot DevTools">
+<a href="/2016/09/23/Nutch爬虫开发/"  title="Nutch爬虫开发">
  <strong>下一篇：</strong><br/> 
- <span>Spring Boot DevTools
+ <span>Nutch爬虫开发
 </span>
 </a>
 </div>
@@ -158,7 +159,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题"><span class="toc-number">1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原因"><span class="toc-number">2.</span> <span class="toc-text">原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决"><span class="toc-number">3.</span> <span class="toc-text">解决</span></a></li></ol>
+ 
  
   </div>
 

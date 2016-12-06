@@ -70,6 +70,79 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2016/12/06/Spring-MVC-模型类绑定/" title="Spring MVC 模型类绑定" itemprop="url">Spring MVC 模型类绑定</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-12-06T05:37:42.000Z" itemprop="datePublished"> 发表于 Dec 6 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>在使用Spring MVC的时候有一个很普通的需求，根据url中传递的id参数，查询并绑定绑定到一个实体对象</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/12/06/Spring-MVC-模型类绑定/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/12/06/Spring-circular-dependency/" title="Spring circular dependency" itemprop="url">Spring circular dependency</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
+		
+  <p class="article-time">
+    <time datetime="2016-12-06T03:22:02.000Z" itemprop="datePublished"> 发表于 Dec 6 2016</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>当发生类似 <code>Bean#1 -&gt; Bean#2 -&gt; Bean#1</code> 的依赖时，Spring框架通常能够自动的进行处理</p>
+<blockquote>
+<p>You can generally trust Spring to do the right thing. It detects configuration problems, such as references to non-existent beans and circular dependencies, at container load-time. Spring sets properties and resolves dependencies as late as possible, when the bean is actually created.</p>
+</blockquote>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2016/12/06/Spring-circular-dependency/#more">阅读更多</a>
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2016/09/23/Nutch爬虫开发/" title="Nutch爬虫开发" itemprop="url">Nutch爬虫开发</a>
   </h1>
   <p class="article-author">By
@@ -368,81 +441,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/05/21/Hibernate使用outer join fetch集合时返回重复的结果/" title="Hibernate使用outer join fetch集合时返回重复的结果" itemprop="url">Hibernate使用outer join fetch集合时返回重复的结果</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2016-05-21T09:00:37.000Z" itemprop="datePublished"> 发表于 May 21 2016</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="问题">问题</h2><p>如果我们有一个订单关联三个订单项，当进行下面的查询时</p>
-<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">List</span> <span class="literal">result</span> = session.createQuery(<span class="string">"select o from Order o left join fetch o.lineItems"</span>).list();</span><br></pre></td></tr></table></figure>
-<p>返回的结果集会是三个一样的订单对象，分别包含了三个订单项。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2016/05/21/Hibernate使用outer join fetch集合时返回重复的结果/#more">阅读更多</a>
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/05/21/Jackson转换TimeStamp时空字串的问题/" title="Jackson转换TimeStamp时空字串的问题" itemprop="url">Jackson转换TimeStamp时空字串的问题</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
-		
-  <p class="article-time">
-    <time datetime="2016-05-21T07:45:59.000Z" itemprop="datePublished"> 发表于 May 21 2016</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="问题">问题</h2><p>当使用Jackson进行json数据转换时，如果目标字段类型为TimeStamp并且要转换的值为空字串时会报空指针错误。</p>
-<h2 id="原因">原因</h2><p>下面是Timestamp反序列化器的代码</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public static <span class="class"><span class="keyword">class</span> <span class="title">TimestampDeserializer</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">DateBasedDeserializer&lt;Timestamp&gt;</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    public <span class="type">TimestampDeserializer</span>() &#123; <span class="keyword">super</span>(<span class="type">Timestamp</span>.<span class="keyword">class</span>); &#125;</span><br><span class="line">    public <span class="type">TimestampDeserializer</span>(<span class="type">TimestampDeserializer</span> src, <span class="type">DateFormat</span> df, <span class="type">String</span> formatString) &#123;</span><br><span class="line">        <span class="keyword">super</span>(src, df, formatString);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="type">TimestampDeserializer</span> withDateFormat(<span class="type">DateFormat</span> df, <span class="type">String</span> formatString) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">TimestampDeserializer</span>(<span class="keyword">this</span>, df, formatString);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    public java.sql.<span class="type">Timestamp</span> deserialize(<span class="type">JsonParser</span> jp, <span class="type">DeserializationContext</span> ctxt) <span class="keyword">throws</span> <span class="type">IOException</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">Timestamp</span>(_parseDate(jp, ctxt).getTime());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>通过<code>_parseDate</code>方法转换为Date后，并没有判断是否转换成功而直接调用了getTime方法。</p>
-<h2 id="解决">解决</h2><p>添加一个自定义的TimeStamp的Deserializer，然后通过SimpleModule来注册到ObjectMapper中。</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -466,7 +464,7 @@
 		
 			<li><a href="/tags/经验错误/" title="经验错误">经验错误<sup>9</sup></a></li>
 		
-			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>7</sup></a></li>
+			<li><a href="/tags/Spring-Framework/" title="Spring Framework">Spring Framework<sup>8</sup></a></li>
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
@@ -478,15 +476,19 @@
 		
 			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
-			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
+			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
 			<li><a href="/tags/Java/" title="Java">Java<sup>3</sup></a></li>
 		
+			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
+		
 			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
 		
 			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
 		
@@ -494,13 +496,9 @@
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>2</sup></a></li>
-		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
-		
-			<li><a href="/tags/SpringFramework/" title="SpringFramework">SpringFramework<sup>1</sup></a></li>
 		
 		</ul>
 </div>

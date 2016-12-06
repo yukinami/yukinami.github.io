@@ -4,12 +4,12 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Mysql联合唯一索引和空值 | Jyong&#39;s Blog</title>
+    <title>Spring MVC 模型类绑定 | Jyong&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Jyong">
     
-    <meta name="description" content="问题当Mysql中建立的联合索引， 只要索引中的某一列的值为空时(NULL)，即便其他的字段完全相同，也不会引起唯一索引冲突。">
+    <meta name="description" content="在使用Spring MVC的时候有一个很普通的需求，根据url中传递的id参数，查询并绑定绑定到一个实体对象">
     
     
     
@@ -70,14 +70,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/02/14/Mysql联合唯一索引和空值/" title="Mysql联合唯一索引和空值" itemprop="url">Mysql联合唯一索引和空值</a>
+      <a href="/2016/12/06/Spring-MVC-模型类绑定/" title="Spring MVC 模型类绑定" itemprop="url">Spring MVC 模型类绑定</a>
   </h1>
   <p class="article-author">By
        
 		<a href="https://plus.google.com/100215768199802928787?rel=author" title="Jyong" target="_blank" itemprop="author">Jyong</a>
 		
   <p class="article-time">
-    <time datetime="2016-02-14T02:05:39.000Z" itemprop="datePublished"> 发表于 Feb 14 2016</time>
+    <time datetime="2016-12-06T05:37:42.000Z" itemprop="datePublished"> 发表于 Dec 6 2016</time>
     
   </p>
 </header>
@@ -86,22 +86,18 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题"><span class="toc-number">1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原因"><span class="toc-number">2.</span> <span class="toc-text">原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决"><span class="toc-number">3.</span> <span class="toc-text">解决</span></a></li></ol>
+			
 		
 		</div>
 		
-		<h2 id="问题">问题</h2><p>当Mysql中建立的联合索引， 只要索引中的某一列的值为空时(NULL)，即便其他的字段完全相同，也不会引起唯一索引冲突。</p>
+		<p>在使用Spring MVC的时候有一个很普通的需求，根据url中传递的id参数，查询并绑定绑定到一个实体对象</p>
 <a id="more"></a>
-<h2 id="原因">原因</h2><p>Mysql官方文档中有这样的解释</p>
-<blockquote>
-<p>A UNIQUE index creates a constraint such that all values in the index must be distinct. An error occurs if you try to add a new row with a key value that matches an existing row. This constraint does not apply to NULL values except for the BDB storage engine. For other engines, a UNIQUE index allows multiple NULL values for columns that can contain NULL.</p>
-</blockquote>
-<p>唯一约束对NULL值不适用。原因可以这样解释： 比如我们有一个单列的唯一索引，既然实际会有空置的情况，那么这列一定不是<code>NOT NULL</code>的，如果唯一约束对空值也有起作用，就会导致仅有一行数据可以为空，这可能会和实际的业务需求想冲突的，所以通常Mysql的存储引擎的唯一索引对NULL值是不适用的。 这也就倒是联合唯一索引的情况下，只要某一列为空，就不会报唯一索引冲突。</p>
-<h2 id="解决">解决</h2><ol>
-<li>使用BDB引擎。 这个方式牺牲太大了，通常不是个好选择。</li>
-<li>给会为空的列定义一个为空的特殊值来表示<code>NULL VALUE</code>。</li>
-</ol>
-<p>或者可以重新审视下业务需求，某列可能为空，那么空值本身就不具有可比性，是不是就可以认为两行就是不一样的数据。</p>
+<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">@Controller</span><br><span class="line">@RequestMapping(<span class="string">"/users"</span><span class="function">)</span><span class="keyword"></span><br><span class="line">public</span> class UserController &#123;</span><br><span class="line"></span><br><span class="line"> <span class="keyword"> private</span><span class="keyword"> final</span> UserRepository userRepository;</span><br><span class="line"></span><br><span class="line">  @Autowired</span><br><span class="line"> <span class="keyword"> public</span><span class="function"> UserController(</span>UserRepository userRepository<span class="function">)</span> &#123;</span><br><span class="line">   <span class="function"> Assert.notNull(</span>repository, <span class="string">"Repository must not be null!"</span><span class="function">)</span>;</span><br><span class="line">    this.userRepository = userRepository;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"> <span class="function"> @RequestMapping(</span><span class="string">"/&#123;id&#125;"</span><span class="function">)</span></span><br><span class="line"> <span class="keyword"> public</span> String<span class="function"> showUserForm(</span>@PathVariable(<span class="string">"id"</span><span class="function">)</span> Long id, Model model<span class="function">)</span> &#123;</span><br><span class="line"></span><br><span class="line">    // Do null<span class="instruction"> check </span>for id</span><br><span class="line">    User user =<span class="function"> userRepository.findOne(</span>id<span class="function">)</span>;</span><br><span class="line">    // Do null<span class="instruction"> check </span>for user</span><br><span class="line"></span><br><span class="line">   <span class="function"> model.addAttribute(</span><span class="string">"user"</span>, user<span class="function">)</span>;</span><br><span class="line">   <span class="instruction"> return </span><span class="string">"user"</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><em>Spring Data</em>提供的<code>DomainClassPropertyEditorRegistrar</code>能够自动地查找所有注册的<em>Spring Data repositories</em>，并使用它进行查询转换</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean <span class="type">class</span>=<span class="string">"….web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"</span>&gt;</span><br><span class="line">  &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"webBindingInitializer"</span>&gt;</span><br><span class="line">    &lt;bean <span class="type">class</span>=<span class="string">"….web.bind.support.ConfigurableWebBindingInitializer"</span>&gt;</span><br><span class="line">      &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"propertyEditorRegistrars"</span>&gt;</span><br><span class="line">        &lt;bean <span class="type">class</span>=<span class="string">"org.springframework.data.repository.support.DomainClassPropertyEditorRegistrar"</span> /&gt;</span><br><span class="line">      &lt;/<span class="keyword">property</span>&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">  &lt;/<span class="keyword">property</span>&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+<p>上面的代码即可简化为</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Controller</span></span><br><span class="line"><span class="annotation">@RequestMapping</span>(<span class="string">"/users"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserController</span> &#123;</span></span><br><span class="line"></span><br><span class="line">  <span class="annotation">@RequestMapping</span>(<span class="string">"/&#123;id&#125;"</span>)</span><br><span class="line">  <span class="keyword">public</span> String showUserForm(<span class="annotation">@PathVariable</span>(<span class="string">"id"</span>) User user, Model model) &#123;</span><br><span class="line"></span><br><span class="line">    model.addAttribute(<span class="string">"user"</span>, user);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"userForm"</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同时使用了PropertyEditors转换后，还能够继续对User对象填充页面的提交的值，这在JPA更新的场合极为方便，省去了手动Merge的过程。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -110,7 +106,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Mysql/">Mysql</a>
+  <span></span> <a href="/tags/Spring-Data/">Spring Data</a><a href="/tags/Spring-MVC/">Spring MVC</a>
   </div>
 
 </div>
@@ -118,7 +114,7 @@
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yukinami.github.io/2016/02/14/Mysql联合唯一索引和空值/" data-title="Mysql联合唯一索引和空值 | Jyong&#39;s Blog" data-tsina="null" class="share clearfix">
+  <div data-url="http://yukinami.github.io/2016/12/06/Spring-MVC-模型类绑定/" data-title="Spring MVC 模型类绑定 | Jyong&#39;s Blog" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -127,19 +123,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2016/02/14/The-last-packet-successfully-received-from-the-server-was-xxx-ago/" title="The last packet successfully received from the server was xxx ago">
-  <strong>上一篇：</strong><br/>
-  <span>
-  The last packet successfully received from the server was xxx ago</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2016/01/18/Spring-Boot-DevTools/"  title="Spring Boot DevTools">
+<a href="/2016/12/06/Spring-circular-dependency/"  title="Spring circular dependency">
  <strong>下一篇：</strong><br/> 
- <span>Spring Boot DevTools
+ <span>Spring circular dependency
 </span>
 </a>
 </div>
@@ -158,7 +146,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题"><span class="toc-number">1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原因"><span class="toc-number">2.</span> <span class="toc-text">原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决"><span class="toc-number">3.</span> <span class="toc-text">解决</span></a></li></ol>
+ 
  
   </div>
 
