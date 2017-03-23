@@ -25,7 +25,7 @@ ExceptionHandlerExceptionResolverExceptionHandlerExceptionResolver实现通常�
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -88,23 +88,23 @@ ExceptionHandlerExceptionResolverExceptionHandlerExceptionResolver实现通常�
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring_MVC的异常处理"><span class="toc-number">1.</span> <span class="toc-text">Spring MVC的异常处理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ExceptionHandlerExceptionResolver"><span class="toc-number">1.1.</span> <span class="toc-text">ExceptionHandlerExceptionResolver</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DefaultHandlerExceptionResolver"><span class="toc-number">1.2.</span> <span class="toc-text">DefaultHandlerExceptionResolver</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ResponseStatusExceptionResolver"><span class="toc-number">1.3.</span> <span class="toc-text">ResponseStatusExceptionResolver</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自定义Servlet容器的错误页"><span class="toc-number">1.4.</span> <span class="toc-text">自定义Servlet容器的错误页</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring_Boot的处理"><span class="toc-number">2.</span> <span class="toc-text">Spring Boot的处理</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-MVC的异常处理"><span class="toc-number">1.</span> <span class="toc-text">Spring MVC的异常处理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ExceptionHandlerExceptionResolver"><span class="toc-number">1.1.</span> <span class="toc-text">ExceptionHandlerExceptionResolver</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DefaultHandlerExceptionResolver"><span class="toc-number">1.2.</span> <span class="toc-text">DefaultHandlerExceptionResolver</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ResponseStatusExceptionResolver"><span class="toc-number">1.3.</span> <span class="toc-text">ResponseStatusExceptionResolver</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自定义Servlet容器的错误页"><span class="toc-number">1.4.</span> <span class="toc-text">自定义Servlet容器的错误页</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-Boot的处理"><span class="toc-number">2.</span> <span class="toc-text">Spring Boot的处理</span></a></li></ol>
 		
 		</div>
 		
-		<h2 id="Spring_MVC的异常处理">Spring MVC的异常处理</h2><p><code>HandlerExceptionResolver</code>的实现用来处理意外的异常。</p>
-<h3 id="ExceptionHandlerExceptionResolver">ExceptionHandlerExceptionResolver</h3><p><code>ExceptionHandlerExceptionResolver</code>实现通常寻找@ExceptionHandler注解的方法来处理异常。</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleController</span> &#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// @RequestMapping methods omitted ...</span></span><br><span class="line"></span><br><span class="line">    <span class="annotation">@ExceptionHandler</span>(IOException.<span class="keyword">class</span>)</span><br><span class="line">    <span class="keyword">public</span> ResponseEntity&lt;String&gt; handleIOException(IOException ex) &#123;</span><br><span class="line">        <span class="comment">// prepare responseEntity</span></span><br><span class="line">        <span class="keyword">return</span> responseEntity;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+		<h2 id="Spring-MVC的异常处理"><a href="#Spring-MVC的异常处理" class="headerlink" title="Spring MVC的异常处理"></a>Spring MVC的异常处理</h2><p><code>HandlerExceptionResolver</code>的实现用来处理意外的异常。</p>
+<h3 id="ExceptionHandlerExceptionResolver"><a href="#ExceptionHandlerExceptionResolver" class="headerlink" title="ExceptionHandlerExceptionResolver"></a>ExceptionHandlerExceptionResolver</h3><p><code>ExceptionHandlerExceptionResolver</code>实现通常寻找@ExceptionHandler注解的方法来处理异常。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Controller</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleController</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">// @RequestMapping methods omitted ...</span></div><div class="line"></div><div class="line">    <span class="meta">@ExceptionHandler(IOException.class)</span></div><div class="line">    <span class="keyword">public</span> ResponseEntity&lt;String&gt; handleIOException(IOException ex) &#123;</div><div class="line">        <span class="comment">// prepare responseEntity</span></div><div class="line">        <span class="keyword">return</span> responseEntity;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <a id="more"></a>
 <p>当前Contorller抛出@ExceptionHandler注解的异常时，被注解的handleIOException方法会执行，返回对应的结果。返回值可以会被当成view name的String，也可以是ModelAndView、ResponseEntity对象，添加@ResponseBody注解等等。 也可以在@ControllerAdvice注解的Controller内定义全局的@ExceptionHandler方法，让其对所有的Controller生效。</p>
-<h3 id="DefaultHandlerExceptionResolver">DefaultHandlerExceptionResolver</h3><p><code>DefaultHandlerExceptionResolver</code>的实现会翻译标准的Spring MVC的异常为默认的HTTP状态码，但是不会往response body中写入错误内容。</p>
+<h3 id="DefaultHandlerExceptionResolver"><a href="#DefaultHandlerExceptionResolver" class="headerlink" title="DefaultHandlerExceptionResolver"></a>DefaultHandlerExceptionResolver</h3><p><code>DefaultHandlerExceptionResolver</code>的实现会翻译标准的Spring MVC的异常为默认的HTTP状态码，但是不会往response body中写入错误内容。</p>
 <p>如果想要写入错误内容，可以继承<code>ResponseEntityExceptionHandler</code>。这个是@ControllerAdvice的便利的基类，提供了@ExceptionHandler方法来处理标准的Spring MVC异常。</p>
-<h3 id="ResponseStatusExceptionResolver">ResponseStatusExceptionResolver</h3><p><code>ResponseStatusExceptionResolver</code>的实现，能够根据异常类的@ResponseStatus注解来返回需要的HTTP状态码。</p>
-<h3 id="自定义Servlet容器的错误页">自定义Servlet容器的错误页</h3><p>当Response被设置了错误的状态码，但是当时body为空时，Servlet容器通常会渲染一个默认的HTML错误页。 要自定义这个错误页可以通过web.xml的<code>&lt;error-page&gt;</code>元素来设置。在Servlet 3之前，必须映射到特定的状态码或异常类型。从Servlet 3开始，可以直接默认的错误页面。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">error-page</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">location</span>&gt;</span>/error<span class="tag">&lt;/<span class="title">location</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">error-page</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="ResponseStatusExceptionResolver"><a href="#ResponseStatusExceptionResolver" class="headerlink" title="ResponseStatusExceptionResolver"></a>ResponseStatusExceptionResolver</h3><p><code>ResponseStatusExceptionResolver</code>的实现，能够根据异常类的@ResponseStatus注解来返回需要的HTTP状态码。</p>
+<h3 id="自定义Servlet容器的错误页"><a href="#自定义Servlet容器的错误页" class="headerlink" title="自定义Servlet容器的错误页"></a>自定义Servlet容器的错误页</h3><p>当Response被设置了错误的状态码，但是当时body为空时，Servlet容器通常会渲染一个默认的HTML错误页。 要自定义这个错误页可以通过web.xml的<code>&lt;error-page&gt;</code>元素来设置。在Servlet 3之前，必须映射到特定的状态码或异常类型。从Servlet 3开始，可以直接默认的错误页面。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">error-page</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">location</span>&gt;</span>/error<span class="tag">&lt;/<span class="name">location</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">error-page</span>&gt;</span></div></pre></td></tr></table></figure>
 <p>这个错误页面的实际地址可以是JSP页面，也可以是能够被@Controller方法处理的URL。</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Controller</span></span><br><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">ErrorController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@RequestMapping</span>(path = <span class="string">"/error"</span>, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)</span><br><span class="line">    <span class="annotation">@ResponseBody</span></span><br><span class="line">    public <span class="built_in">Map</span>&lt;<span class="built_in">String</span>, <span class="built_in">Object</span>&gt; handle(HttpServletRequest request) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">Map</span>&lt;<span class="built_in">String</span>, <span class="built_in">Object</span>&gt; map = <span class="keyword">new</span> HashMap&lt;<span class="built_in">String</span>, <span class="built_in">Object</span>&gt;();</span><br><span class="line">        map.put(<span class="string">"status"</span>, request.getAttribute(<span class="string">"javax.servlet.error.status_code"</span>));</span><br><span class="line">        map.put(<span class="string">"reason"</span>, request.getAttribute(<span class="string">"javax.servlet.error.message"</span>));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> map;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="Spring_Boot的处理">Spring Boot的处理</h2><p>Spring Boot默认提供了<code>/error</code>的映射来处理所有的异常，并且在servlet container中将其注册为了全局的错误页面。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Controller</span></div><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">ErrorController</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@RequestMapping</span>(path = <span class="string">"/error"</span>, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)</div><div class="line">    <span class="meta">@ResponseBody</span></div><div class="line">    public <span class="built_in">Map</span>&lt;<span class="built_in">String</span>, <span class="built_in">Object</span>&gt; handle(HttpServletRequest request) &#123;</div><div class="line"></div><div class="line">        <span class="built_in">Map</span>&lt;<span class="built_in">String</span>, <span class="built_in">Object</span>&gt; map = <span class="keyword">new</span> HashMap&lt;<span class="built_in">String</span>, <span class="built_in">Object</span>&gt;();</div><div class="line">        map.put(<span class="string">"status"</span>, request.getAttribute(<span class="string">"javax.servlet.error.status_code"</span>));</div><div class="line">        map.put(<span class="string">"reason"</span>, request.getAttribute(<span class="string">"javax.servlet.error.message"</span>));</div><div class="line"></div><div class="line">        <span class="keyword">return</span> map;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="Spring-Boot的处理"><a href="#Spring-Boot的处理" class="headerlink" title="Spring Boot的处理"></a>Spring Boot的处理</h2><p>Spring Boot默认提供了<code>/error</code>的映射来处理所有的异常，并且在servlet container中将其注册为了全局的错误页面。</p>
 <p>要完全替换默认的行为，可以实现<code>ErrorController</code>接口并注册该类型的Bean。也可以仅仅注册<code>ErrorAttributes</code>类型的Bean替换部分错误的内容，或者提供一个HTML的error view来替换默认的页面样式(默认的HTML error view定义在<code>WhitelabelErrorViewConfiguration</code>中)。</p>
   
 	</div>
@@ -162,7 +162,7 @@ ExceptionHandlerExceptionResolverExceptionHandlerExceptionResolver实现通常�
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring_MVC的异常处理"><span class="toc-number">1.</span> <span class="toc-text">Spring MVC的异常处理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ExceptionHandlerExceptionResolver"><span class="toc-number">1.1.</span> <span class="toc-text">ExceptionHandlerExceptionResolver</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DefaultHandlerExceptionResolver"><span class="toc-number">1.2.</span> <span class="toc-text">DefaultHandlerExceptionResolver</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ResponseStatusExceptionResolver"><span class="toc-number">1.3.</span> <span class="toc-text">ResponseStatusExceptionResolver</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自定义Servlet容器的错误页"><span class="toc-number">1.4.</span> <span class="toc-text">自定义Servlet容器的错误页</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring_Boot的处理"><span class="toc-number">2.</span> <span class="toc-text">Spring Boot的处理</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-MVC的异常处理"><span class="toc-number">1.</span> <span class="toc-text">Spring MVC的异常处理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ExceptionHandlerExceptionResolver"><span class="toc-number">1.1.</span> <span class="toc-text">ExceptionHandlerExceptionResolver</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DefaultHandlerExceptionResolver"><span class="toc-number">1.2.</span> <span class="toc-text">DefaultHandlerExceptionResolver</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ResponseStatusExceptionResolver"><span class="toc-number">1.3.</span> <span class="toc-text">ResponseStatusExceptionResolver</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自定义Servlet容器的错误页"><span class="toc-number">1.4.</span> <span class="toc-text">自定义Servlet容器的错误页</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-Boot的处理"><span class="toc-number">2.</span> <span class="toc-text">Spring Boot的处理</span></a></li></ol>
  
   </div>
 
@@ -185,13 +185,13 @@ ExceptionHandlerExceptionResolverExceptionHandlerExceptionResolver实现通常�
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -199,23 +199,23 @@ ExceptionHandlerExceptionResolverExceptionHandlerExceptionResolver实现通常�
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -276,7 +276,7 @@ ExceptionHandlerExceptionResolverExceptionHandlerExceptionResolver实现通常�
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

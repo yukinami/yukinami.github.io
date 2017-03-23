@@ -23,7 +23,7 @@
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -86,26 +86,26 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#解决办法"><span class="toc-number">1.</span> <span class="toc-text">解决办法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring_Data_JPA中的分页问题"><span class="toc-number">2.</span> <span class="toc-text">Spring Data JPA中的分页问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分页Fetch的性能问题"><span class="toc-number">3.</span> <span class="toc-text">分页Fetch的性能问题</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#解决办法"><span class="toc-number">1.</span> <span class="toc-text">解决办法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-Data-JPA中的分页问题"><span class="toc-number">2.</span> <span class="toc-text">Spring Data JPA中的分页问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分页Fetch的性能问题"><span class="toc-number">3.</span> <span class="toc-text">分页Fetch的性能问题</span></a></li></ol>
 		
 		</div>
 		
 		<p>JPA对于关联属性的加载时机，可以通过<code>FetchType</code>来定义<code>EAGER</code>或者<code>LAZY</code>，但是对于加载的方式，是使用SELECT、SUBSELEC、JOIN则是由provider来决定的。JPA并没有提供相关的定义。例如，在使用Hibernate作为proider时，即便定义OneToMany的<code>FetchType</code>为<code>EAGER</code>, Hibernate确实会在加载对象的时候同时加载关联对象，但是却是通过SELECT方式来实现的，也就是我们常说的N+1问题，对性能有较大的影响。</p>
 <a id="more"></a>
-<h2 id="解决办法">解决办法</h2><p>通过JPQL</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@Query("<span class="operator"><span class="keyword">SELECT</span> u <span class="keyword">FROM</span> <span class="keyword">User</span> u <span class="keyword">JOIN</span> <span class="keyword">FETCH</span> u.<span class="keyword">roles</span> r<span class="string">")</span></span></span><br></pre></td></tr></table></figure>
+<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>通过JPQL</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@Query("<span class="keyword">SELECT</span> u <span class="keyword">FROM</span> <span class="keyword">User</span> u <span class="keyword">JOIN</span> <span class="keyword">FETCH</span> u.roles r<span class="string">")</span></div></pre></td></tr></table></figure>
 <p>或者Creteria API</p>
-<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> Specification&lt;User&gt;() &#123;</span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function">Predicate <span class="title">toPredicate</span><span class="params">( Root&lt;User&gt; root, CriteriaQuery&lt;?&gt; criteria, CriteriaBuilder builder )</span> </span>&#123;</span><br><span class="line">        root.fetch( User_.roles );</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="Spring_Data_JPA中的分页问题">Spring Data JPA中的分页问题</h2><p>但是如果上面两个查询，用于在Spring Data JPA中的Pagination的分页查询的话，又报如下的错误</p>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">query specified join fetching, but <span class="operator">the</span> owner <span class="operator">of</span> <span class="operator">the</span> fetched association was <span class="operator">not</span> present <span class="operator">in</span> <span class="operator">the</span> select list</span><br></pre></td></tr></table></figure>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> Specification&lt;User&gt;() &#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="keyword">public</span> <span class="function">Predicate <span class="title">toPredicate</span><span class="params">( Root&lt;User&gt; root, CriteriaQuery&lt;?&gt; criteria, CriteriaBuilder builder )</span> </span>&#123;</div><div class="line">        root.fetch( User_.roles );</div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="Spring-Data-JPA中的分页问题"><a href="#Spring-Data-JPA中的分页问题" class="headerlink" title="Spring Data JPA中的分页问题"></a>Spring Data JPA中的分页问题</h2><p>但是如果上面两个查询，用于在Spring Data JPA中的Pagination的分页查询的话，又报如下的错误</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">query specified join fetching, but <span class="keyword">the</span> owner <span class="keyword">of</span> <span class="keyword">the</span> fetched association was <span class="keyword">not</span> present <span class="keyword">in</span> <span class="keyword">the</span> select list</div></pre></td></tr></table></figure>
 <p>意思是说，查询指定了join fetching，但是需要被fetched的关联的owner没有在select列表中出现。就比如说，我们指定了需要fetch User的roles属性，但是select中连user本身都没有出现，这个fetch就变的多余了。但是我们确实取了User对象</p>
 <p>SimpleJpaRepository中对Query的构建</p>
-<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">protected TypedQuery&lt;T&gt; getQuery(Specification&lt;T&gt; spec, <span class="keyword">Sort</span> <span class="keyword">sort</span>) &#123;</span><br><span class="line"></span><br><span class="line">	CriteriaBuilder builder = em.getCriteriaBuilder();</span><br><span class="line">	CriteriaQuery&lt;T&gt; <span class="keyword">query</span> = builder.createQuery(getDomainClass());</span><br><span class="line"></span><br><span class="line">	Root&lt;T&gt; root = applySpecificationToCriteria(spec, <span class="keyword">query</span>);</span><br><span class="line">	<span class="keyword">query</span>.select(root);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">sort</span> != null) &#123;</span><br><span class="line">		<span class="keyword">query</span>.orderBy(toOrders(<span class="keyword">sort</span>, root, builder));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> applyRepositoryMethodMetadata(em.createQuery(<span class="keyword">query</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">protected TypedQuery&lt;T&gt; getQuery(Specification&lt;T&gt; spec, <span class="keyword">Sort</span> <span class="keyword">sort</span>) &#123;</div><div class="line"></div><div class="line">	CriteriaBuilder builder = em.getCriteriaBuilder();</div><div class="line">	CriteriaQuery&lt;T&gt; <span class="keyword">query</span> = builder.createQuery(getDomainClass());</div><div class="line"></div><div class="line">	Root&lt;T&gt; root = applySpecificationToCriteria(spec, <span class="keyword">query</span>);</div><div class="line">	<span class="keyword">query</span>.select(root);</div><div class="line"></div><div class="line">	<span class="keyword">if</span> (<span class="keyword">sort</span> != null) &#123;</div><div class="line">		<span class="keyword">query</span>.orderBy(toOrders(<span class="keyword">sort</span>, root, builder));</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> applyRepositoryMethodMetadata(em.createQuery(<span class="keyword">query</span>));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>原因在于我们查询的是Page对象，Spring除了会使用差个查询获取数据外，还会使用这个查询进行count查询，但是那个查询中没有没指定User对象。</p>
 <p>解决办法是如果发现针对count查询，不指定fetch</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">new Specification<span class="tag">&lt;<span class="title">User</span>&gt;</span>() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public Predicate toPredicate( Root<span class="tag">&lt;<span class="title">User</span>&gt;</span> root, CriteriaQuery<span class="php"><span class="preprocessor">&lt;?</span>&gt; criteria, CriteriaBuilder builder ) &#123;</span><br><span class="line">    	<span class="class"><span class="keyword">Class</span> <span class="title">clazz</span> = <span class="title">cq</span>.<span class="title">getResultType</span>();</span><br><span class="line">    	<span class="title">if</span> (<span class="title">clazz</span>.<span class="title">equals</span>(<span class="title">User</span>.<span class="title">class</span>)) </span>&#123;</span><br><span class="line">    		root.fetch(User_.roles);</span><br><span class="line">    	&#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure>
-<h2 id="分页Fetch的性能问题">分页Fetch的性能问题</h2><p>我们知道，理想的分页是过程在数据库查询阶段就指定条件来限制返回结果的件数的。 但是我们同时又需要去JOIN子表，因为每条主表记录关联子表的记录条数是不确定的，这也就导致需要取多少条数据库返回记录变得不确定了。最终会产生如下的警告</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">7 <span class="tag">juin</span> 2011 09<span class="pseudo">:52</span><span class="pseudo">:37</span> <span class="tag">org</span><span class="class">.hibernate</span><span class="class">.hql</span><span class="class">.ast</span><span class="class">.QueryTranslatorImpl</span> <span class="tag">list</span> <span class="rule"><span class="attribute">ATTENTION</span>:<span class="value"> firstResult/maxResults specified with collection fetch</span></span>; <span class="tag">applying</span> <span class="tag">in</span> <span class="tag">memory</span>!</span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">new Specification<span class="tag">&lt;<span class="name">User</span>&gt;</span>() &#123;</div><div class="line">    @Override</div><div class="line">    public Predicate toPredicate( Root<span class="tag">&lt;<span class="name">User</span>&gt;</span> root, CriteriaQuery<span class="php"><span class="meta">&lt;?</span>&gt; criteria, CriteriaBuilder builder ) &#123;</span></div><div class="line">    	<span class="class"><span class="keyword">Class</span> <span class="title">clazz</span> = <span class="title">cq</span>.<span class="title">getResultType</span>();</span></div><div class="line">    	<span class="title">if</span> (<span class="title">clazz</span>.<span class="title">equals</span>(<span class="title">User</span>.<span class="title">class</span>)) &#123;</div><div class="line">    		root.fetch(User_.roles);</div><div class="line">    	&#125;</div><div class="line">        </div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="分页Fetch的性能问题"><a href="#分页Fetch的性能问题" class="headerlink" title="分页Fetch的性能问题"></a>分页Fetch的性能问题</h2><p>我们知道，理想的分页是过程在数据库查询阶段就指定条件来限制返回结果的件数的。 但是我们同时又需要去JOIN子表，因为每条主表记录关联子表的记录条数是不确定的，这也就导致需要取多少条数据库返回记录变得不确定了。最终会产生如下的警告</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">7 </span>juin <span class="number">2011</span> <span class="number">09</span>:<span class="number">52</span>:<span class="number">37</span> org.hibernate.hql.ast.QueryTranslatorImpl <span class="keyword">list</span> ATTENTION: firstResult/maxResults specified with collection fetch; applying in memory!</div></pre></td></tr></table></figure>
 <p>也就是说，分页的操作不能在数据库端进行了，只能查询数据库的所有记录，然后在内存中进行分页，这在数据量庞大的主表的情况是不能接受的（通常我们需要分页，也就意味着主表的记录较多）</p>
 <p>所以结论上讲，类似OneToMany这样会导致结果条数不确定的JOIN，在需要分页时，是不能使用的。 所以我们只能选择SELECT或者SUBSELECT。好在就算我们使用的JPA，Hibernate的FetchMode的还是可以使用的，为了避免N+1问题，只能使用SUBSELECT。</p>
 <p>NOTES：在使用Hibernate作为provider的时候，FetchMode的JOIN并没有效果，原因未知。</p>
@@ -167,7 +167,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#解决办法"><span class="toc-number">1.</span> <span class="toc-text">解决办法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring_Data_JPA中的分页问题"><span class="toc-number">2.</span> <span class="toc-text">Spring Data JPA中的分页问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分页Fetch的性能问题"><span class="toc-number">3.</span> <span class="toc-text">分页Fetch的性能问题</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#解决办法"><span class="toc-number">1.</span> <span class="toc-text">解决办法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-Data-JPA中的分页问题"><span class="toc-number">2.</span> <span class="toc-text">Spring Data JPA中的分页问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分页Fetch的性能问题"><span class="toc-number">3.</span> <span class="toc-text">分页Fetch的性能问题</span></a></li></ol>
  
   </div>
 
@@ -190,13 +190,13 @@
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -204,23 +204,23 @@
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -281,7 +281,7 @@
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

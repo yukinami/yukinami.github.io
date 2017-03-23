@@ -27,7 +27,7 @@ Spy Object 对真实对象的部分方法进行模拟，除了模拟的方法外
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -90,11 +90,11 @@ Spy Object 对真实对象的部分方法进行模拟，除了模拟的方法外
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本概念"><span class="toc-number">1.</span> <span class="toc-text">基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#单元测试"><span class="toc-number">1.1.</span> <span class="toc-text">单元测试</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#如何进行Mock"><span class="toc-number">1.1.1.</span> <span class="toc-text">如何进行Mock</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#集成测试"><span class="toc-number">1.2.</span> <span class="toc-text">集成测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#功能测试"><span class="toc-number">1.3.</span> <span class="toc-text">功能测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试方法"><span class="toc-number">2.</span> <span class="toc-text">测试方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Behavior-driven_development(BDD)"><span class="toc-number">2.1.</span> <span class="toc-text">Behavior-driven development(BDD)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Cucumber"><span class="toc-number">2.1.1.</span> <span class="toc-text">Cucumber</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#业务描述"><span class="toc-number">2.1.1.1.</span> <span class="toc-text">业务描述</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#步骤实现"><span class="toc-number">2.1.1.2.</span> <span class="toc-text">步骤实现</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试框架"><span class="toc-number">3.</span> <span class="toc-text">测试框架</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Test_Runner"><span class="toc-number">3.1.</span> <span class="toc-text">Test Runner</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BDD"><span class="toc-number">3.2.</span> <span class="toc-text">BDD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mock库"><span class="toc-number">3.3.</span> <span class="toc-text">Mock库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#断言&匹配库"><span class="toc-number">3.4.</span> <span class="toc-text">断言&匹配库</span></a></li></ol></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本概念"><span class="toc-number">1.</span> <span class="toc-text">基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#单元测试"><span class="toc-number">1.1.</span> <span class="toc-text">单元测试</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#如何进行Mock"><span class="toc-number">1.1.1.</span> <span class="toc-text">如何进行Mock</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#集成测试"><span class="toc-number">1.2.</span> <span class="toc-text">集成测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#功能测试"><span class="toc-number">1.3.</span> <span class="toc-text">功能测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试方法"><span class="toc-number">2.</span> <span class="toc-text">测试方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Behavior-driven-development-BDD"><span class="toc-number">2.1.</span> <span class="toc-text">Behavior-driven development(BDD)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Cucumber"><span class="toc-number">2.1.1.</span> <span class="toc-text">Cucumber</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#业务描述"><span class="toc-number">2.1.1.1.</span> <span class="toc-text">业务描述</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#步骤实现"><span class="toc-number">2.1.1.2.</span> <span class="toc-text">步骤实现</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试框架"><span class="toc-number">3.</span> <span class="toc-text">测试框架</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Test-Runner"><span class="toc-number">3.1.</span> <span class="toc-text">Test Runner</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BDD"><span class="toc-number">3.2.</span> <span class="toc-text">BDD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mock库"><span class="toc-number">3.3.</span> <span class="toc-text">Mock库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#断言-amp-匹配库"><span class="toc-number">3.4.</span> <span class="toc-text">断言&匹配库</span></a></li></ol></li></ol>
 		
 		</div>
 		
-		<h2 id="基本概念">基本概念</h2><h3 id="单元测试">单元测试</h3><p>一些单元测试中设计的基本概念</p>
+		<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><h3 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h3><p>一些单元测试中设计的基本概念</p>
 <ul>
 <li>Stub 指的是以可控的方式对对象方法进行模拟，使其按照预期的行为返回结果或抛出异常等的过程。</li>
 <li>Mock Object 整个对象都是模拟对象，所有方法在模拟之前进行调用都是空方法。</li>
@@ -114,7 +114,7 @@ Spy Object 对真实对象的部分方法进行模拟，除了模拟的方法外
 </ul>
 <p>不能够或者不应该使用真实的对象方法。使用Mock对象，可以避免其他方法执行结果对目标方法执行的干扰，同时能够更好的控制方法的执行路径。</p>
 <p>实施单元测试的好处不仅仅在于它能保证代码的正确性，更大的好处在于它的高效，因为它是通过new初始化的，调用的对象也可以进行mock，并不依赖于难以控制的外部环境。另外的好处是可以间接地提高代码的品质要求，如果你想实施单元测试，那么你得要求你的类尽可能的是一个POJO，代码应该应有较好的分层结构以及松散的耦合，一段品质很差的代码要实施单元测试是非常苦难的。</p>
-<h4 id="如何进行Mock">如何进行Mock</h4><p>下面是基本的mock准则</p>
+<h4 id="如何进行Mock"><a href="#如何进行Mock" class="headerlink" title="如何进行Mock"></a>如何进行Mock</h4><p>下面是基本的mock准则</p>
 <ul>
 <li>不要什么都mock</li>
 <li>不要mock不是你的类</li>
@@ -128,9 +128,9 @@ Spy Object 对真实对象的部分方法进行模拟，除了模拟的方法外
 <li>验证</li>
 </ol>
 <p>下面是<a href="http://mockito.org/" target="_blank" rel="external">Mocktio</a>的示例代码</p>
-<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// you can mock concrete classes, not only interfaces</span></span><br><span class="line">LinkedList mockedList = mock(LinkedList.class);</span><br><span class="line"></span><br><span class="line"><span class="comment">// stubbing appears before the actual execution</span></span><br><span class="line"><span class="keyword">when</span>(mockedList.<span class="keyword">get</span>(<span class="number">0</span>)).thenReturn(<span class="string">"first"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// the following prints "first"</span></span><br><span class="line">System.<span class="keyword">out</span>.println(mockedList.<span class="keyword">get</span>(<span class="number">0</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// the following prints "null" because get(999) was not stubbed</span></span><br><span class="line">System.<span class="keyword">out</span>.println(mockedList.<span class="keyword">get</span>(<span class="number">999</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// virify get(0) is called</span></span><br><span class="line">verify(mockedList.<span class="keyword">get</span>).<span class="keyword">get</span>(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
-<h3 id="集成测试">集成测试</h3><p>集成测试主要针对是测试多个组件组合在一起工作的情况。 例如Repository接口和Spring Data JPA集成的情况下，生成的查询接口测试；Web框架和Controller集成的情况下，请求参数的绑定、转换、验证是否正常；和消息中间件集成时，消息的收发是否正常等等。</p>
-<h3 id="功能测试">功能测试</h3><p>功能测试有时候也叫E2E测试，功能测试以系统的功能点为测试对象。以Web应用为例，功能测试的主要应该是测试页面的功能是否正常，例如测试</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// you can mock concrete classes, not only interfaces</span></div><div class="line">LinkedList mockedList = mock(LinkedList.<span class="keyword">class</span>);</div><div class="line"></div><div class="line"><span class="comment">// stubbing appears before the actual execution</span></div><div class="line"><span class="keyword">when</span>(mockedList.<span class="keyword">get</span>(<span class="number">0</span>)).thenReturn(<span class="string">"first"</span>);</div><div class="line"></div><div class="line"><span class="comment">// the following prints "first"</span></div><div class="line">System.<span class="keyword">out</span>.println(mockedList.<span class="keyword">get</span>(<span class="number">0</span>));</div><div class="line"></div><div class="line"><span class="comment">// the following prints "null" because get(999) was not stubbed</span></div><div class="line">System.<span class="keyword">out</span>.println(mockedList.<span class="keyword">get</span>(<span class="number">999</span>));</div><div class="line"></div><div class="line"><span class="comment">// virify get(0) is called</span></div><div class="line">verify(mockedList.<span class="keyword">get</span>).<span class="keyword">get</span>(<span class="number">0</span>);</div></pre></td></tr></table></figure>
+<h3 id="集成测试"><a href="#集成测试" class="headerlink" title="集成测试"></a>集成测试</h3><p>集成测试主要针对是测试多个组件组合在一起工作的情况。 例如Repository接口和Spring Data JPA集成的情况下，生成的查询接口测试；Web框架和Controller集成的情况下，请求参数的绑定、转换、验证是否正常；和消息中间件集成时，消息的收发是否正常等等。</p>
+<h3 id="功能测试"><a href="#功能测试" class="headerlink" title="功能测试"></a>功能测试</h3><p>功能测试有时候也叫E2E测试，功能测试以系统的功能点为测试对象。以Web应用为例，功能测试的主要应该是测试页面的功能是否正常，例如测试</p>
 <ul>
 <li>请求是否成功</li>
 <li>重定向是否正确</li>
@@ -140,27 +140,27 @@ Spy Object 对真实对象的部分方法进行模拟，除了模拟的方法外
 </ul>
 <p>功能测试最常用的工具<a href="http://www.seleniumhq.org/" target="_blank" rel="external">Selenium</a>。当然有些框架也提供应用内的功能测试，例如Rails的Functional Test，但是这些测试不属于E2E测试的范畴，因为他们是基于容器内的测试，而不是完全独立的端到端的测试。</p>
 <p>测试逻辑</p>
-<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CreateMessagePage page = CreateMessagePage.to<span class="comment">(driver)</span>;</span><br><span class="line">ViewMessagePage viewMessagePage =</span><br><span class="line">    page.createMessage<span class="comment">(ViewMessagePage.class, expectedSummary, expectedText)</span>;</span><br><span class="line">    </span><br><span class="line">assertThat<span class="comment">(viewMessagePage.getMessage()</span>).isEqualTo<span class="comment">(expectedMessage)</span>;</span><br><span class="line">assertThat<span class="comment">(viewMessagePage.getSuccess()</span>).isEqualTo<span class="comment">("Successfully created a new message")</span>;</span><br></pre></td></tr></table></figure>
-<h2 id="测试方法">测试方法</h2><h3 id="Behavior-driven_development(BDD)">Behavior-driven development(BDD)</h3><p>行为驱动开发是一种敏捷软件开发的技术，它鼓励软件项目中的开发者、QA和非技术人员或商业参与者之间的协作。 BDD是一种开发方式，但是它和测试紧密相关。BDD用它的DSL来描述系统的功能的，测试用例则则相当于对功能描述一个实现。</p>
-<h4 id="Cucumber">Cucumber</h4><p><a href="https://cucumber.io/" target="_blank" rel="external">Cucumber</a>是一个BDD的框架，它支持各种语言的实现。</p>
-<h5 id="业务描述">业务描述</h5><p>Cucumber使用<a href="https://github.com/cucumber/cucumber/wiki/Gherkin" target="_blank" rel="external">Gherkin</a>语言来作为DSL来对业务规则进行描述，下面是一个<a href="https://github.com/cucumber/cucumber/wiki/Gherkin" target="_blank" rel="external">Gherkin</a>的文档</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Feature</span>: <span class="string">Refund item</span></span><br><span class="line"></span><br><span class="line"><span class="xquery">  Scenario: Jeff returns a faulty microwave</span><br><span class="line">    Given Jeff has bought a microwave <span class="keyword">for</span> <span class="variable">$100</span></span><br><span class="line">    And he has a receipt</span><br><span class="line">    When he returns the microwave</span><br><span class="line">    Then Jeff should be refunded <span class="variable">$100</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">CreateMessagePage page = CreateMessagePage.to<span class="comment">(driver)</span>;</div><div class="line">ViewMessagePage viewMessagePage =</div><div class="line">    page.createMessage<span class="comment">(ViewMessagePage.class, expectedSummary, expectedText)</span>;</div><div class="line">    </div><div class="line">assertThat<span class="comment">(viewMessagePage.getMessage()</span>).isEqualTo<span class="comment">(expectedMessage)</span>;</div><div class="line">assertThat<span class="comment">(viewMessagePage.getSuccess()</span>).isEqualTo<span class="comment">("Successfully created a new message")</span>;</div></pre></td></tr></table></figure>
+<h2 id="测试方法"><a href="#测试方法" class="headerlink" title="测试方法"></a>测试方法</h2><h3 id="Behavior-driven-development-BDD"><a href="#Behavior-driven-development-BDD" class="headerlink" title="Behavior-driven development(BDD)"></a>Behavior-driven development(BDD)</h3><p>行为驱动开发是一种敏捷软件开发的技术，它鼓励软件项目中的开发者、QA和非技术人员或商业参与者之间的协作。 BDD是一种开发方式，但是它和测试紧密相关。BDD用它的DSL来描述系统的功能的，测试用例则则相当于对功能描述一个实现。</p>
+<h4 id="Cucumber"><a href="#Cucumber" class="headerlink" title="Cucumber"></a>Cucumber</h4><p><a href="https://cucumber.io/" target="_blank" rel="external">Cucumber</a>是一个BDD的框架，它支持各种语言的实现。</p>
+<h5 id="业务描述"><a href="#业务描述" class="headerlink" title="业务描述"></a>业务描述</h5><p>Cucumber使用<a href="https://github.com/cucumber/cucumber/wiki/Gherkin" target="_blank" rel="external">Gherkin</a>语言来作为DSL来对业务规则进行描述，下面是一个<a href="https://github.com/cucumber/cucumber/wiki/Gherkin" target="_blank" rel="external">Gherkin</a>的文档</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">Feature</span>: Refund item</div><div class="line"></div><div class="line"><span class="mipsasm"><span class="symbol">  Scenario:</span> <span class="keyword">Jeff </span>returns a faulty microwave</span></div><div class="line">    Given <span class="keyword">Jeff </span>has <span class="keyword">bought </span>a microwave for $<span class="number">100</span></div><div class="line">    <span class="keyword">And </span>he has a receipt</div><div class="line">    When he returns the microwave</div><div class="line">    Then <span class="keyword">Jeff </span><span class="keyword">should </span><span class="keyword">be </span>refunded $<span class="number">100</span></div></pre></td></tr></table></figure>
 <p>一个Scenario指的是一个业务规则的演示、描述。其中包括Give、And、When、Then等多个Step。</p>
 <p>上面的文档就是非技术人员或商业参与者需要做的，使用DSL语言对系统功能进行描述。</p>
-<h5 id="步骤实现">步骤实现</h5><p>开发人员则需要对上面的文档中的描述进行实现，调用实际的功能代码，以达到测试代码的目的。</p>
+<h5 id="步骤实现"><a href="#步骤实现" class="headerlink" title="步骤实现"></a>步骤实现</h5><p>开发人员则需要对上面的文档中的描述进行实现，调用实际的功能代码，以达到测试代码的目的。</p>
 <p>例如，针对下面的Step</p>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Scenario: Some cukes</span><br><span class="line">  Given I have <span class="number">48</span> cukes <span class="keyword">in</span> <span class="keyword">my</span> belly</span><br></pre></td></tr></table></figure>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Scenario: <span class="keyword">Some</span> cukes</div><div class="line">  Given I have <span class="number">48</span> cukes <span class="keyword">in</span> my belly</div></pre></td></tr></table></figure>
 <p>进行实现</p>
-<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Given</span>(<span class="string">"I have (\\d+) cukes in my belly"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">I_have_cukes_in_my_bellt</span><span class="params">(<span class="keyword">int</span> cukes)</span> </span>&#123;</span><br><span class="line">	System.out.format(<span class="string">"Cukes: %n\n"</span>, cukes)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Given</span>(<span class="string">"I have (\\d+) cukes in my belly"</span>)</div><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">I_have_cukes_in_my_bellt</span><span class="params">(<span class="keyword">int</span> cukes)</span> </span>&#123;</div><div class="line">	System.out.format(<span class="string">"Cukes: %n\n"</span>, cukes)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>实现方法是应该调用实际的业务代码，对于Given来说，应该是类似<code>setUp</code>来初始化测试上下文环境的。</p>
-<h2 id="测试框架">测试框架</h2><p>下面主要介绍下各个平台中较为广泛的使用的测试框架</p>
-<h3 id="Test_Runner">Test Runner</h3><p>Test Runner是用来启动测试，调用测试代码，反馈测试结果的。它本身可能作为一个测试框架还包括了断言、Mock等其他额外的功能</p>
+<h2 id="测试框架"><a href="#测试框架" class="headerlink" title="测试框架"></a>测试框架</h2><p>下面主要介绍下各个平台中较为广泛的使用的测试框架</p>
+<h3 id="Test-Runner"><a href="#Test-Runner" class="headerlink" title="Test Runner"></a>Test Runner</h3><p>Test Runner是用来启动测试，调用测试代码，反馈测试结果的。它本身可能作为一个测试框架还包括了断言、Mock等其他额外的功能</p>
 <ul>
 <li><a href="http://karma-runner.github.io/" target="_blank" rel="external">Karama</a> 它作为JS的Test Runner，仅负责测试的运行。它是一个Node.js的模块，能够在本地启动浏览器执行测试用例，并将测试结果输出到本地控制台。</li>
 <li>Junit Java平台的测试框架，它是一个完整的测试框架，除了负责运行测试用例，它还包括测试方法定义，断言的书写等功能。</li>
 <li><a href="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/testing_with_xcode/chapters/01-introduction.html" target="_blank" rel="external">XCTest</a> 从Xcode5，使用XCtest作为OS X和iOS平台的完整测试框架。 </li>
 </ul>
-<h3 id="BDD">BDD</h3><p>即便开发团队不使用完整的BDD框架进行开发，使用BDD风格的测试用例描述方式，仍然有诸多的有点，测试用例具有良好的可读性。</p>
+<h3 id="BDD"><a href="#BDD" class="headerlink" title="BDD"></a>BDD</h3><p>即便开发团队不使用完整的BDD框架进行开发，使用BDD风格的测试用例描述方式，仍然有诸多的有点，测试用例具有良好的可读性。</p>
 <p>下面是一些BDD测试框架，其中一部分虽然是测试框架，但也创建拥有功能描述文档的功能</p>
 <ul>
 <li><a href="http://jasmine.github.io/edge/introduction.html" target="_blank" rel="external">Jasmine</a> 基于JS的完整BDD测试框架，包括断言、mock的功能。</li>
@@ -168,7 +168,7 @@ Spy Object 对真实对象的部分方法进行模拟，除了模拟的方法外
 <li><a href="https://github.com/specta/specta" target="_blank" rel="external">Specta</a> 基于Object-C和Cocoa的BDD测试框架，它不提供断言、mock的功能。</li>
 <li><a href="https://github.com/kiwi-bdd/Kiwi" target="_blank" rel="external">Kiwi</a> iOS平台的完整BDD测试框架，包括了断言、mock的功能。</li>
 </ul>
-<h3 id="Mock库">Mock库</h3><ul>
+<h3 id="Mock库"><a href="#Mock库" class="headerlink" title="Mock库"></a>Mock库</h3><ul>
 <li><a href="http://jasmine.github.io/edge/introduction.html" target="_blank" rel="external">Jasmine</a> Jasmine包括了mock功能</li>
 <li><a href="http://mockito.org/" target="_blank" rel="external">Mocktio</a> Java平台的著名的Mock的库</li>
 <li><a href="https://github.com/jonreid/OCMockito" target="_blank" rel="external">OCMockito</a> Mocktio的OC版本</li>
@@ -177,7 +177,7 @@ Spy Object 对真实对象的部分方法进行模拟，除了模拟的方法外
 <ul>
 <li>[OHHTTPStubs] iOS平台的HTTP请求的Stub库。它可以Stub所有通过NSURLConnection接口进行的请求，模拟数据的返回，模拟网速慢的情况的请求等。 除了可以用于更高效的测试外，还可以用于开发阶段，API等尚未完成时的接口模拟等。</li>
 </ul>
-<h3 id="断言&amp;匹配库">断言&amp;匹配库</h3><p>匹配库本身并不是测试必要的一部分，但是有了匹配库可以让断言的书写更为简洁和高效</p>
+<h3 id="断言-amp-匹配库"><a href="#断言-amp-匹配库" class="headerlink" title="断言&amp;匹配库"></a>断言&amp;匹配库</h3><p>匹配库本身并不是测试必要的一部分，但是有了匹配库可以让断言的书写更为简洁和高效</p>
 <ul>
 <li><a href="http://jasmine.github.io/edge/introduction.html" target="_blank" rel="external">Jasmine</a> Jasmine包括了断言的功能</li>
 <li><a href="http://joel-costigliola.github.io/assertj/" target="_blank" rel="external">AssertJ</a> 具有fluent API的Java断言库</li>
@@ -240,7 +240,7 @@ Spy Object 对真实对象的部分方法进行模拟，除了模拟的方法外
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本概念"><span class="toc-number">1.</span> <span class="toc-text">基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#单元测试"><span class="toc-number">1.1.</span> <span class="toc-text">单元测试</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#如何进行Mock"><span class="toc-number">1.1.1.</span> <span class="toc-text">如何进行Mock</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#集成测试"><span class="toc-number">1.2.</span> <span class="toc-text">集成测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#功能测试"><span class="toc-number">1.3.</span> <span class="toc-text">功能测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试方法"><span class="toc-number">2.</span> <span class="toc-text">测试方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Behavior-driven_development(BDD)"><span class="toc-number">2.1.</span> <span class="toc-text">Behavior-driven development(BDD)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Cucumber"><span class="toc-number">2.1.1.</span> <span class="toc-text">Cucumber</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#业务描述"><span class="toc-number">2.1.1.1.</span> <span class="toc-text">业务描述</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#步骤实现"><span class="toc-number">2.1.1.2.</span> <span class="toc-text">步骤实现</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试框架"><span class="toc-number">3.</span> <span class="toc-text">测试框架</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Test_Runner"><span class="toc-number">3.1.</span> <span class="toc-text">Test Runner</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BDD"><span class="toc-number">3.2.</span> <span class="toc-text">BDD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mock库"><span class="toc-number">3.3.</span> <span class="toc-text">Mock库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#断言&匹配库"><span class="toc-number">3.4.</span> <span class="toc-text">断言&匹配库</span></a></li></ol></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本概念"><span class="toc-number">1.</span> <span class="toc-text">基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#单元测试"><span class="toc-number">1.1.</span> <span class="toc-text">单元测试</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#如何进行Mock"><span class="toc-number">1.1.1.</span> <span class="toc-text">如何进行Mock</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#集成测试"><span class="toc-number">1.2.</span> <span class="toc-text">集成测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#功能测试"><span class="toc-number">1.3.</span> <span class="toc-text">功能测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试方法"><span class="toc-number">2.</span> <span class="toc-text">测试方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Behavior-driven-development-BDD"><span class="toc-number">2.1.</span> <span class="toc-text">Behavior-driven development(BDD)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Cucumber"><span class="toc-number">2.1.1.</span> <span class="toc-text">Cucumber</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#业务描述"><span class="toc-number">2.1.1.1.</span> <span class="toc-text">业务描述</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#步骤实现"><span class="toc-number">2.1.1.2.</span> <span class="toc-text">步骤实现</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试框架"><span class="toc-number">3.</span> <span class="toc-text">测试框架</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Test-Runner"><span class="toc-number">3.1.</span> <span class="toc-text">Test Runner</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BDD"><span class="toc-number">3.2.</span> <span class="toc-text">BDD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mock库"><span class="toc-number">3.3.</span> <span class="toc-text">Mock库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#断言-amp-匹配库"><span class="toc-number">3.4.</span> <span class="toc-text">断言&匹配库</span></a></li></ol></li></ol>
  
   </div>
 
@@ -263,13 +263,13 @@ Spy Object 对真实对象的部分方法进行模拟，除了模拟的方法外
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -277,23 +277,23 @@ Spy Object 对真实对象的部分方法进行模拟，除了模拟的方法外
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -354,7 +354,7 @@ Spy Object 对真实对象的部分方法进行模拟，除了模拟的方法外
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

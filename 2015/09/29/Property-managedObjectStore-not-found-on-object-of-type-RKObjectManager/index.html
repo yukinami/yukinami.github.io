@@ -25,7 +25,7 @@ Property ‘managedObjectStore’ not found on object of type’RKObjectManager 
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -92,21 +92,21 @@ Property ‘managedObjectStore’ not found on object of type’RKObjectManager 
 		
 		</div>
 		
-		<h2 id="问题">问题</h2><p>使用Restkit时，访问<code>RKObjectManger</code>的<code>managedObjectStore</code>属性是提示</p>
+		<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>使用Restkit时，访问<code>RKObjectManger</code>的<code>managedObjectStore</code>属性是提示</p>
 <blockquote>
 <p>Property ‘managedObjectStore’ not found on object of type’RKObjectManager *’</p>
 </blockquote>
 <a id="more"></a>
-<h2 id="原因">原因</h2><p>看了下<code>RKObjectManger</code>的头文件中关于<code>managedObjectStore</code>属性的定义是这样的</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#ifdef RKCoreDataIncluded</span></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> A Core Data backed object store for persisting objects that have been fetched from the Web</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) RKManagedObjectStore *managedObjectStore;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> An array of `RKFetchRequestBlock` blocks used to map `NSURL` objects into corresponding `NSFetchRequest` objects.</span><br><span class="line"> </span><br><span class="line"> When searched, the blocks are iterated in the reverse-order of their registration and the first block with a non-nil return value halts the search.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">readonly</span>) <span class="built_in">NSArray</span> *fetchRequestBlocks;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> Adds the given `RKFetchRequestBlock` block to the manager.</span><br><span class="line"> </span><br><span class="line"> @param block A block object to be executed when constructing an `NSFetchRequest` object from a given `NSURL`. The block has a return type of `NSFetchRequest` and accepts a single `NSURL` argument.</span><br><span class="line"> */</span></span><br><span class="line">- (<span class="keyword">void</span>)addFetchRequestBlock:(<span class="built_in">NSFetchRequest</span> *(^)(<span class="built_in">NSURL</span> *URL))block;</span><br><span class="line"><span class="preprocessor">#endif</span></span><br></pre></td></tr></table></figure>
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>看了下<code>RKObjectManger</code>的头文件中关于<code>managedObjectStore</code>属性的定义是这样的</p>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#ifdef RKCoreDataIncluded</span></div><div class="line">/**</div><div class="line"> A <span class="type">Core</span> <span class="type">Data</span> backed <span class="keyword">object</span> store <span class="keyword">for</span> persisting objects that have been fetched <span class="keyword">from</span> the <span class="type">Web</span></div><div class="line"> */</div><div class="line">@property (nonatomic, strong) <span class="type">RKManagedObjectStore</span> *managedObjectStore;</div><div class="line"></div><div class="line">/**</div><div class="line"> <span class="type">An</span> <span class="built_in">array</span> <span class="keyword">of</span> `<span class="type">RKFetchRequestBlock</span>` blocks used to map `<span class="type">NSURL</span>` objects into corresponding `<span class="type">NSFetchRequest</span>` objects.</div><div class="line"> </div><div class="line"> <span class="type">When</span> searched, the blocks are iterated <span class="keyword">in</span> the reverse-order <span class="keyword">of</span> their registration <span class="keyword">and</span> the first <span class="keyword">block</span> <span class="keyword">with</span> a non-<span class="keyword">nil</span> <span class="keyword">return</span> value halts the search.</div><div class="line"> */</div><div class="line">@property (nonatomic, readonly) <span class="type">NSArray</span> *fetchRequestBlocks;</div><div class="line"></div><div class="line">/**</div><div class="line"> <span class="type">Adds</span> the given `<span class="type">RKFetchRequestBlock</span>` <span class="keyword">block</span> to the manager.</div><div class="line"> </div><div class="line"> @param <span class="keyword">block</span> A <span class="keyword">block</span> <span class="keyword">object</span> to be executed <span class="keyword">when</span> constructing an `<span class="type">NSFetchRequest</span>` <span class="keyword">object</span> <span class="keyword">from</span> a given `<span class="type">NSURL</span>`. <span class="type">The</span> <span class="keyword">block</span> has a <span class="keyword">return</span> <span class="keyword">type</span> <span class="keyword">of</span> `<span class="type">NSFetchRequest</span>` <span class="keyword">and</span> accepts a single `<span class="type">NSURL</span>` argument.</div><div class="line"> */</div><div class="line">- (<span class="built_in">void</span>)addFetchRequestBlock:(<span class="type">NSFetchRequest</span> *(^)(<span class="type">NSURL</span> *<span class="type">URL</span>))<span class="keyword">block</span>;</div><div class="line"><span class="comment">#endif</span></div></pre></td></tr></table></figure>
 <p>同时这个宏变量是这样定义的</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="id">#ifdef</span> _COREDATADEFINES_H</span><br><span class="line"><span class="id">#if</span> __has_include(<span class="string">"RKCoreData.h"</span>)</span><br><span class="line"><span class="hexcolor">#def</span>ine RKCoreDataIncluded</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> _COREDATADEFINES_H</span></div><div class="line"><span class="meta">#<span class="meta-keyword">if</span> __has_include(<span class="meta-string">"RKCoreData.h"</span>)</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> RKCoreDataIncluded</span></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure>
 <p><code>_COREDATADEFINES_H</code>这个宏是在CoreData的<code>CoreDataDefines.h</code>头文件中定义的</p>
 <p>CoreDataDefines.h</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="id">#ifndef</span> _COREDATADEFINES_H</span><br><span class="line"><span class="hexcolor">#def</span>ine _COREDATADEFINES_H</span><br></pre></td></tr></table></figure>
-<h2 id="解决">解决</h2><p>需要在import Restkit，这样在import<code>RKObjectManger.h</code>时，才能正确定义宏以及属性。</p>
-<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;CoreData/CoreData.h&gt;</span></span></span><br></pre></td></tr></table></figure>
-<h2 id="总结">总结</h2><p>OC中的头文件引入顺序非常重要，会影响到一些实际代码特别是一些宏的定义。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> _COREDATADEFINES_H</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> _COREDATADEFINES_H</span></div></pre></td></tr></table></figure>
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>需要在import Restkit，这样在import<code>RKObjectManger.h</code>时，才能正确定义宏以及属性。</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;CoreData/CoreData.h&gt;</span></span></div></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>OC中的头文件引入顺序非常重要，会影响到一些实际代码特别是一些宏的定义。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -115,7 +115,7 @@ Property ‘managedObjectStore’ not found on object of type’RKObjectManager 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Restkit/">Restkit</a><a href="/tags/iOS/">iOS</a><a href="/tags/经验错误/">经验错误</a>
+  <span></span> <a href="/tags/经验错误/">经验错误</a><a href="/tags/iOS/">iOS</a><a href="/tags/Restkit/">Restkit</a>
   </div>
 
 </div>
@@ -186,13 +186,13 @@ Property ‘managedObjectStore’ not found on object of type’RKObjectManager 
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -200,23 +200,23 @@ Property ‘managedObjectStore’ not found on object of type’RKObjectManager 
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -277,7 +277,7 @@ Property ‘managedObjectStore’ not found on object of type’RKObjectManager 
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

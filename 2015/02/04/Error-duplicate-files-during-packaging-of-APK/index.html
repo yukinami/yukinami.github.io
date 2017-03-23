@@ -24,7 +24,7 @@
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -91,13 +91,13 @@
 		
 		</div>
 		
-		<h1 id="错误">错误</h1><p>Android项目构建时报如下错</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">Error:</span> duplicate files during packaging of APK <span class="regexp">/Users/</span>snowblink<span class="regexp">/workspace/</span>NoodlesMobile<span class="regexp">/app-stu/</span>build<span class="regexp">/outputs/</span>apk/xxx-debug-unaligned.apk</span><br></pre></td></tr></table></figure>
+		<h1 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h1><p>Android项目构建时报如下错</p>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">Error: </span>duplicate files during packaging of APK /Users/snowblink/workspace/NoodlesMobile/app-stu/build/outputs/apk/xxx-debug-unaligned.apk</div></pre></td></tr></table></figure>
 <a id="more"></a>
-<h1 id="原因">原因</h1><p>打包apk文件时，资源文件冲突。</p>
-<h1 id="解决">解决</h1><h2 id="Maven">Maven</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">plugin</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>com.jayway.maven.plugins.android.generation2<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>android-maven-plugin<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">extensions</span>&gt;</span>true<span class="tag">&lt;/<span class="title">extensions</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">configuration</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">extractDuplicates</span>&gt;</span>true<span class="tag">&lt;/<span class="title">extractDuplicates</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h2 id="Gradle">Gradle</h2><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">packagingOptions</span> &#123;</span><br><span class="line">    <span class="title">exclude</span> <span class="string">'META-INF/notice.txt'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="总结">总结</h1><p><a href="http://developer.android.com/sdk/installing/studio-build.html" target="_blank" rel="external">Android官方文档</a>对构建过程中打包apk的描述</p>
+<h1 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h1><p>打包apk文件时，资源文件冲突。</p>
+<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><h2 id="Maven"><a href="#Maven" class="headerlink" title="Maven"></a>Maven</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.jayway.maven.plugins.android.generation2<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>android-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">extensions</span>&gt;</span>true<span class="tag">&lt;/<span class="name">extensions</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">extractDuplicates</span>&gt;</span>true<span class="tag">&lt;/<span class="name">extractDuplicates</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="Gradle"><a href="#Gradle" class="headerlink" title="Gradle"></a>Gradle</h2><figure class="highlight nginx"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="section">packagingOptions</span> &#123;</div><div class="line">    <span class="attribute">exclude</span> <span class="string">'META-INF/notice.txt'</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><a href="http://developer.android.com/sdk/installing/studio-build.html" target="_blank" rel="external">Android官方文档</a>对构建过程中打包apk的描述</p>
 <blockquote>
 <p>All non-compiled resources (such as images), compiled resources, and the .dex files are sent to the apkbuilder tool to be packaged into an .apk file.</p>
 </blockquote>
@@ -181,13 +181,13 @@
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -195,23 +195,23 @@
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -272,7 +272,7 @@
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

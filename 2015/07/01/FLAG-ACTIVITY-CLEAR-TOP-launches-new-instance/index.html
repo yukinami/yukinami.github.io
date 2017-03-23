@@ -23,7 +23,7 @@
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -90,9 +90,9 @@
 		
 		</div>
 		
-		<h1 id="错误">错误</h1><p>在使用<code>NavUtils.navigateUpFromSameTask(this)</code>导航到父Activity时，页面切换的动画是从右往左滑动，这样的动画看起来不像是返回动画，而是打开了一个新的页面的动画。</p>
+		<h1 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h1><p>在使用<code>NavUtils.navigateUpFromSameTask(this)</code>导航到父Activity时，页面切换的动画是从右往左滑动，这样的动画看起来不像是返回动画，而是打开了一个新的页面的动画。</p>
 <a id="more"></a>
-<h1 id="原因">原因</h1><p>SDK版本小于16时，<code>NavUtilsImpl</code>的实现是<code>NavUtilsImplBase</code>，其中的<code>navigateUpTo</code>方法是实现是添加了flag<code>Intent.FLAG_ACTIVITY_CLEAR_TOP</code>。</p>
+<h1 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h1><p>SDK版本小于16时，<code>NavUtilsImpl</code>的实现是<code>NavUtilsImplBase</code>，其中的<code>navigateUpTo</code>方法是实现是添加了flag<code>Intent.FLAG_ACTIVITY_CLEAR_TOP</code>。</p>
 <p>关于<code>Intent.FLAG_ACTIVITY_CLEAR_TOP</code>，官方文档中是这样描述的</p>
 <blockquote>
 <p>If the activity being started is already running in the current task, then instead of launching a new<br>instance of that activity, all of the other activities on top of it are destroyed and this intent is<br>delivered to the resumed instance of the activity (now on top), through onNewIntent()).</p>
@@ -178,13 +178,13 @@
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -192,23 +192,23 @@
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -269,7 +269,7 @@
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

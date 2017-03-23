@@ -23,7 +23,7 @@
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -90,12 +90,12 @@
 		
 		</div>
 		
-		<h1 id="问题">问题</h1><p>执行gradle-tomcat-plugin的tomcatRun任务时，服务器正常启动，没有任何异常，输出的log也没有异常，但是访问时返回404页面</p>
+		<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>执行gradle-tomcat-plugin的tomcatRun任务时，服务器正常启动，没有任何异常，输出的log也没有异常，但是访问时返回404页面</p>
 <a id="more"></a>
-<h1 id="原因">原因</h1><p>gradle-tomcat-plugin部署应用时，插件会去查找 src/main/webapp 目录。如果没有找到这个目录，则应用不会被部署。出现这个问题的时候，我的代码是从git服务器上拉下来的，确实发现服务器上没有webapp这个目录，但是本地是有这个目录的。 由于是空目录，git的无法跟踪空目录，也就导致这个目录没有被提交上去。</p>
+<h1 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h1><p>gradle-tomcat-plugin部署应用时，插件会去查找 src/main/webapp 目录。如果没有找到这个目录，则应用不会被部署。出现这个问题的时候，我的代码是从git服务器上拉下来的，确实发现服务器上没有webapp这个目录，但是本地是有这个目录的。 由于是空目录，git的无法跟踪空目录，也就导致这个目录没有被提交上去。</p>
 <p>关于git跟踪空目录参考<a href="https://git.wiki.kernel.org/index.php/Git_FAQ#Can_I_add_empty_directories.3F" target="_blank" rel="external">这里</a></p>
-<h1 id="解决">解决</h1><p>只要把webapp这个目录提交上去就可以解决了。 目录下添加.gitignore</p>
-<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># Ignore everything in this directory</span></span><br><span class="line">*</span><br><span class="line"><span class="preprocessor"># Except this file</span></span><br><span class="line">!.gitignore</span><br></pre></td></tr></table></figure>
+<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>只要把webapp这个目录提交上去就可以解决了。 目录下添加.gitignore</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"># Ignore everything <span class="keyword">in</span> <span class="keyword">this</span> directory</div><div class="line">*</div><div class="line"># Except <span class="keyword">this</span> file</div><div class="line">!.gitignore</div></pre></td></tr></table></figure>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -104,7 +104,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Gradle/">Gradle</a><a href="/tags/经验错误/">经验错误</a>
+  <span></span> <a href="/tags/经验错误/">经验错误</a><a href="/tags/Gradle/">Gradle</a>
   </div>
 
 </div>
@@ -175,13 +175,13 @@
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -189,23 +189,23 @@
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -266,7 +266,7 @@
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

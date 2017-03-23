@@ -21,7 +21,7 @@
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -83,8 +83,9 @@
 </header>
     <div class="article-content">
         
-        <h2 id="基于源码的流程分析">基于源码的流程分析</h2><p>下面的源码基于<code>Spring Security 4.0.3</code>版本。</p>
-<h3 id="入口_WebSecurityConfiguration">入口 WebSecurityConfiguration</h3><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Autowired</span>(required = <span class="literal">false</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="typename">void</span> setFilterChainProxySecurityConfigurer(</span><br><span class="line">		ObjectPostProcessor&lt;Object&gt; objectPostProcessor,</span><br><span class="line">		<span class="annotation">@Value</span>(<span class="string">"#&#123;@autowiredWebSecurityConfigurersIgnoreParents.getWebSecurityConfigurers()&#125;"</span>) List&lt;SecurityConfigurer&lt;Filter, WebSecurity&gt;&gt; webSecurityConfigurers)</span><br><span class="line">		<span class="keyword">throws</span> Exception &#123;</span><br><span class="line">	webSecurity = objectPostProcessor</span><br><span class="line">			.postProcess(<span class="keyword">new</span> WebSecurity(objectPostProcessor));</span><br><span class="line">	<span class="keyword">if</span> (debugEnabled != <span class="literal">null</span>) &#123;</span><br><span class="line">		webSecurity.debug(debugEnabled);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	Collections.sort(webSecurityConfigurers, AnnotationAwareOrderComparator.INSTANCE);</span><br><span class="line"></span><br><span class="line">	Integer previousOrder = <span class="literal">null</span>;</span><br><span class="line">	<span class="keyword">for</span> (SecurityConfigurer&lt;Filter, WebSecurity&gt; <span class="string">config :</span> webSecurityConfigurers) &#123;</span><br><span class="line">		Integer order = AnnotationAwareOrderComparator.lookupOrder(config);</span><br><span class="line">		<span class="keyword">if</span> (previousOrder != <span class="literal">null</span> &amp;&amp; previousOrder.equals(order)) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(</span><br><span class="line">					<span class="string">"@Order on WebSecurityConfigurers must be unique. Order of "</span></span><br><span class="line">							+ order + <span class="string">" was already used, so it cannot be used on "</span></span><br><span class="line">							+ config + <span class="string">" too."</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		previousOrder = order;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> (SecurityConfigurer&lt;Filter, WebSecurity&gt; <span class="string">webSecurityConfigurer :</span> webSecurityConfigurers) &#123;</span><br><span class="line">		webSecurity.apply(webSecurityConfigurer);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">this</span>.webSecurityConfigurers = webSecurityConfigurers;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <h2 id="基于源码的流程分析"><a href="#基于源码的流程分析" class="headerlink" title="基于源码的流程分析"></a>基于源码的流程分析</h2><p>下面的源码基于<code>Spring Security 4.0.3</code>版本。</p>
+<h3 id="入口-WebSecurityConfiguration"><a href="#入口-WebSecurityConfiguration" class="headerlink" title="入口 WebSecurityConfiguration"></a>入口 WebSecurityConfiguration</h3><p><code>WebSecurityConfiguration</code>的目的是配置<code>WebSecurity</code>来创建[FilterChainProxy][FilterChainProxy]</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Autowired</span>(required = <span class="literal">false</span>)</div><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> setFilterChainProxySecurityConfigurer(</div><div class="line">		ObjectPostProcessor&lt;Object&gt; objectPostProcessor,</div><div class="line">		<span class="meta">@Value</span>(<span class="string">"#&#123;@autowiredWebSecurityConfigurersIgnoreParents.getWebSecurityConfigurers()&#125;"</span>) List&lt;SecurityConfigurer&lt;Filter, WebSecurity&gt;&gt; webSecurityConfigurers)</div><div class="line">		<span class="keyword">throws</span> Exception &#123;</div><div class="line">	webSecurity = objectPostProcessor</div><div class="line">			.postProcess(<span class="keyword">new</span> WebSecurity(objectPostProcessor));</div><div class="line">	<span class="keyword">if</span> (debugEnabled != <span class="literal">null</span>) &#123;</div><div class="line">		webSecurity.debug(debugEnabled);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	Collections.sort(webSecurityConfigurers, AnnotationAwareOrderComparator.INSTANCE);</div><div class="line"></div><div class="line">	Integer previousOrder = <span class="literal">null</span>;</div><div class="line">	<span class="keyword">for</span> (SecurityConfigurer&lt;Filter, WebSecurity&gt; <span class="string">config :</span> webSecurityConfigurers) &#123;</div><div class="line">		Integer order = AnnotationAwareOrderComparator.lookupOrder(config);</div><div class="line">		<span class="keyword">if</span> (previousOrder != <span class="literal">null</span> &amp;&amp; previousOrder.equals(order)) &#123;</div><div class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(</div><div class="line">					<span class="string">"@Order on WebSecurityConfigurers must be unique. Order of "</span></div><div class="line">							+ order + <span class="string">" was already used, so it cannot be used on "</span></div><div class="line">							+ config + <span class="string">" too."</span>);</div><div class="line">		&#125;</div><div class="line">		previousOrder = order;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> (SecurityConfigurer&lt;Filter, WebSecurity&gt; <span class="string">webSecurityConfigurer :</span> webSecurityConfigurers) &#123;</div><div class="line">		webSecurity.apply(webSecurityConfigurer);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">this</span>.webSecurityConfigurers = webSecurityConfigurers;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
         
         
         <p class="article-more-link">
@@ -119,7 +120,7 @@
 </header>
     <div class="article-content">
         
-        <h2 id="问题">问题</h2><p>系统长时间运行，但是没有人使用后，再次使用时会无法连接上数据库，会报类似这样的错误</p>
+        <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>系统长时间运行，但是没有人使用后，再次使用时会无法连接上数据库，会报类似这样的错误</p>
 <blockquote>
 <p>org.hibernate.util.JDBCExceptionReporter: The last packet successfully received from the server was 56697 seconds ago. The last packet sent successfully to the server was 56697 seconds ago, which  is longer than the server configured value of ‘wait_timeout’. You should consider either expiring and/or testing connection validity before use in your application, increasing the server configured values for client timeouts, or using the Connector/J connection property ‘autoReconnect=true’ to avoid this problem.</p>
 </blockquote>
@@ -157,7 +158,7 @@
 </header>
     <div class="article-content">
         
-        <h2 id="问题">问题</h2><p>当Mysql中建立的联合索引， 只要索引中的某一列的值为空时(NULL)，即便其他的字段完全相同，也不会引起唯一索引冲突。</p>
+        <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>当Mysql中建立的联合索引， 只要索引中的某一列的值为空时(NULL)，即便其他的字段完全相同，也不会引起唯一索引冲突。</p>
         
         
         <p class="article-more-link">
@@ -227,8 +228,8 @@
 </header>
     <div class="article-content">
         
-        <h1 id="Work_Flow">Work Flow</h1><h2 id="Git_Flow">Git Flow</h2><p><img src="https://about.gitlab.com/images/git_flow/gitdashflow.png" alt=""></p>
-<h3 id="主要分支">主要分支</h3><p>核心库应该有两个无限生命周期的分支：</p>
+        <h1 id="Work-Flow"><a href="#Work-Flow" class="headerlink" title="Work Flow"></a>Work Flow</h1><h2 id="Git-Flow"><a href="#Git-Flow" class="headerlink" title="Git Flow"></a>Git Flow</h2><p><img src="https://about.gitlab.com/images/git_flow/gitdashflow.png" alt=""></p>
+<h3 id="主要分支"><a href="#主要分支" class="headerlink" title="主要分支"></a>主要分支</h3><p>核心库应该有两个无限生命周期的分支：</p>
 <ul>
 <li>master</li>
 <li>develop</li>
@@ -272,7 +273,7 @@
 </header>
     <div class="article-content">
         
-        <h1 id="性能测试指南">性能测试指南</h1><h2 id="概念">概念</h2><p>性能测试是通过自动化的测试工具模拟多种正常、峰值以及异常负载条件来对系统的各项性能指标进行测试。负载测试和压力测试都属于性能测试，两者可以结合进行。</p>
+        <h1 id="性能测试指南"><a href="#性能测试指南" class="headerlink" title="性能测试指南"></a>性能测试指南</h1><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>性能测试是通过自动化的测试工具模拟多种正常、峰值以及异常负载条件来对系统的各项性能指标进行测试。负载测试和压力测试都属于性能测试，两者可以结合进行。</p>
 <ul>
 <li>负载测试是模拟实际软件系统所承受的负载条件的系统负荷，通过不断加载（如逐渐增加模拟用户的数量）或其它加载方式来观察不同负载下系统的响应时间和数据吞吐量、系统占用的资源（如CPU、内存）等，以检验系统的行为和特性，以发现系统可能存在的性能瓶颈、内存泄漏、不能实时同步等问题。负载测试更多地体现了一种方法或一种技术。</li>
 <li>压力测试是在强负载（大数据量、大量并发用户等）下的测试，查看应用系统在峰值使用情况下操作行为，从而有效地发现系统的某项功能隐患、系统是否具有良好的容错能力和可恢复能力。压力测试分为高负载下的长时间（如24小时以上）的稳定性压力测试和极限负载情况下导致系统崩溃的破坏性压力测试。</li>
@@ -311,9 +312,9 @@
 </header>
     <div class="article-content">
         
-        <h1 id="Docker_CI">Docker CI</h1><h2 id="构建私有_Docker_Registry">构建私有 Docker Registry</h2><h3 id="启动_registry">启动 registry</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p <span class="number">5000</span>:<span class="number">5000</span> --name registry registry:<span class="number">2</span></span><br></pre></td></tr></table></figure>
-<h3 id="Insecure_Registry">Insecure Registry</h3><p>当尝试从配有配置TLS的Registry会报如下错</p>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FATA[<span class="number">0000</span>] Error response <span class="built_in">from</span> daemon: v1 ping attempt failed <span class="operator">with</span> error: Get <span class="keyword">https</span>://<span class="number">121.42</span><span class="number">.160</span><span class="number">.161</span>:<span class="number">5000</span>/v1/<span class="title">_ping</span>: tls: oversized record received <span class="operator">with</span> <span class="built_in">length</span> <span class="number">20527.</span> If this <span class="keyword">private</span> registry supports only HTTP <span class="operator">or</span> HTTPS <span class="operator">with</span> <span class="operator">an</span> unknown CA certificate, please <span class="built_in">add</span> `<span class="comment">--insecure-registry 121.42.160.161:5000` to the daemon's arguments. In the case of HTTPS, if you have access to the registry's CA certificate, no need for the flag; simply place the CA certificate at /etc/docker/certs.d/121.42.160.161:5000/ca.crt</span></span><br></pre></td></tr></table></figure>
+        <h1 id="Docker-CI"><a href="#Docker-CI" class="headerlink" title="Docker CI"></a>Docker CI</h1><h2 id="构建私有-Docker-Registry"><a href="#构建私有-Docker-Registry" class="headerlink" title="构建私有 Docker Registry"></a>构建私有 Docker Registry</h2><h3 id="启动-registry"><a href="#启动-registry" class="headerlink" title="启动 registry"></a>启动 registry</h3><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker <span class="keyword">run</span><span class="bash"> <span class="_">-d</span> -p 5000:5000 --name registry registry:2</span></div></pre></td></tr></table></figure>
+<h3 id="Insecure-Registry"><a href="#Insecure-Registry" class="headerlink" title="Insecure Registry"></a>Insecure Registry</h3><p>当尝试从配有配置TLS的Registry会报如下错</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">FATA[<span class="number">0000</span>] Error response <span class="built_in">from</span> daemon: v1 ping attempt failed <span class="keyword">with</span> error: Get <span class="keyword">https</span>://<span class="number">121.42</span><span class="number">.160</span><span class="number">.161</span>:<span class="number">5000</span>/v1/<span class="title">_ping</span>: tls: oversized record received <span class="keyword">with</span> <span class="built_in">length</span> <span class="number">20527.</span> If this <span class="keyword">private</span> registry supports only HTTP <span class="keyword">or</span> HTTPS <span class="keyword">with</span> <span class="keyword">an</span> unknown CA certificate, please <span class="built_in">add</span> `<span class="comment">--insecure-registry 121.42.160.161:5000` to the daemon's arguments. In the case of HTTPS, if you have access to the registry's CA certificate, no need for the flag; simply place the CA certificate at /etc/docker/certs.d/121.42.160.161:5000/ca.crt</span></div></pre></td></tr></table></figure>
         
         
         <p class="article-more-link">
@@ -348,7 +349,7 @@
 </header>
     <div class="article-content">
         
-        <h2 id="问题">问题</h2><p>使用Restkit时，访问<code>RKObjectManger</code>的<code>managedObjectStore</code>属性是提示</p>
+        <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>使用Restkit时，访问<code>RKObjectManger</code>的<code>managedObjectStore</code>属性是提示</p>
 <blockquote>
 <p>Property ‘managedObjectStore’ not found on object of type’RKObjectManager *’</p>
 </blockquote>
@@ -387,7 +388,7 @@
     <div class="article-content">
         
         <p>敏捷的Web框架，应该至少做到开箱即用，开发时不依赖任何外部数据库和外部的服务器是最理想的。</p>
-<h2 id="Web框架">Web框架</h2><p>Spring Boot基于Spring平台，涉及到了构建一个Java Web项目的大部分方面，是一个非常好的选择。只要简单的声明依赖，便可支持基于Spring各种特性。Web层基于Spring MVC，持久层支持JPA，Spring Data JPA，View层支持Freemarker等模板语言，支持Message、Application properties，支持日志，支持多个环境的Profile，安全方面支持Spring Security等等。Spring Boot把Spring的各个项目无缝的结合在一起，可以统一的使用Application properties对它们进行配置。</p>
+<h2 id="Web框架"><a href="#Web框架" class="headerlink" title="Web框架"></a>Web框架</h2><p>Spring Boot基于Spring平台，涉及到了构建一个Java Web项目的大部分方面，是一个非常好的选择。只要简单的声明依赖，便可支持基于Spring各种特性。Web层基于Spring MVC，持久层支持JPA，Spring Data JPA，View层支持Freemarker等模板语言，支持Message、Application properties，支持日志，支持多个环境的Profile，安全方面支持Spring Security等等。Spring Boot把Spring的各个项目无缝的结合在一起，可以统一的使用Application properties对它们进行配置。</p>
         
         
         <p class="article-more-link">
@@ -422,7 +423,7 @@
 </header>
     <div class="article-content">
         
-        <h1 id="问题">问题</h1><p>执行gradle-tomcat-plugin的tomcatRun任务时，服务器正常启动，没有任何异常，输出的log也没有异常，但是访问时返回404页面</p>
+        <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>执行gradle-tomcat-plugin的tomcatRun任务时，服务器正常启动，没有任何异常，输出的log也没有异常，但是访问时返回404页面</p>
         
         
         <p class="article-more-link">
@@ -465,13 +466,13 @@
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -479,23 +480,23 @@
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -556,7 +557,7 @@
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

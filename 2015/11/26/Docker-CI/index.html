@@ -25,7 +25,7 @@ Insecure Registry当尝试从配有配置TLS的Registry会报如下错
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -88,13 +88,13 @@ Insecure Registry当尝试从配有配置TLS的Registry会报如下错
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker_CI"><span class="toc-number">1.</span> <span class="toc-text">Docker CI</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#构建私有_Docker_Registry"><span class="toc-number">1.1.</span> <span class="toc-text">构建私有 Docker Registry</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#启动_registry"><span class="toc-number">1.1.1.</span> <span class="toc-text">启动 registry</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Insecure_Registry"><span class="toc-number">1.1.2.</span> <span class="toc-text">Insecure Registry</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置TLS"><span class="toc-number">1.1.3.</span> <span class="toc-text">配置TLS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Storage"><span class="toc-number">1.1.4.</span> <span class="toc-text">Storage</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用配置文件启动"><span class="toc-number">1.1.4.1.</span> <span class="toc-text">使用配置文件启动</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Authentication"><span class="toc-number">1.1.5.</span> <span class="toc-text">Authentication</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#启用authentication后，certificate再次报错"><span class="toc-number">1.1.5.1.</span> <span class="toc-text">启用authentication后，certificate再次报错</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#持续集成"><span class="toc-number">1.2.</span> <span class="toc-text">持续集成</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#GitLab_钩子触发构建"><span class="toc-number">1.2.1.</span> <span class="toc-text">GitLab 钩子触发构建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Jenkin_构建"><span class="toc-number">1.2.2.</span> <span class="toc-text">Jenkin 构建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#通知_Container"><span class="toc-number">1.2.3.</span> <span class="toc-text">通知 Container</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#手动触发更新"><span class="toc-number">1.2.4.</span> <span class="toc-text">手动触发更新</span></a></li></ol></li></ol></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker-CI"><span class="toc-number">1.</span> <span class="toc-text">Docker CI</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#构建私有-Docker-Registry"><span class="toc-number">1.1.</span> <span class="toc-text">构建私有 Docker Registry</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#启动-registry"><span class="toc-number">1.1.1.</span> <span class="toc-text">启动 registry</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Insecure-Registry"><span class="toc-number">1.1.2.</span> <span class="toc-text">Insecure Registry</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置TLS"><span class="toc-number">1.1.3.</span> <span class="toc-text">配置TLS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Storage"><span class="toc-number">1.1.4.</span> <span class="toc-text">Storage</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用配置文件启动"><span class="toc-number">1.1.4.1.</span> <span class="toc-text">使用配置文件启动</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Authentication"><span class="toc-number">1.1.5.</span> <span class="toc-text">Authentication</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#启用authentication后，certificate再次报错"><span class="toc-number">1.1.5.1.</span> <span class="toc-text">启用authentication后，certificate再次报错</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#持续集成"><span class="toc-number">1.2.</span> <span class="toc-text">持续集成</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#GitLab-钩子触发构建"><span class="toc-number">1.2.1.</span> <span class="toc-text">GitLab 钩子触发构建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Jenkin-构建"><span class="toc-number">1.2.2.</span> <span class="toc-text">Jenkin 构建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#通知-Container"><span class="toc-number">1.2.3.</span> <span class="toc-text">通知 Container</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#手动触发更新"><span class="toc-number">1.2.4.</span> <span class="toc-text">手动触发更新</span></a></li></ol></li></ol></li></ol>
 		
 		</div>
 		
-		<h1 id="Docker_CI">Docker CI</h1><h2 id="构建私有_Docker_Registry">构建私有 Docker Registry</h2><h3 id="启动_registry">启动 registry</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p <span class="number">5000</span>:<span class="number">5000</span> --name registry registry:<span class="number">2</span></span><br></pre></td></tr></table></figure>
-<h3 id="Insecure_Registry">Insecure Registry</h3><p>当尝试从配有配置TLS的Registry会报如下错</p>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FATA[<span class="number">0000</span>] Error response <span class="built_in">from</span> daemon: v1 ping attempt failed <span class="operator">with</span> error: Get <span class="keyword">https</span>://<span class="number">121.42</span><span class="number">.160</span><span class="number">.161</span>:<span class="number">5000</span>/v1/<span class="title">_ping</span>: tls: oversized record received <span class="operator">with</span> <span class="built_in">length</span> <span class="number">20527.</span> If this <span class="keyword">private</span> registry supports only HTTP <span class="operator">or</span> HTTPS <span class="operator">with</span> <span class="operator">an</span> unknown CA certificate, please <span class="built_in">add</span> `<span class="comment">--insecure-registry 121.42.160.161:5000` to the daemon's arguments. In the case of HTTPS, if you have access to the registry's CA certificate, no need for the flag; simply place the CA certificate at /etc/docker/certs.d/121.42.160.161:5000/ca.crt</span></span><br></pre></td></tr></table></figure>
+		<h1 id="Docker-CI"><a href="#Docker-CI" class="headerlink" title="Docker CI"></a>Docker CI</h1><h2 id="构建私有-Docker-Registry"><a href="#构建私有-Docker-Registry" class="headerlink" title="构建私有 Docker Registry"></a>构建私有 Docker Registry</h2><h3 id="启动-registry"><a href="#启动-registry" class="headerlink" title="启动 registry"></a>启动 registry</h3><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker <span class="keyword">run</span><span class="bash"> <span class="_">-d</span> -p 5000:5000 --name registry registry:2</span></div></pre></td></tr></table></figure>
+<h3 id="Insecure-Registry"><a href="#Insecure-Registry" class="headerlink" title="Insecure Registry"></a>Insecure Registry</h3><p>当尝试从配有配置TLS的Registry会报如下错</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">FATA[<span class="number">0000</span>] Error response <span class="built_in">from</span> daemon: v1 ping attempt failed <span class="keyword">with</span> error: Get <span class="keyword">https</span>://<span class="number">121.42</span><span class="number">.160</span><span class="number">.161</span>:<span class="number">5000</span>/v1/<span class="title">_ping</span>: tls: oversized record received <span class="keyword">with</span> <span class="built_in">length</span> <span class="number">20527.</span> If this <span class="keyword">private</span> registry supports only HTTP <span class="keyword">or</span> HTTPS <span class="keyword">with</span> <span class="keyword">an</span> unknown CA certificate, please <span class="built_in">add</span> `<span class="comment">--insecure-registry 121.42.160.161:5000` to the daemon's arguments. In the case of HTTPS, if you have access to the registry's CA certificate, no need for the flag; simply place the CA certificate at /etc/docker/certs.d/121.42.160.161:5000/ca.crt</span></div></pre></td></tr></table></figure>
 <a id="more"></a>
 <p>并且<a href="https://docs.docker.com/registry/insecure/" target="_blank" rel="external">官方文档</a>提到</p>
 <blockquote>
@@ -104,18 +104,18 @@ Insecure Registry当尝试从配有配置TLS的Registry会报如下错
 <blockquote>
 <p>Warning: it’s not possible to use an insecure registry with basic authentication</p>
 </blockquote>
-<h3 id="配置TLS">配置TLS</h3><p>生成自签名证书</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -<span class="tag">p</span> certs &amp;&amp; openssl req \</span><br><span class="line">  -newkey rsa:<span class="number">4096</span> -nodes -sha256 -keyout certs/domain<span class="class">.key</span> \</span><br><span class="line">  -x509 -days <span class="number">365</span> -out certs/domain.crt</span><br></pre></td></tr></table></figure>
+<h3 id="配置TLS"><a href="#配置TLS" class="headerlink" title="配置TLS"></a>配置TLS</h3><p>生成自签名证书</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">mkdir</span> -p certs &amp;&amp; openssl req \</div><div class="line">  -newkey rsa:<span class="number">4096</span> -nodes -sha256 -keyout certs/<span class="built_in">domain</span>.<span class="built_in">key</span> \</div><div class="line">  -x509 -days <span class="number">365</span> -out certs/<span class="built_in">domain</span>.crt</div></pre></td></tr></table></figure>
 <p>如果生成自签名证书的host地址是IP，则需要编辑/etc/ssl/openssl.cnf，在[v3_ca]段落内添加</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">subjectAltName = IP:<span class="number">192.168</span><span class="number">.2</span><span class="number">.107</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">subjectAltName = <span class="built_in">IP</span>:<span class="number">192.168</span><span class="meta">.2</span><span class="meta">.107</span></div></pre></td></tr></table></figure>
 <p>否则客户端连接时会报错</p>
 <blockquote>
 <p>Failed to tls handshake with 192.168.2.107 x509: cannot validate certificate for 192.168.2.107 because it doesn’t contain any IP SANs</p>
 </blockquote>
 <p>然后重启容器启用TLS</p>
-<figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 5000:5000 --restart=always --name registry \</span><br><span class="line">  -<span class="ruby">v <span class="string">`pwd`</span>/<span class="symbol">certs:</span>/certs \</span><br><span class="line"></span>  -<span class="ruby">e <span class="constant">REGISTRY_HTTP_TLS_CERTIFICATE</span>=<span class="regexp">/certs/domain</span>.crt \</span><br><span class="line"></span>  -<span class="ruby">e <span class="constant">REGISTRY_HTTP_TLS_KEY</span>=<span class="regexp">/certs/domain</span>.key \</span><br><span class="line"></span>  registry:2</span><br></pre></td></tr></table></figure>
+<figure class="highlight haml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">docker run -d -p 5000:5000 --restart=always --name registry \</div><div class="line">  -<span class="ruby">v <span class="string">`pwd`</span>/<span class="symbol">certs:</span>/certs \</span></div><div class="line">  -<span class="ruby">e REGISTRY_HTTP_TLS_CERTIFICATE=<span class="regexp">/certs/domain</span>.crt \</span></div><div class="line">  -<span class="ruby">e REGISTRY_HTTP_TLS_KEY=<span class="regexp">/certs/domain</span>.key \</span></div><div class="line">  registry:2</div></pre></td></tr></table></figure>
 <p>然后通过拷贝<code>domain.crt</code>到客户端<code>/etc/docker/certs.d/myregistrydomain.com:5000/ca.crt</code>，让每个docker进程信任证书。</p>
-<h3 id="Storage">Storage</h3><p>关于Aliyun OSS storage driver配置参数参考<a href="https://github.com/docker/distribution/blob/master/docs/storage-drivers/oss.md" target="_blank" rel="external">这里</a></p>
+<h3 id="Storage"><a href="#Storage" class="headerlink" title="Storage"></a>Storage</h3><p>关于Aliyun OSS storage driver配置参数参考<a href="https://github.com/docker/distribution/blob/master/docs/storage-drivers/oss.md" target="_blank" rel="external">这里</a></p>
 <ul>
 <li>accesskeyid 阿里云accesskeyid</li>
 <li>accesskeysecret 阿里云accesskeysecret</li>
@@ -125,32 +125,32 @@ Insecure Registry当尝试从配有配置TLS的Registry会报如下错
 <li>endpoint (可选)，驱动可以自动根据bucket、inernal、region的参数值，配置endpoint的值</li>
 </ul>
 <p>配置的具体内容，大概是这个样子</p>
-<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">storage</span>:</span><br><span class="line">  <span class="attribute">oss</span>:</span><br><span class="line">    <span class="attribute">accesskeyid</span>: xxxxxxx </span><br><span class="line">    <span class="attribute">accesskeysecret</span>: xxxxxxx</span><br><span class="line">    <span class="attribute">bucket</span>: my-registry</span><br><span class="line">    <span class="attribute">internal</span>: true </span><br><span class="line">    <span class="attribute">region</span>: oss-cn-qingdao</span><br></pre></td></tr></table></figure>
-<h4 id="使用配置文件启动">使用配置文件启动</h4><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -<span class="tag">p</span> <span class="number">5000</span>:<span class="number">5000</span> --restart=always --name registry \</span><br><span class="line">  -v `pwd`/config<span class="class">.yml</span>:/etc/docker/registry/config<span class="class">.yml</span> \</span><br><span class="line">  registry:<span class="number">2</span></span><br></pre></td></tr></table></figure>
-<h3 id="Authentication">Authentication</h3><p>使用htpasswd后端授权的配置如下</p>
-<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">auth</span>:</span><br><span class="line">  <span class="attribute">htpasswd</span>:</span><br><span class="line">    <span class="attribute">realm</span>: basic-realm</span><br><span class="line">    <span class="attribute">path</span>: /path/to/htpasswd</span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="attr">storage:</span></div><div class="line"><span class="attr">  oss:</span></div><div class="line"><span class="attr">    accesskeyid:</span> xxxxxxx </div><div class="line"><span class="attr">    accesskeysecret:</span> xxxxxxx</div><div class="line"><span class="attr">    bucket:</span> my-registry</div><div class="line"><span class="attr">    internal:</span> <span class="literal">true</span> </div><div class="line"><span class="attr">    region:</span> oss-cn-qingdao</div></pre></td></tr></table></figure>
+<h4 id="使用配置文件启动"><a href="#使用配置文件启动" class="headerlink" title="使用配置文件启动"></a>使用配置文件启动</h4><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">docker run -d -<span class="selector-tag">p</span> <span class="number">5000</span>:<span class="number">5000</span> --restart=always --name registry \</div><div class="line">  -v `pwd`/config<span class="selector-class">.yml</span>:/etc/docker/registry/config<span class="selector-class">.yml</span> \</div><div class="line">  registry:<span class="number">2</span></div></pre></td></tr></table></figure>
+<h3 id="Authentication"><a href="#Authentication" class="headerlink" title="Authentication"></a>Authentication</h3><p>使用htpasswd后端授权的配置如下</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">auth:</span></div><div class="line"><span class="symbol">  htpasswd:</span></div><div class="line"><span class="symbol">    realm:</span> basic-realm</div><div class="line"><span class="symbol">    path:</span> <span class="meta-keyword">/path/</span>to/htpasswd</div></pre></td></tr></table></figure>
 <p>使用htpasswd命令生成<code>htpasswd</code>文件前，需要先安装<code>apache2-utils</code>。 另外htpasswd授权必须配合TLS一同使用，并且只支持<code>bcrypt</code>格式的密码</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">htpasswd</span> -cB auth-conf yourusername</span><br></pre></td></tr></table></figure>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">htpasswd -cB auth-conf yourusername</span></div></pre></td></tr></table></figure>
 <p>也可以使用registry容器中自带的<code>htpasswd</code>命令</p>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="command">run</span> <span class="comment">--entrypoint htpasswd registry:2 -Bbn testuser testpassword &gt; auth/htpasswd</span></span><br></pre></td></tr></table></figure>
-<h4 id="启用authentication后，certificate再次报错">启用authentication后，certificate再次报错</h4><p>报错的内容如下</p>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FATA[<span class="number">0008</span>] Error response <span class="built_in">from</span> daemon: no successful auth challenge <span class="keyword">for</span> <span class="keyword">https</span>://<span class="number">121.42</span><span class="number">.160</span><span class="number">.161</span>:<span class="number">5000</span>/v2/ - errors: [Get <span class="keyword">https</span>://<span class="number">121.42</span><span class="number">.160</span><span class="number">.161</span>:<span class="number">5000</span>/v2/: x509: certificate signed <span class="keyword">by</span> unknown authority]</span><br></pre></td></tr></table></figure>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker <span class="built_in">run</span> <span class="comment">--entrypoint htpasswd registry:2 -Bbn testuser testpassword &gt; auth/htpasswd</span></div></pre></td></tr></table></figure>
+<h4 id="启用authentication后，certificate再次报错"><a href="#启用authentication后，certificate再次报错" class="headerlink" title="启用authentication后，certificate再次报错"></a>启用authentication后，certificate再次报错</h4><p>报错的内容如下</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">FATA[<span class="number">0008</span>] Error response from daemon: no successful auth challenge <span class="keyword">for</span> https:<span class="regexp">//</span><span class="number">121.42</span>.<span class="number">160.161</span>:<span class="number">5000</span><span class="regexp">/v2/</span> - errors: [Get https:<span class="regexp">//</span><span class="number">121.42</span>.<span class="number">160.161</span>:<span class="number">5000</span><span class="regexp">/v2/</span>: x509: certificate signed by unknown authority]</div></pre></td></tr></table></figure>
 <p>原因是当启用authentication后，一些docke的版本需要在OS级别信任证书。Ubuntu下如下操作</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp auth/domain<span class="class">.crt</span> /usr/local/share/ca-certificates/myregistrydomain<span class="class">.com</span><span class="class">.crt</span></span><br><span class="line">update-ca-certificates</span><br></pre></td></tr></table></figure>
-<h2 id="持续集成">持续集成</h2><h3 id="GitLab_钩子触发构建">GitLab 钩子触发构建</h3><p>首先需要在Jenkis的构建触发器中，配置身份验证令牌，然后在GitLab的Web hooks配置地址<code>/buildWithParameters?token=TOKEN_NAME</code>。 之后每当有代码push到GitLab后，就会触发这个钩子，发起Jenkins的构建，最终将构建的镜像推送到私有Registry中。</p>
-<h3 id="Jenkin_构建">Jenkin 构建</h3><p>Jenkins的构建流程大致如下</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cp auth/domain<span class="selector-class">.crt</span> /usr/local/share/ca-certificates/myregistrydomain<span class="selector-class">.com</span><span class="selector-class">.crt</span></div><div class="line">update-ca-certificates</div></pre></td></tr></table></figure>
+<h2 id="持续集成"><a href="#持续集成" class="headerlink" title="持续集成"></a>持续集成</h2><h3 id="GitLab-钩子触发构建"><a href="#GitLab-钩子触发构建" class="headerlink" title="GitLab 钩子触发构建"></a>GitLab 钩子触发构建</h3><p>首先需要在Jenkis的构建触发器中，配置身份验证令牌，然后在GitLab的Web hooks配置地址<code>/buildWithParameters?token=TOKEN_NAME</code>。 之后每当有代码push到GitLab后，就会触发这个钩子，发起Jenkins的构建，最终将构建的镜像推送到私有Registry中。</p>
+<h3 id="Jenkin-构建"><a href="#Jenkin-构建" class="headerlink" title="Jenkin 构建"></a>Jenkin 构建</h3><p>Jenkins的构建流程大致如下</p>
 <ol>
 <li>编译、测试、打包工程</li>
 <li>下载打包的结果工程，连同运行环境一起构建到Docker的镜像文件中</li>
 <li>Push到私有Registry</li>
 </ol>
 <p>前面的编译、测试、打包的步骤通过Jenkins提供的选项来配置，后面的镜像构建通过脚本来进行</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker build -t myrepo/api-server .</span><br><span class="line">docker tag myrepo/api-server xxx<span class="class">.xxx</span><span class="class">.xxx</span><span class="class">.xxx</span>:<span class="number">5000</span>/myrepo/api-server</span><br><span class="line">docker push xxx<span class="class">.xxx</span><span class="class">.xxx</span><span class="class">.xxx</span>:<span class="number">5000</span>/myrepo/api-server</span><br></pre></td></tr></table></figure>
-<h3 id="通知_Container">通知 Container</h3><p>镜像推送的私有Registry，需要通过Nofification通知Endpoint，拉去最新的镜像文件来更新运行环境。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">docker build -t myrepo/api-server .</div><div class="line">docker tag myrepo/api-server xxx<span class="selector-class">.xxx</span><span class="selector-class">.xxx</span><span class="selector-class">.xxx</span>:<span class="number">5000</span>/myrepo/api-server</div><div class="line">docker push xxx<span class="selector-class">.xxx</span><span class="selector-class">.xxx</span><span class="selector-class">.xxx</span>:<span class="number">5000</span>/myrepo/api-server</div></pre></td></tr></table></figure>
+<h3 id="通知-Container"><a href="#通知-Container" class="headerlink" title="通知 Container"></a>通知 Container</h3><p>镜像推送的私有Registry，需要通过Nofification通知Endpoint，拉去最新的镜像文件来更新运行环境。</p>
 <p>Endpoint的对于收到的Event的处理是需要自己来实现的，相关的API在<a href="https://godoc.org/github.com/docker/distribution/notifications]" target="_blank" rel="external">这里</a>。</p>
-<h3 id="手动触发更新">手动触发更新</h3><p>通过Nofification的方式处理更新需要会golang的一些语法才能进行。当然我们也可以通过Jenkins来手动触发更新。</p>
+<h3 id="手动触发更新"><a href="#手动触发更新" class="headerlink" title="手动触发更新"></a>手动触发更新</h3><p>通过Nofification的方式处理更新需要会golang的一些语法才能进行。当然我们也可以通过Jenkins来手动触发更新。</p>
 <p>首先我们需要通过http远程运行docker。docker默认监听Unix socket，需要让其支持通过http通讯，具体的配置可以参考<a href="http://docs.docker.com/engine/articles/https/" target="_blank" rel="external">这里</a>。然后执行如下脚本</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker pull xxx<span class="class">.xxx</span><span class="class">.xxx</span><span class="class">.xxx</span>:<span class="number">5000</span>/myrepo/api-server</span><br><span class="line">docker run docker run -d -<span class="tag">p</span> <span class="number">8888</span>:<span class="number">8080</span> xxx<span class="class">.xxx</span><span class="class">.xxx</span><span class="class">.xxx</span>:<span class="number">5000</span>/myrepo/api-server</span><br></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">docker pull xxx<span class="selector-class">.xxx</span><span class="selector-class">.xxx</span><span class="selector-class">.xxx</span>:<span class="number">5000</span>/myrepo/api-server</div><div class="line">docker run docker run -d -<span class="selector-tag">p</span> <span class="number">8888</span>:<span class="number">8080</span> xxx<span class="selector-class">.xxx</span><span class="selector-class">.xxx</span><span class="selector-class">.xxx</span>:<span class="number">5000</span>/myrepo/api-server</div></pre></td></tr></table></figure>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -159,7 +159,7 @@ Insecure Registry当尝试从配有配置TLS的Registry会报如下错
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/CI/">CI</a><a href="/tags/Docker/">Docker</a>
+  <span></span> <a href="/tags/Docker/">Docker</a><a href="/tags/CI/">CI</a>
   </div>
 
 </div>
@@ -207,7 +207,7 @@ Insecure Registry当尝试从配有配置TLS的Registry会报如下错
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker_CI"><span class="toc-number">1.</span> <span class="toc-text">Docker CI</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#构建私有_Docker_Registry"><span class="toc-number">1.1.</span> <span class="toc-text">构建私有 Docker Registry</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#启动_registry"><span class="toc-number">1.1.1.</span> <span class="toc-text">启动 registry</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Insecure_Registry"><span class="toc-number">1.1.2.</span> <span class="toc-text">Insecure Registry</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置TLS"><span class="toc-number">1.1.3.</span> <span class="toc-text">配置TLS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Storage"><span class="toc-number">1.1.4.</span> <span class="toc-text">Storage</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用配置文件启动"><span class="toc-number">1.1.4.1.</span> <span class="toc-text">使用配置文件启动</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Authentication"><span class="toc-number">1.1.5.</span> <span class="toc-text">Authentication</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#启用authentication后，certificate再次报错"><span class="toc-number">1.1.5.1.</span> <span class="toc-text">启用authentication后，certificate再次报错</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#持续集成"><span class="toc-number">1.2.</span> <span class="toc-text">持续集成</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#GitLab_钩子触发构建"><span class="toc-number">1.2.1.</span> <span class="toc-text">GitLab 钩子触发构建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Jenkin_构建"><span class="toc-number">1.2.2.</span> <span class="toc-text">Jenkin 构建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#通知_Container"><span class="toc-number">1.2.3.</span> <span class="toc-text">通知 Container</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#手动触发更新"><span class="toc-number">1.2.4.</span> <span class="toc-text">手动触发更新</span></a></li></ol></li></ol></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker-CI"><span class="toc-number">1.</span> <span class="toc-text">Docker CI</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#构建私有-Docker-Registry"><span class="toc-number">1.1.</span> <span class="toc-text">构建私有 Docker Registry</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#启动-registry"><span class="toc-number">1.1.1.</span> <span class="toc-text">启动 registry</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Insecure-Registry"><span class="toc-number">1.1.2.</span> <span class="toc-text">Insecure Registry</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置TLS"><span class="toc-number">1.1.3.</span> <span class="toc-text">配置TLS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Storage"><span class="toc-number">1.1.4.</span> <span class="toc-text">Storage</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用配置文件启动"><span class="toc-number">1.1.4.1.</span> <span class="toc-text">使用配置文件启动</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Authentication"><span class="toc-number">1.1.5.</span> <span class="toc-text">Authentication</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#启用authentication后，certificate再次报错"><span class="toc-number">1.1.5.1.</span> <span class="toc-text">启用authentication后，certificate再次报错</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#持续集成"><span class="toc-number">1.2.</span> <span class="toc-text">持续集成</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#GitLab-钩子触发构建"><span class="toc-number">1.2.1.</span> <span class="toc-text">GitLab 钩子触发构建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Jenkin-构建"><span class="toc-number">1.2.2.</span> <span class="toc-text">Jenkin 构建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#通知-Container"><span class="toc-number">1.2.3.</span> <span class="toc-text">通知 Container</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#手动触发更新"><span class="toc-number">1.2.4.</span> <span class="toc-text">手动触发更新</span></a></li></ol></li></ol></li></ol>
  
   </div>
 
@@ -230,13 +230,13 @@ Insecure Registry当尝试从配有配置TLS的Registry会报如下错
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -244,23 +244,23 @@ Insecure Registry当尝试从配有配置TLS的Registry会报如下错
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -321,7 +321,7 @@ Insecure Registry当尝试从配有配置TLS的Registry会报如下错
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

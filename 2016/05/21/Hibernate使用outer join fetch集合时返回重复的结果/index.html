@@ -25,7 +25,7 @@
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -92,14 +92,14 @@
 		
 		</div>
 		
-		<h2 id="问题">问题</h2><p>如果我们有一个订单关联三个订单项，当进行下面的查询时</p>
-<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">List</span> <span class="literal">result</span> = session.createQuery(<span class="string">"select o from Order o left join fetch o.lineItems"</span>).list();</span><br></pre></td></tr></table></figure>
+		<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>如果我们有一个订单关联三个订单项，当进行下面的查询时</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">List result = session.createQuery("<span class="keyword">select</span> o <span class="keyword">from</span> <span class="keyword">Order</span> o <span class="keyword">left</span> <span class="keyword">join</span> <span class="keyword">fetch</span> o.lineItems<span class="string">").list();</span></div></pre></td></tr></table></figure>
 <p>返回的结果集会是三个一样的订单对象，分别包含了三个订单项。</p>
 <a id="more"></a>
-<h2 id="原因">原因</h2><p>首先在SQL层面LEFT JOIN会以左表为驱动表去关联从表的中的所有记录。以上面的的订单为例，就会返回三条纪录。而Hibernate默认会保留所有的驱动表中的记录，多余的两条记录会引用同一条订单记录。</p>
-<h2 id="解决">解决</h2><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">List</span> <span class="literal">result</span> = session.createQuery(<span class="string">"select o from Order o left join fetch o.lineItems"</span>)  </span><br><span class="line">                      .setResultTransformer(<span class="type">Criteria</span>.<span class="type">DISTINCT_ROOT_ENTITY</span>) // <span class="type">Yes</span>, really!  </span><br><span class="line">                      .list();</span><br></pre></td></tr></table></figure>
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>首先在SQL层面LEFT JOIN会以左表为驱动表去关联从表的中的所有记录。以上面的的订单为例，就会返回三条纪录。而Hibernate默认会保留所有的驱动表中的记录，多余的两条记录会引用同一条订单记录。</p>
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">List result = session.createQuery("<span class="keyword">select</span> o <span class="keyword">from</span> <span class="keyword">Order</span> o <span class="keyword">left</span> <span class="keyword">join</span> <span class="keyword">fetch</span> o.lineItems<span class="string">")  </span></div><div class="line">                      .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY) // Yes, really!  </div><div class="line">                      .list();</div></pre></td></tr></table></figure>
 <p>或者</p>
-<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">List</span> <span class="literal">result</span> = session.createQuery(<span class="string">"select distinct o from Order o left join fetch o.lineItems"</span>).list();</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">List result = session.createQuery("<span class="keyword">select</span> <span class="keyword">distinct</span> o <span class="keyword">from</span> <span class="keyword">Order</span> o <span class="keyword">left</span> <span class="keyword">join</span> <span class="keyword">fetch</span> o.lineItems<span class="string">").list();</span></div></pre></td></tr></table></figure>
 <p>后者的意义和SQL的distinct并不一样，这里它就是DISTINCT_ROOT_ENTITY result transformer的缩写。</p>
 <p><a href="https://developer.jboss.org/wiki/HibernateFAQ-AdvancedProblems#jive_content_id_Hibernate_does_not_return_distinct_results_for_a_query_with_outer_join_fetching_enabled_for_a_collection_even_if_I_use_the_distinct_keyword" target="_blank" rel="external">https://developer.jboss.org/wiki/HibernateFAQ-AdvancedProblems#jive_content_id_Hibernate_does_not_return_distinct_results_for_a_query_with_outer_join_fetching_enabled_for_a_collection_even_if_I_use_the_distinct_keyword</a></p>
   
@@ -110,7 +110,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Hibernate/">Hibernate</a><a href="/tags/经验错误/">经验错误</a>
+  <span></span> <a href="/tags/经验错误/">经验错误</a><a href="/tags/Hibernate/">Hibernate</a>
   </div>
 
 </div>
@@ -181,13 +181,13 @@
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -195,23 +195,23 @@
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -272,7 +272,7 @@
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

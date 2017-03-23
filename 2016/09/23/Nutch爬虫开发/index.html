@@ -24,7 +24,7 @@ Nutch目前主要由1.x和2.x两个分支，主要的不同在于数据存储的
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -91,22 +91,22 @@ Nutch目前主要由1.x和2.x两个分支，主要的不同在于数据存储的
 		
 		</div>
 		
-		<h1 id="Nutch爬虫开发">Nutch爬虫开发</h1><h2 id="介绍">介绍</h2><p>Nutch是一个用Java实现的搜索引擎，它包括全文搜索和网络爬虫。它支持针对不同的业务场景，使用本地运行模式或者基于Hadoop的分布式运行模式。</p>
+		<h1 id="Nutch爬虫开发"><a href="#Nutch爬虫开发" class="headerlink" title="Nutch爬虫开发"></a>Nutch爬虫开发</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Nutch是一个用Java实现的搜索引擎，它包括全文搜索和网络爬虫。它支持针对不同的业务场景，使用本地运行模式或者基于Hadoop的分布式运行模式。</p>
 <p>Nutch目前主要由1.x和2.x两个分支，主要的不同在于数据存储的实现。这里的存储指的是，Nutch本身会保存关于爬取过程中的爬虫的各种状态到称为<em>crawldb</em>的存储中去。1.x是以SequenceFile结构的方式保存到本地或者分布式文件系统中去，而2.x则是把存储层抽象了出来，不再依赖特定的存储结构，而是使用<a href="https://gora.apache.org/" target="_blank" rel="external">gora</a>来处理存储映射，所以最终可以保存到gora支持的RDBMS、NOSQL（Mongodb、HBase）等各种存储中去。</p>
 <a id="more"></a>
-<h2 id="安装">安装</h2><p>从<a href="http://nutch.apache.org/downloads.html" target="_blank" rel="external">这里</a>下载最新的源码包。执行</p>
-<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ant</span> <span class="keyword">runtime</span></span><br></pre></td></tr></table></figure>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>从<a href="http://nutch.apache.org/downloads.html" target="_blank" rel="external">这里</a>下载最新的源码包。执行</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">ant</span> <span class="keyword">runtime</span></div></pre></td></tr></table></figure>
 <p>会进行依赖包的下载、源码的编译、运行环境的构建等步骤。执行完毕后，</p>
 <ul>
 <li><code>runtime/local</code>目录是独立的本地运行环境</li>
 <li><code>conf</code>、<code>build</code>、<code>runtime/deploy</code>目录则是分布式运行环境</li>
 </ul>
 <p>NOTE: 对Nutch的配置推荐直接修改<code>conf</code>目录下的配置，因为本地运行环境的构建是由这个目录构建出来的，<code>runtime/local</code>和它的关系相当于build和src的关系。</p>
-<h2 id="爬取">爬取</h2><p>网页的爬取可以通过<code>bin</code>目录下的<code>crawl</code>脚本进行自动的爬取，也可以通过<code>nutch</code>脚本进行分部爬虫。为了便于理解Nutch的爬取过程，这里以<code>nutch</code>脚本为例进行爬取。</p>
+<h2 id="爬取"><a href="#爬取" class="headerlink" title="爬取"></a>爬取</h2><p>网页的爬取可以通过<code>bin</code>目录下的<code>crawl</code>脚本进行自动的爬取，也可以通过<code>nutch</code>脚本进行分部爬虫。为了便于理解Nutch的爬取过程，这里以<code>nutch</code>脚本为例进行爬取。</p>
 <p>Nutch的爬取过程分为五个步骤，每个步骤的执行结果都会保存到crawldb中，并通过<code>markers</code>字段记录执行到哪个阶段。</p>
 <p>NOTE: 示例中使用Nutch2.3.1版本，并使用Mongodb作为存储。</p>
-<h3 id="Inject">Inject</h3><p>从文件中得到一批种子网页，把它们放到抓取数据库中去</p>
-<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.<span class="regexp">/nutch inject ./urls/</span></span><br></pre></td></tr></table></figure>
+<h3 id="Inject"><a href="#Inject" class="headerlink" title="Inject"></a>Inject</h3><p>从文件中得到一批种子网页，把它们放到抓取数据库中去</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">.<span class="regexp">/nutch inject ./u</span>rls<span class="regexp">/</span></div></pre></td></tr></table></figure>
 <p>参数</p>
 <ul>
 <li><code>./urls/</code>为要爬去的url的目录</li>
@@ -115,8 +115,8 @@ Nutch目前主要由1.x和2.x两个分支，主要的不同在于数据存储的
 <p>crawlId对应crawldb中的表名，规则为<code>${crawlId}_webpage</code>。也就是说不加-crawlId参数的情况下，数据会进入<code>webpage</code>表中。</p>
 <p>执行结果</p>
 <p><img src="/img/nutch-inject.png" alt=""></p>
-<h3 id="Generate">Generate</h3><p>从抓取数据库中产生要抓取的页面放到抓取队列中去，产生batchJob。</p>
-<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./nutch <span class="keyword">generate</span></span><br></pre></td></tr></table></figure>
+<h3 id="Generate"><a href="#Generate" class="headerlink" title="Generate"></a>Generate</h3><p>从抓取数据库中产生要抓取的页面放到抓取队列中去，产生batchJob。</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./nutch <span class="keyword">generate</span></div></pre></td></tr></table></figure>
 <p>该任务调用<code>FetchSchedule</code>来计算哪些url需要爬取。下面是官网wiki中关于任务的描述</p>
 <blockquote>
 <p>The generate command looks up in the crawl db for all the urls due for fetch and regroup them in a segment. An url is due for fetch if it is either a new url or if it is time to re-crawl it. </p>
@@ -129,8 +129,8 @@ Nutch目前主要由1.x和2.x两个分支，主要的不同在于数据存储的
 </ul>
 <p>执行结果</p>
 <p><img src="/img/nutch-generate.png" alt=""></p>
-<h3 id="Fetch">Fetch</h3><p>对抓取队列中的网页进行抓取，在reducer中使用了生产/消费者模型</p>
-<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./nutch fetch -<span class="built_in">all</span></span><br></pre></td></tr></table></figure>
+<h3 id="Fetch"><a href="#Fetch" class="headerlink" title="Fetch"></a>Fetch</h3><p>对抓取队列中的网页进行抓取，在reducer中使用了生产/消费者模型</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./nutch fetch -<span class="keyword">all</span></div></pre></td></tr></table></figure>
 <p>参数</p>
 <ul>
 <li>batchId为必须的参数，上一步指定或生成的batchId，或者<code>-all</code></li>
@@ -139,8 +139,8 @@ Nutch目前主要由1.x和2.x两个分支，主要的不同在于数据存储的
 <p>该步骤处理的webpage的条件是gnmrk和batchId一致。</p>
 <p>执行结果</p>
 <p><img src="/img/nutch-fetch.png" alt=""></p>
-<h3 id="Parse">Parse</h3><p>对抓取完成的网页进行解析，产生一些新的链接与网页内容的解析结果</p>
-<figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./nutch <span class="built_in">parse</span> -<span class="built_in">all</span></span><br></pre></td></tr></table></figure>
+<h3 id="Parse"><a href="#Parse" class="headerlink" title="Parse"></a>Parse</h3><p>对抓取完成的网页进行解析，产生一些新的链接与网页内容的解析结果</p>
+<figure class="highlight q"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./nutch <span class="built_in">parse</span> -<span class="built_in">all</span></div></pre></td></tr></table></figure>
 <p>参数</p>
 <ul>
 <li>batchId为必须的参数，上一步指定或生成的batchId，或者<code>-all</code></li>
@@ -149,8 +149,8 @@ Nutch目前主要由1.x和2.x两个分支，主要的不同在于数据存储的
 <p>该步骤处理的webpage的条件是ftcmrk和batchId一致。</p>
 <p>执行结果</p>
 <p><img src="/img/nutch-parse.png" alt=""></p>
-<h3 id="Updatedb">Updatedb</h3><p>把新产生的链接更新到抓取数据库中去</p>
-<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./nutch updatedb -<span class="built_in">all</span></span><br></pre></td></tr></table></figure>
+<h3 id="Updatedb"><a href="#Updatedb" class="headerlink" title="Updatedb"></a>Updatedb</h3><p>把新产生的链接更新到抓取数据库中去</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./nutch updatedb -<span class="keyword">all</span></div></pre></td></tr></table></figure>
 <p>参数</p>
 <ul>
 <li>batchId为必须的参数，上一步指定或生成的batchId，或者<code>-all</code></li>
@@ -159,22 +159,22 @@ Nutch目前主要由1.x和2.x两个分支，主要的不同在于数据存储的
 <p>该步骤处理的webpage的条件是gnmrk和batchId一致。</p>
 <p>执行结果</p>
 <p><img src="/img/nutch-updatedb.png" alt=""></p>
-<h3 id="Crawl脚本">Crawl脚本</h3><p>Crawl脚本的执行的流程是先执行Inject，然后循环执行Genrate、Fetch、Parse、Updatedb。 循环的次数依赖于<code>numberOfRounds</code>参数，同时先是爬取的深度。</p>
-<h3 id="关于FetchTime的更新">关于FetchTime的更新</h3><p>Webpage中的FetchTime是Generator的重要参考值，字段更新规则如下</p>
+<h3 id="Crawl脚本"><a href="#Crawl脚本" class="headerlink" title="Crawl脚本"></a>Crawl脚本</h3><p>Crawl脚本的执行的流程是先执行Inject，然后循环执行Genrate、Fetch、Parse、Updatedb。 循环的次数依赖于<code>numberOfRounds</code>参数，同时先是爬取的深度。</p>
+<h3 id="关于FetchTime的更新"><a href="#关于FetchTime的更新" class="headerlink" title="关于FetchTime的更新"></a>关于FetchTime的更新</h3><p>Webpage中的FetchTime是Generator的重要参考值，字段更新规则如下</p>
 <ul>
 <li>Inject和Fetch会更新fetchTime成当前时间</li>
 <li>Updatedb会更新fetchTime为当前时间+fetchInternal</li>
 </ul>
-<h2 id="开发">开发</h2><h2 id="IDEA中使用">IDEA中使用</h2><h4 id="导入">导入</h4><p>先转换成eclipse工程后导入即可</p>
-<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ant</span> eclipse</span><br></pre></td></tr></table></figure>
+<h2 id="开发"><a href="#开发" class="headerlink" title="开发"></a>开发</h2><h2 id="IDEA中使用"><a href="#IDEA中使用" class="headerlink" title="IDEA中使用"></a>IDEA中使用</h2><h4 id="导入"><a href="#导入" class="headerlink" title="导入"></a>导入</h4><p>先转换成eclipse工程后导入即可</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">ant eclipse</span></div></pre></td></tr></table></figure>
 <p>Test目录标记成test，并且把src和test输出到不同的目录，避免测试代码干扰正常的执行。</p>
 <p><img src="/img/mark-test.png" alt=""></p>
 <p><img src="/img/set-output.png" alt=""></p>
-<h3 id="运行">运行</h3><p>通过分别运行<code>InjectorJob</code>，<code>GeneratorJob</code>，<code>FetcherJob</code>，<code>ParseJob</code>，<code>DBUpdaterJob</code>类的Main方法可即可执行各个爬取步骤。</p>
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><p>通过分别运行<code>InjectorJob</code>，<code>GeneratorJob</code>，<code>FetcherJob</code>，<code>ParseJob</code>，<code>DBUpdaterJob</code>类的Main方法可即可执行各个爬取步骤。</p>
 <p>NOTE: Working Directory要修改到<code>build</code>目录，才能正确获取到正确的运行环境。</p>
 <p><img src="/img/working-dir.png" alt=""></p>
-<h3 id="插件更新">插件更新</h3><p>插件源码的修改需要更新<code>build</code>目录中的class文件及配置。</p>
-<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ant</span> <span class="keyword">compile</span> resolve-test</span><br></pre></td></tr></table></figure>
+<h3 id="插件更新"><a href="#插件更新" class="headerlink" title="插件更新"></a>插件更新</h3><p>插件源码的修改需要更新<code>build</code>目录中的class文件及配置。</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">ant</span> <span class="keyword">compile</span> resolve-test</div></pre></td></tr></table></figure>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -183,7 +183,7 @@ Nutch目前主要由1.x和2.x两个分支，主要的不同在于数据存储的
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Nutch/">Nutch</a><a href="/tags/爬虫/">爬虫</a>
+  <span></span> <a href="/tags/爬虫/">爬虫</a><a href="/tags/Nutch/">Nutch</a>
   </div>
 
 </div>
@@ -254,13 +254,13 @@ Nutch目前主要由1.x和2.x两个分支，主要的不同在于数据存储的
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -268,23 +268,23 @@ Nutch目前主要由1.x和2.x两个分支，主要的不同在于数据存储的
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -345,7 +345,7 @@ Nutch目前主要由1.x和2.x两个分支，主要的不同在于数据存储的
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

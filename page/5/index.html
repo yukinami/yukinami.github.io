@@ -21,7 +21,7 @@
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -83,7 +83,7 @@
 </header>
     <div class="article-content">
         
-        <h1 id="JVM_Hot_Swapping">JVM Hot Swapping</h1><p>从Java1.4启，JVM引入了HotSwap，能够在Debug的时候更新类的字节码，所有新式的IDE（包括Eclipse、IDEA和NetBeans）都支持这一技术。但是它只能用来更新方法体，这一定程度上限制了它的实用性。</p>
+        <h1 id="JVM-Hot-Swapping"><a href="#JVM-Hot-Swapping" class="headerlink" title="JVM Hot Swapping"></a>JVM Hot Swapping</h1><p>从Java1.4启，JVM引入了HotSwap，能够在Debug的时候更新类的字节码，所有新式的IDE（包括Eclipse、IDEA和NetBeans）都支持这一技术。但是它只能用来更新方法体，这一定程度上限制了它的实用性。</p>
         
         
         <p class="article-more-link">
@@ -118,7 +118,7 @@
 </header>
     <div class="article-content">
         
-        <h1 id="介绍">介绍</h1><h2 id="Swagger">Swagger</h2><p><code>Swagger</code>是用来描述和文档化RESTful API的一个项目。<a href="https://github.com/swagger-api/swagger-spec/blob/master/versions/2.0.md">Swagger Spec</a>是一套规范，定义了该如何去描述一个<code>RESTful API</code>。类似的项目还有<code>RAML</code>、<code>API Blueprint</code>。 根据<code>Swagger Spec</code>来描述RESTful API的文件称之为<code>Swagger specification file</code>，它使用JSON来表述，也支持作为JSON支持的YAML。</p>
+        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><h2 id="Swagger"><a href="#Swagger" class="headerlink" title="Swagger"></a>Swagger</h2><p><code>Swagger</code>是用来描述和文档化RESTful API的一个项目。<a href="https://github.com/swagger-api/swagger-spec/blob/master/versions/2.0.md">Swagger Spec</a>是一套规范，定义了该如何去描述一个<code>RESTful API</code>。类似的项目还有<code>RAML</code>、<code>API Blueprint</code>。 根据<code>Swagger Spec</code>来描述RESTful API的文件称之为<code>Swagger specification file</code>，它使用JSON来表述，也支持作为JSON支持的YAML。</p>
         
         
         <p class="article-more-link">
@@ -153,8 +153,8 @@
 </header>
     <div class="article-content">
         
-        <h1 id="Concurrency基础">Concurrency基础</h1><h2 id="Executor">Executor</h2><p><code>Executor</code>是一个用来执行<code>Runable</code>实例的对象，接口定义如下</p>
-<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">/<span class="keyword">*</span><span class="keyword">*</span></span><br><span class="line"> <span class="keyword">*</span> An object that executes submitted &#123;<span class="comment">@link Runnable&#125; tasks. This</span></span><br><span class="line"> <span class="keyword">*</span> interface provides a way of decoupling task submission from the</span><br><span class="line"> <span class="keyword">*</span> mechanics of how each task will be run, including details of thread</span><br><span class="line"> <span class="keyword">*</span> use, scheduling, etc.  An &#123;<span class="comment">@code Executor&#125; is normally used</span></span><br><span class="line"> <span class="keyword">*</span> instead of explicitly creating threads.</span><br><span class="line"> <span class="keyword">*</span>/</span><br><span class="line">public interface Executor &#123;</span><br><span class="line"></span><br><span class="line">    /<span class="keyword">*</span><span class="keyword">*</span></span><br><span class="line">     <span class="keyword">*</span> Executes the given command at some time in the future.  The command</span><br><span class="line">     <span class="keyword">*</span> may execute in a new thread, in a pooled thread, or in the calling</span><br><span class="line">     <span class="keyword">*</span> thread, at the discretion of the &#123;<span class="comment">@code Executor&#125; implementation.</span></span><br><span class="line">     <span class="keyword">*</span></span><br><span class="line">     <span class="keyword">*</span> <span class="comment">@param command the runnable task</span></span><br><span class="line">     <span class="keyword">*</span> <span class="comment">@throws RejectedExecutionException if this task cannot be</span></span><br><span class="line">     <span class="keyword">*</span> accepted for execution</span><br><span class="line">     <span class="keyword">*</span> <span class="comment">@throws NullPointerException if command is null</span></span><br><span class="line">     <span class="keyword">*</span>/</span><br><span class="line">    void execute(Runnable command);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <h1 id="Concurrency基础"><a href="#Concurrency基础" class="headerlink" title="Concurrency基础"></a>Concurrency基础</h1><h2 id="Executor"><a href="#Executor" class="headerlink" title="Executor"></a>Executor</h2><p><code>Executor</code>是一个用来执行<code>Runable</code>实例的对象，接口定义如下</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * An object that executes submitted &#123;@link Runnable&#125; tasks. This</div><div class="line"> * <span class="keyword">interface</span> provides a way <span class="keyword">of</span> decoupling <span class="keyword">task</span> submission from the</div><div class="line"> * mechanics <span class="keyword">of</span> how each <span class="keyword">task</span> will be run, including details <span class="keyword">of</span> thread</div><div class="line"> * <span class="keyword">use</span>, scheduling, etc.  An &#123;@code Executor&#125; <span class="keyword">is</span> normally used</div><div class="line"> * instead <span class="keyword">of</span> explicitly creating threads.</div><div class="line"> */</div><div class="line">public <span class="keyword">interface</span> Executor &#123;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * Executes the given command <span class="keyword">at</span> <span class="keyword">some</span> time <span class="keyword">in</span> the future.  The command</div><div class="line">     * may execute <span class="keyword">in</span> a <span class="keyword">new</span> thread, <span class="keyword">in</span> a pooled thread, <span class="keyword">or</span> <span class="keyword">in</span> the calling</div><div class="line">     * thread, <span class="keyword">at</span> the discretion <span class="keyword">of</span> the &#123;@code Executor&#125; implementation.</div><div class="line">     *</div><div class="line">     * @param command the runnable <span class="keyword">task</span></div><div class="line">     * @throws RejectedExecutionException <span class="keyword">if</span> this <span class="keyword">task</span> cannot be</div><div class="line">     * accepted <span class="keyword">for</span> execution</div><div class="line">     * @throws NullPointerException <span class="keyword">if</span> command <span class="keyword">is</span> null</div><div class="line">     */</div><div class="line">    void execute(Runnable command);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
         
         
         <p class="article-more-link">
@@ -189,7 +189,7 @@
 </header>
     <div class="article-content">
         
-        <h1 id="错误">错误</h1><p>在使用<code>NavUtils.navigateUpFromSameTask(this)</code>导航到父Activity时，页面切换的动画是从右往左滑动，这样的动画看起来不像是返回动画，而是打开了一个新的页面的动画。</p>
+        <h1 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h1><p>在使用<code>NavUtils.navigateUpFromSameTask(this)</code>导航到父Activity时，页面切换的动画是从右往左滑动，这样的动画看起来不像是返回动画，而是打开了一个新的页面的动画。</p>
         
         
         <p class="article-more-link">
@@ -224,8 +224,8 @@
 </header>
     <div class="article-content">
         
-        <h1 id="Interceptors">Interceptors</h1><p>Junit4.7引入了一个新功能叫做”Interceptors”，旨在以一个更为清晰简单的API，带回JUnit<code>meta-testing</code>的能力。但是之后又被重新命名为”Rule”。</p>
-<h2 id="Meta-testing">Meta-testing</h2><p>Junit擅长表达尽量少的测试逻辑。在Junit3中，你能够以不同的方式控制测试运行过程。Junit4简化的代价就是失去了这个“meta-testing”。这不影响简单测试，但是限制了更为强大的测试。现在Junit4重新把meta-testing带了回来。</p>
+        <h1 id="Interceptors"><a href="#Interceptors" class="headerlink" title="Interceptors"></a>Interceptors</h1><p>Junit4.7引入了一个新功能叫做”Interceptors”，旨在以一个更为清晰简单的API，带回JUnit<code>meta-testing</code>的能力。但是之后又被重新命名为”Rule”。</p>
+<h2 id="Meta-testing"><a href="#Meta-testing" class="headerlink" title="Meta-testing"></a>Meta-testing</h2><p>Junit擅长表达尽量少的测试逻辑。在Junit3中，你能够以不同的方式控制测试运行过程。Junit4简化的代价就是失去了这个“meta-testing”。这不影响简单测试，但是限制了更为强大的测试。现在Junit4重新把meta-testing带了回来。</p>
 <p>比如说，你想输出一个log当每个测试失败的时候。</p>
         
         
@@ -261,7 +261,7 @@
 </header>
     <div class="article-content">
         
-        <h1 id="同源策略">同源策略</h1><p><code>Same-Origin Policy</code>根据<code>origin</code>限制浏览器通过脚本或者文档执行特定的动作。<code>origin</code>指的是URL的path之前的所有的部分(比如说，<a href="http://www.example.com">http://www.example.com</a> )。对于一些动作，浏览器会比较origins，如果它们不匹配，则不运行继续执行。比如说：</p>
+        <h1 id="同源策略"><a href="#同源策略" class="headerlink" title="同源策略"></a>同源策略</h1><p><code>Same-Origin Policy</code>根据<code>origin</code>限制浏览器通过脚本或者文档执行特定的动作。<code>origin</code>指的是URL的path之前的所有的部分(比如说，<a href="http://www.example.com">http://www.example.com</a> )。对于一些动作，浏览器会比较origins，如果它们不匹配，则不运行继续执行。比如说：</p>
 <ul>
 <li>一个父document不能访问来自不同origin的&lt;iframe&gt;的内容。这可以阻止恶意网站打开你们的银行网站，偷取你的安全秘钥</li>
 <li>一个document可以通过表单post发送信息，但是跨域AJAX请求通常是不允许的</li>
@@ -301,7 +301,7 @@
 </header>
     <div class="article-content">
         
-        <h1 id="错误">错误</h1><p>多个<code>AsyncTask</code>、<code>Loader</code>同时执行的时候，偶尔会闪退。 错误信息大致如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@@@ ABORTING: INVALID HEAP ADDRESS IN dlfree</span><br><span class="line">Fatal signal <span class="number">11</span> (SIGSEGV) at <span class="number">0xdeadbaad</span> (code=<span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
+        <h1 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h1><p>多个<code>AsyncTask</code>、<code>Loader</code>同时执行的时候，偶尔会闪退。 错误信息大致如下：<br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">@@@ ABORTING: INVALID HEAP ADDRESS <span class="keyword">IN</span> dlfree</div><div class="line">Fatal signal <span class="number">11</span> (SIGSEGV) <span class="meta">at</span> <span class="number">0xdeadbaad</span> (code=<span class="number">1</span>)</div></pre></td></tr></table></figure></p>
         
         
         <p class="article-more-link">
@@ -337,7 +337,7 @@
     <div class="article-content">
         
         <p>SwipeRefreshLayout 可以用于通过下滑的手势刷新View内容的情况。使用起来很简单，用SwipeRefreshLayout包裹需要刷新的View即可。</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;android<span class="class">.support</span><span class="class">.v4</span><span class="class">.widget</span><span class="class">.SwipeRefreshLayout</span></span><br><span class="line">        xmlns:android=<span class="string">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">        android:id=<span class="string">"@+id/swipe_container"</span></span><br><span class="line">        android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">        android:layout_height=<span class="string">"match_parent"</span>&gt;</span><br><span class="line"></span><br><span class="line">    &lt;LinearLayout android:orientation=<span class="string">"vertical"</span></span><br><span class="line">        android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">        android:layout_height=<span class="string">"match_parent"</span>&gt;</span><br><span class="line"></span><br><span class="line">        &lt;ListView</span><br><span class="line">            android:id=<span class="string">"@android:id/list"</span></span><br><span class="line">            style=<span class="string">"@style/ListView"</span></span><br><span class="line">            android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">            android:layout_height=<span class="string">"match_parent"</span> /&gt;</span><br><span class="line">    &lt;/LinearLayout&gt;</span><br><span class="line"></span><br><span class="line">&lt;/android<span class="class">.support</span><span class="class">.v4</span><span class="class">.widget</span><span class="class">.SwipeRefreshLayout</span>&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&lt;android<span class="selector-class">.support</span><span class="selector-class">.v4</span><span class="selector-class">.widget</span><span class="selector-class">.SwipeRefreshLayout</span></div><div class="line">        xmlns:android=<span class="string">"http://schemas.android.com/apk/res/android"</span></div><div class="line">        android:id=<span class="string">"@+id/swipe_container"</span></div><div class="line">        android:layout_width=<span class="string">"match_parent"</span></div><div class="line">        android:layout_height=<span class="string">"match_parent"</span>&gt;</div><div class="line"></div><div class="line">    &lt;LinearLayout android:orientation=<span class="string">"vertical"</span></div><div class="line">        android:layout_width=<span class="string">"match_parent"</span></div><div class="line">        android:layout_height=<span class="string">"match_parent"</span>&gt;</div><div class="line"></div><div class="line">        &lt;ListView</div><div class="line">            android:id=<span class="string">"@android:id/list"</span></div><div class="line">            style=<span class="string">"@style/ListView"</span></div><div class="line">            android:layout_width=<span class="string">"match_parent"</span></div><div class="line">            android:layout_height=<span class="string">"match_parent"</span> /&gt;</div><div class="line">    &lt;/LinearLayout&gt;</div><div class="line"></div><div class="line">&lt;/android<span class="selector-class">.support</span><span class="selector-class">.v4</span><span class="selector-class">.widget</span><span class="selector-class">.SwipeRefreshLayout</span>&gt;</div></pre></td></tr></table></figure>
         
         
         <p class="article-more-link">
@@ -408,8 +408,8 @@
 </header>
     <div class="article-content">
         
-        <h1 id="问题">问题</h1><p>使用spring-android-auth时，其使用的<code>RestTemplate</code>是依赖包spring-android-rest-template<code>中的，而是spring-web-mvc中的。该</code>RestTemplate`使用http request默认的逻辑如下</p>
-<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">boolean</span> HTTP_COMPONENTS_AVAILABLE = ClassUtils.isPresent(<span class="string">"org.apache.http.client.HttpClient"</span>, ClientHttpRequestFactory.<span class="keyword">class</span>.getClassLoader());</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.GINGERBREAD) &#123;</span><br><span class="line">	<span class="keyword">this</span>.requestFactory = <span class="keyword">new</span> SimpleClientHttpRequestFactory();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	<span class="keyword">this</span>.requestFactory = <span class="keyword">new</span> HttpComponentsClientHttpRequestFactory();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>使用spring-android-auth时，其使用的<code>RestTemplate</code>是依赖包spring-android-rest-template<code>中的，而是spring-web-mvc中的。该</code>RestTemplate`使用http request默认的逻辑如下</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">boolean</span> HTTP_COMPONENTS_AVAILABLE = ClassUtils.isPresent(<span class="string">"org.apache.http.client.HttpClient"</span>, ClientHttpRequestFactory.<span class="keyword">class</span>.getClassLoader());</div><div class="line"></div><div class="line"><span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.GINGERBREAD) &#123;</div><div class="line">	<span class="keyword">this</span>.requestFactory = <span class="keyword">new</span> SimpleClientHttpRequestFactory();</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">	<span class="keyword">this</span>.requestFactory = <span class="keyword">new</span> HttpComponentsClientHttpRequestFactory();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
         
         
         <p class="article-more-link">
@@ -452,13 +452,13 @@
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -466,23 +466,23 @@
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -543,7 +543,7 @@
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

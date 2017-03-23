@@ -24,7 +24,7 @@
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -92,13 +92,13 @@
 		</div>
 		
 		<p>SwipeRefreshLayout 可以用于通过下滑的手势刷新View内容的情况。使用起来很简单，用SwipeRefreshLayout包裹需要刷新的View即可。</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;android<span class="class">.support</span><span class="class">.v4</span><span class="class">.widget</span><span class="class">.SwipeRefreshLayout</span></span><br><span class="line">        xmlns:android=<span class="string">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">        android:id=<span class="string">"@+id/swipe_container"</span></span><br><span class="line">        android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">        android:layout_height=<span class="string">"match_parent"</span>&gt;</span><br><span class="line"></span><br><span class="line">    &lt;LinearLayout android:orientation=<span class="string">"vertical"</span></span><br><span class="line">        android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">        android:layout_height=<span class="string">"match_parent"</span>&gt;</span><br><span class="line"></span><br><span class="line">        &lt;ListView</span><br><span class="line">            android:id=<span class="string">"@android:id/list"</span></span><br><span class="line">            style=<span class="string">"@style/ListView"</span></span><br><span class="line">            android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">            android:layout_height=<span class="string">"match_parent"</span> /&gt;</span><br><span class="line">    &lt;/LinearLayout&gt;</span><br><span class="line"></span><br><span class="line">&lt;/android<span class="class">.support</span><span class="class">.v4</span><span class="class">.widget</span><span class="class">.SwipeRefreshLayout</span>&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&lt;android<span class="selector-class">.support</span><span class="selector-class">.v4</span><span class="selector-class">.widget</span><span class="selector-class">.SwipeRefreshLayout</span></div><div class="line">        xmlns:android=<span class="string">"http://schemas.android.com/apk/res/android"</span></div><div class="line">        android:id=<span class="string">"@+id/swipe_container"</span></div><div class="line">        android:layout_width=<span class="string">"match_parent"</span></div><div class="line">        android:layout_height=<span class="string">"match_parent"</span>&gt;</div><div class="line"></div><div class="line">    &lt;LinearLayout android:orientation=<span class="string">"vertical"</span></div><div class="line">        android:layout_width=<span class="string">"match_parent"</span></div><div class="line">        android:layout_height=<span class="string">"match_parent"</span>&gt;</div><div class="line"></div><div class="line">        &lt;ListView</div><div class="line">            android:id=<span class="string">"@android:id/list"</span></div><div class="line">            style=<span class="string">"@style/ListView"</span></div><div class="line">            android:layout_width=<span class="string">"match_parent"</span></div><div class="line">            android:layout_height=<span class="string">"match_parent"</span> /&gt;</div><div class="line">    &lt;/LinearLayout&gt;</div><div class="line"></div><div class="line">&lt;/android<span class="selector-class">.support</span><span class="selector-class">.v4</span><span class="selector-class">.widget</span><span class="selector-class">.SwipeRefreshLayout</span>&gt;</div></pre></td></tr></table></figure>
 <a id="more"></a>
 <p>初始化View的Activity应该注册一个<code>OnRefreshListener</code>来处理手势完成时需要执行的（刷新）动作。当手势结束的时候，Refreshing指示器会一直显示，如果监听者决定不刷新，或者已经刷新完了，那么要调用<code>setRefreshing(false)</code>来取消Refreshing指示器。如果Activity需要单独显示Refreshing指示器，也可以调用<code>setRefreshing(true)</code>。</p>
 <p>这个Layout应该作为需要刷新内容的父视图，并且只支持一个子视图。这个子视图将成为手势的目标，并且会被强制匹配<code>SwipeRefreshLayout</code>的宽高。</p>
 <p><code>SwipeRefreshLayout</code>不提供可访问的事件；因此，应该提供一个菜单项来允许，当滑动手势时刷新内容。</p>
 <p>不知道是不是TextView自己有处理滚动的原因或者其他，<code>SwipeRefreshLayout</code>单独和<code>TextView</code>使用时会很奇怪，往下滑动时Refreshing指示器不会正常显示，只有到松手时，才会突然出现一次又消失。解决这个问题可以通过在TextView外面在包括一个ScollView。</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">&lt;android<span class="class">.support</span><span class="class">.v4</span><span class="class">.widget</span><span class="class">.SwipeRefreshLayout</span></span><br><span class="line">        xmlns:android=<span class="string">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">        android:id=<span class="string">"@+id/swipe_container"</span></span><br><span class="line">        android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">        android:layout_height=<span class="string">"match_parent"</span>&gt;</span><br><span class="line"></span><br><span class="line">    &lt;LinearLayout android:orientation=<span class="string">"vertical"</span></span><br><span class="line">        android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">        android:layout_height=<span class="string">"match_parent"</span>&gt;</span><br><span class="line"></span><br><span class="line">        &lt;ListView</span><br><span class="line">            android:id=<span class="string">"@android:id/list"</span></span><br><span class="line">            style=<span class="string">"@style/ListView"</span></span><br><span class="line">            android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">            android:layout_height=<span class="string">"match_parent"</span></span><br><span class="line">            android:<span class="attribute">visibility</span>=<span class="string">"gone"</span> /&gt;</span><br><span class="line"></span><br><span class="line">        &lt;ScrollView</span><br><span class="line">            android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">            android:layout_height=<span class="string">"match_parent"</span> &gt;</span><br><span class="line"></span><br><span class="line">            &lt;TextView</span><br><span class="line">                android:id=<span class="string">"@android:id/empty"</span></span><br><span class="line">                style=<span class="string">"@style/ListSubtitleText"</span></span><br><span class="line">                android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">                android:layout_height=<span class="string">"match_parent"</span></span><br><span class="line">                android:gravity=<span class="string">"center"</span></span><br><span class="line">                android:layout_gravity=<span class="string">"center"</span></span><br><span class="line">                android:text=<span class="string">"@string/default_empty"</span> /&gt;</span><br><span class="line">        &lt;/ScrollView&gt;</span><br><span class="line">    &lt;/LinearLayout&gt;</span><br><span class="line"></span><br><span class="line">&lt;/android<span class="class">.support</span><span class="class">.v4</span><span class="class">.widget</span><span class="class">.SwipeRefreshLayout</span>&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">&lt;android<span class="selector-class">.support</span><span class="selector-class">.v4</span><span class="selector-class">.widget</span><span class="selector-class">.SwipeRefreshLayout</span></div><div class="line">        xmlns:android=<span class="string">"http://schemas.android.com/apk/res/android"</span></div><div class="line">        android:id=<span class="string">"@+id/swipe_container"</span></div><div class="line">        android:layout_width=<span class="string">"match_parent"</span></div><div class="line">        android:layout_height=<span class="string">"match_parent"</span>&gt;</div><div class="line"></div><div class="line">    &lt;LinearLayout android:orientation=<span class="string">"vertical"</span></div><div class="line">        android:layout_width=<span class="string">"match_parent"</span></div><div class="line">        android:layout_height=<span class="string">"match_parent"</span>&gt;</div><div class="line"></div><div class="line">        &lt;ListView</div><div class="line">            android:id=<span class="string">"@android:id/list"</span></div><div class="line">            style=<span class="string">"@style/ListView"</span></div><div class="line">            android:layout_width=<span class="string">"match_parent"</span></div><div class="line">            android:layout_height=<span class="string">"match_parent"</span></div><div class="line">            android:<span class="attribute">visibility</span>=<span class="string">"gone"</span> /&gt;</div><div class="line"></div><div class="line">        &lt;ScrollView</div><div class="line">            android:layout_width=<span class="string">"match_parent"</span></div><div class="line">            android:layout_height=<span class="string">"match_parent"</span> &gt;</div><div class="line"></div><div class="line">            &lt;TextView</div><div class="line">                android:id=<span class="string">"@android:id/empty"</span></div><div class="line">                style=<span class="string">"@style/ListSubtitleText"</span></div><div class="line">                android:layout_width=<span class="string">"match_parent"</span></div><div class="line">                android:layout_height=<span class="string">"match_parent"</span></div><div class="line">                android:gravity=<span class="string">"center"</span></div><div class="line">                android:layout_gravity=<span class="string">"center"</span></div><div class="line">                android:text=<span class="string">"@string/default_empty"</span> /&gt;</div><div class="line">        &lt;/ScrollView&gt;</div><div class="line">    &lt;/LinearLayout&gt;</div><div class="line"></div><div class="line">&lt;/android<span class="selector-class">.support</span><span class="selector-class">.v4</span><span class="selector-class">.widget</span><span class="selector-class">.SwipeRefreshLayout</span>&gt;</div></pre></td></tr></table></figure>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -178,13 +178,13 @@
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -192,23 +192,23 @@
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -269,7 +269,7 @@
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

@@ -24,7 +24,7 @@ JPA的关联关系中的single-ended的关联（也就是ToOne）的模式fetch�
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -87,15 +87,15 @@ JPA的关联关系中的single-ended的关联（也就是ToOne）的模式fetch�
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Hibernate_Fetching_strategies"><span class="toc-number">1.</span> <span class="toc-text">Hibernate Fetching strategies</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Hibernate对JPA_Criteria接口的实现"><span class="toc-number">1.1.</span> <span class="toc-text">Hibernate对JPA Criteria接口的实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Eager对HQL的影响"><span class="toc-number">1.2.</span> <span class="toc-text">Eager对HQL的影响</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EntityGraph"><span class="toc-number">2.</span> <span class="toc-text">EntityGraph</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EAGER_fetching不一致"><span class="toc-number">3.</span> <span class="toc-text">EAGER fetching不一致</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring_Data_JPA中的实现"><span class="toc-number">4.</span> <span class="toc-text">Spring Data JPA中的实现</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Hibernate-Fetching-strategies"><span class="toc-number">1.</span> <span class="toc-text">Hibernate Fetching strategies</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Hibernate对JPA-Criteria接口的实现"><span class="toc-number">1.1.</span> <span class="toc-text">Hibernate对JPA Criteria接口的实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Eager对HQL的影响"><span class="toc-number">1.2.</span> <span class="toc-text">Eager对HQL的影响</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EntityGraph"><span class="toc-number">2.</span> <span class="toc-text">EntityGraph</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EAGER-fetching不一致"><span class="toc-number">3.</span> <span class="toc-text">EAGER fetching不一致</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-Data-JPA中的实现"><span class="toc-number">4.</span> <span class="toc-text">Spring Data JPA中的实现</span></a></li></ol>
 		
 		</div>
 		
 		<p>下面的内容基于JPA的Hibernate实现进行讨论。</p>
 <p>JPA的关联关系中的single-ended的关联（也就是ToOne）的模式fetch类型是的eager的。 在使用<code>EntityMangerd#find</code>方法进行查找时，这些关联会通过JOIN的方式被查询出来。但是如果使用Criteria API或者JPQL进行查询时，会发现针对这些关联产生了额外的SELECT查询，也就是通常我们所说的N+1的问题。</p>
 <a id="more"></a>
-<h2 id="Hibernate_Fetching_strategies">Hibernate Fetching strategies</h2><p>这里需要先讨论下Hibernate的fetch策略的问题。在Hibernate的映射文件（或者注解）中可以通过fetch属性来告诉Hibernate如何fetch关联对象。</p>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="keyword">set</span> <span class="property">name</span>=<span class="string">"permissions"</span></span><br><span class="line">            fetch=<span class="string">"join"</span>&gt;</span><br><span class="line">    &lt;key column=<span class="string">"userId"</span>/&gt;</span><br><span class="line">    &lt;one-<span class="keyword">to</span>-many <span class="type">class</span>=<span class="string">"Permission"</span>/&gt;</span><br><span class="line">&lt;/<span class="keyword">set</span></span><br><span class="line">&lt;many-<span class="keyword">to</span>-one <span class="property">name</span>=<span class="string">"mother"</span> <span class="type">class</span>=<span class="string">"Cat"</span> fetch=<span class="string">"join"</span>/&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="Hibernate-Fetching-strategies"><a href="#Hibernate-Fetching-strategies" class="headerlink" title="Hibernate Fetching strategies"></a>Hibernate Fetching strategies</h2><p>这里需要先讨论下Hibernate的fetch策略的问题。在Hibernate的映射文件（或者注解）中可以通过fetch属性来告诉Hibernate如何fetch关联对象。</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;<span class="keyword">set</span> <span class="built_in">name</span>=<span class="string">"permissions"</span></div><div class="line">            fetch=<span class="string">"join"</span>&gt;</div><div class="line">    &lt;key column=<span class="string">"userId"</span>/&gt;</div><div class="line">    &lt;one-<span class="keyword">to</span>-many <span class="built_in">class</span>=<span class="string">"Permission"</span>/&gt;</div><div class="line">&lt;/<span class="keyword">set</span></div><div class="line">&lt;many-<span class="keyword">to</span>-one <span class="built_in">name</span>=<span class="string">"mother"</span> <span class="built_in">class</span>=<span class="string">"Cat"</span> fetch=<span class="string">"join"</span>/&gt;</div></pre></td></tr></table></figure>
 <p>上面的例子中，使用join的方式来fetch mother属性，也间接的表明mother关联是eager的。 但是这里声明的fetch策略仅仅对下面几种情况有效</p>
 <ul>
 <li>通过<code>get()</code>或者<code>load()</code>方法获取<br>— 当被作为关联引用到的时候产生的隐式获取</li>
@@ -103,23 +103,23 @@ JPA的关联关系中的single-ended的关联（也就是ToOne）的模式fetch�
 <li>使用HQL查询并且声明的是subselect fetching</li>
 </ul>
 <p>既然映射文件中声明的fetch策略对Criteria查询有效，但是为何使用JPA的Criteria接口时又没有使用JOIN来关联呢？</p>
-<h3 id="Hibernate对JPA_Criteria接口的实现">Hibernate对JPA Criteria接口的实现</h3><p>Hibernate对JPA的Criteria接口返回的<code>TypedQuery</code>实现类是<code>CriteriaQueryTypeQueryAdapter</code>，可以看到Hibernate对JPA返回的Criteria对象的编译的过程实际是转换成JPQL的查询。</p>
-<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;X&gt; getResultList() &#123;</span><br><span class="line">	<span class="function"><span class="keyword">return</span> jpqlQuery.<span class="title">getResultList</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Hibernate对JPA-Criteria接口的实现"><a href="#Hibernate对JPA-Criteria接口的实现" class="headerlink" title="Hibernate对JPA Criteria接口的实现"></a>Hibernate对JPA Criteria接口的实现</h3><p>Hibernate对JPA的Criteria接口返回的<code>TypedQuery</code>实现类是<code>CriteriaQueryTypeQueryAdapter</code>，可以看到Hibernate对JPA返回的Criteria对象的编译的过程实际是转换成JPQL的查询。</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> List&lt;X&gt; getResultList() &#123;</div><div class="line">	<span class="function"><span class="keyword">return</span> jpqlQuery.<span class="title">getResultList</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>而Hibernate对于JPQL的实现则最终又是通过HQL来实现了。这就可以解释其原因了。那么对于使用JPA接口的情况下，只有3中情况可以使用到映射文件中定义的fetch策略。</p>
-<h3 id="Eager对HQL的影响">Eager对HQL的影响</h3><p>对于声明成eager的关联，那么他们最终一定会去获取到这个关联。使用HQL的情况，如果HQL中通过FETCH JOIN来进行了关联，那并没有什么问题。 但是如果没有关联，那么Hibernate则会额外产生一条SELECT语句来对eager的关联进行进行查找。 也就是说如果实体中有eager关联的属性，为了避免产生N+1问题，不管我们是否需要这个关联属性必须显示的FETCH这个关联。</p>
-<h2 id="EntityGraph">EntityGraph</h2><p>EntityGraph可以运行时动态的覆盖映射文件中定义的FetchType。实际加载EntityGraph有两种方式</p>
+<h3 id="Eager对HQL的影响"><a href="#Eager对HQL的影响" class="headerlink" title="Eager对HQL的影响"></a>Eager对HQL的影响</h3><p>对于声明成eager的关联，那么他们最终一定会去获取到这个关联。使用HQL的情况，如果HQL中通过FETCH JOIN来进行了关联，那并没有什么问题。 但是如果没有关联，那么Hibernate则会额外产生一条SELECT语句来对eager的关联进行进行查找。 也就是说如果实体中有eager关联的属性，为了避免产生N+1问题，不管我们是否需要这个关联属性必须显示的FETCH这个关联。</p>
+<h2 id="EntityGraph"><a href="#EntityGraph" class="headerlink" title="EntityGraph"></a>EntityGraph</h2><p>EntityGraph可以运行时动态的覆盖映射文件中定义的FetchType。实际加载EntityGraph有两种方式</p>
 <ul>
 <li>FETCH 对于EntityGraph声明的属性使用eager，未声明的属性使用lazy</li>
 <li>LOAD  对于EntityGraph声明的属性使用eager，未声明的属性使用他们在映射文件中声明的默认的fetch类型</li>
 </ul>
 <p>Hibernate对于EntityGraph的实现是使用了FetchProfile。但是FetchProfile本身实在EntityGraph之前诞生的，它用于覆盖映射文件的中fetchMode，而不是fetchType。 也就导致了使用Hibernate作为JPA实现时，FETCH和LOAD两种方式是一样的，并不能覆盖原来在映射文件中的eager为lazy。作为原因就是上面提到的JPQ中无论是Criteria API还是JPQL都是使用HQL来实现的，而HQL是无法实现覆盖eager关联的。 <a href="https://hibernate.atlassian.net/browse/HHH-8776" target="_blank" rel="external">这里</a>是相关问题的讨论。</p>
 <p>最终在EntityGraph中声明的属性相当于声明了它需要使用JOIN来进行fetch。</p>
-<h2 id="EAGER_fetching不一致">EAGER fetching不一致</h2><p>通过上面的内容我们可以发现，对于eager的关联，在不用的使用场景下（find，JPQL），会产生不一致的结果。所以eager join看起来是一个代码中的<a href="https://dzone.com/articles/eager-fetching-code-smell" target="_blank" rel="external">坏味道</a>。 所以推荐在global fetch plan（映射文件）中，定义所有的关联为lazy，而在每个具体的查询中来定义fetch策略。</p>
+<h2 id="EAGER-fetching不一致"><a href="#EAGER-fetching不一致" class="headerlink" title="EAGER fetching不一致"></a>EAGER fetching不一致</h2><p>通过上面的内容我们可以发现，对于eager的关联，在不用的使用场景下（find，JPQL），会产生不一致的结果。所以eager join看起来是一个代码中的<a href="https://dzone.com/articles/eager-fetching-code-smell" target="_blank" rel="external">坏味道</a>。 所以推荐在global fetch plan（映射文件）中，定义所有的关联为lazy，而在每个具体的查询中来定义fetch策略。</p>
 <p>下面是用Hibernate官方文档中的一段引用</p>
 <blockquote>
 <p>Usually, the mapping document is not used to customize fetching. Instead, we keep the default behavior, and override it for a particular transaction, using left join fetch in HQL.</p>
 </blockquote>
-<h2 id="Spring_Data_JPA中的实现">Spring Data JPA中的实现</h2><p>Spring Data JPA可以通过接口的Query Method方法签名自动的来实现JPA的调用逻辑，它的调用是通过JPA Criteria API来实现的，所以最终也是无法使用映射文件文件的fetch策略的。推荐的方式是使用@Query的话直接在JPQL的声明需要fetch的关联；使用Spring Data JPA自动生成的时候使用EntityGraph来fetch。</p>
+<h2 id="Spring-Data-JPA中的实现"><a href="#Spring-Data-JPA中的实现" class="headerlink" title="Spring Data JPA中的实现"></a>Spring Data JPA中的实现</h2><p>Spring Data JPA可以通过接口的Query Method方法签名自动的来实现JPA的调用逻辑，它的调用是通过JPA Criteria API来实现的，所以最终也是无法使用映射文件文件的fetch策略的。推荐的方式是使用@Query的话直接在JPQL的声明需要fetch的关联；使用Spring Data JPA自动生成的时候使用EntityGraph来fetch。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -176,7 +176,7 @@ JPA的关联关系中的single-ended的关联（也就是ToOne）的模式fetch�
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Hibernate_Fetching_strategies"><span class="toc-number">1.</span> <span class="toc-text">Hibernate Fetching strategies</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Hibernate对JPA_Criteria接口的实现"><span class="toc-number">1.1.</span> <span class="toc-text">Hibernate对JPA Criteria接口的实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Eager对HQL的影响"><span class="toc-number">1.2.</span> <span class="toc-text">Eager对HQL的影响</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EntityGraph"><span class="toc-number">2.</span> <span class="toc-text">EntityGraph</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EAGER_fetching不一致"><span class="toc-number">3.</span> <span class="toc-text">EAGER fetching不一致</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring_Data_JPA中的实现"><span class="toc-number">4.</span> <span class="toc-text">Spring Data JPA中的实现</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Hibernate-Fetching-strategies"><span class="toc-number">1.</span> <span class="toc-text">Hibernate Fetching strategies</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Hibernate对JPA-Criteria接口的实现"><span class="toc-number">1.1.</span> <span class="toc-text">Hibernate对JPA Criteria接口的实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Eager对HQL的影响"><span class="toc-number">1.2.</span> <span class="toc-text">Eager对HQL的影响</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EntityGraph"><span class="toc-number">2.</span> <span class="toc-text">EntityGraph</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EAGER-fetching不一致"><span class="toc-number">3.</span> <span class="toc-text">EAGER fetching不一致</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-Data-JPA中的实现"><span class="toc-number">4.</span> <span class="toc-text">Spring Data JPA中的实现</span></a></li></ol>
  
   </div>
 
@@ -199,13 +199,13 @@ JPA的关联关系中的single-ended的关联（也就是ToOne）的模式fetch�
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -213,23 +213,23 @@ JPA的关联关系中的single-ended的关联（也就是ToOne）的模式fetch�
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -290,7 +290,7 @@ JPA的关联关系中的single-ended的关联（也就是ToOne）的模式fetch�
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

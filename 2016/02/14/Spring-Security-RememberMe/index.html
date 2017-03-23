@@ -23,7 +23,7 @@
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -90,14 +90,14 @@
 		
 		</div>
 		
-		<h2 id="Remember-Me接口和实现">Remember-Me接口和实现</h2><figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Authentication autoLogin<span class="list">(<span class="keyword">HttpServletRequest</span> request, HttpServletResponse response)</span><span class="comment">;</span></span><br><span class="line"></span><br><span class="line">void loginFail<span class="list">(<span class="keyword">HttpServletRequest</span> request, HttpServletResponse response)</span><span class="comment">;</span></span><br><span class="line"></span><br><span class="line">void loginSuccess<span class="list">(<span class="keyword">HttpServletRequest</span> request, HttpServletResponse response,</span><br><span class="line">	Authentication successfulAuthentication)</span><span class="comment">;</span></span><br></pre></td></tr></table></figure>
+		<h2 id="Remember-Me接口和实现"><a href="#Remember-Me接口和实现" class="headerlink" title="Remember-Me接口和实现"></a>Remember-Me接口和实现</h2><figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Authentication autoLogin(<span class="name">HttpServletRequest</span> request, HttpServletResponse response)<span class="comment">;</span></div><div class="line"></div><div class="line">void loginFail(<span class="name">HttpServletRequest</span> request, HttpServletResponse response)<span class="comment">;</span></div><div class="line"></div><div class="line">void loginSuccess(<span class="name">HttpServletRequest</span> request, HttpServletResponse response,</div><div class="line">	Authentication successfulAuthentication)<span class="comment">;</span></div></pre></td></tr></table></figure>
 <a id="more"></a>
 <p>Remember-me是和<code>UsernamePasswordAuthenticationFilter</code>一起使用的，通过其父类<code>AbstractAuthenticationProcessingFilter</code>中的钩子来触发回调来实现用户信息的保存。</p>
-<h3 id="TokenBasedRememberMeServices">TokenBasedRememberMeServices</h3><p>这个实现是通过把用户名和密码进行哈希，然后将生成token值写入Cookies。Cookie的key值同时会被<code>authentication provider</code>共享，以用来进行登录的验证。</p>
-<h3 id="PersistentTokenBasedRememberMeServices">PersistentTokenBasedRememberMeServices</h3><p>这个实现使用起来是和<code>TokenBasedRememberMeServices</code>类似的，只是他不是根据用户名和密码进行哈希，而是生成一个随机的值，然后通过<code>PersistentTokenRepository</code>保存起来。</p>
-<h2 id="配置Remember-Me">配置Remember-Me</h2><p>Remember-Me的请求参数，生效时间等等都是在<code>AbstractRememberMeServices</code>中定义的，通过<code>RememberMeConfigurer</code>来配置Remember-Me。</p>
+<h3 id="TokenBasedRememberMeServices"><a href="#TokenBasedRememberMeServices" class="headerlink" title="TokenBasedRememberMeServices"></a>TokenBasedRememberMeServices</h3><p>这个实现是通过把用户名和密码进行哈希，然后将生成token值写入Cookies。Cookie的key值同时会被<code>authentication provider</code>共享，以用来进行登录的验证。</p>
+<h3 id="PersistentTokenBasedRememberMeServices"><a href="#PersistentTokenBasedRememberMeServices" class="headerlink" title="PersistentTokenBasedRememberMeServices"></a>PersistentTokenBasedRememberMeServices</h3><p>这个实现使用起来是和<code>TokenBasedRememberMeServices</code>类似的，只是他不是根据用户名和密码进行哈希，而是生成一个随机的值，然后通过<code>PersistentTokenRepository</code>保存起来。</p>
+<h2 id="配置Remember-Me"><a href="#配置Remember-Me" class="headerlink" title="配置Remember-Me"></a>配置Remember-Me</h2><p>Remember-Me的请求参数，生效时间等等都是在<code>AbstractRememberMeServices</code>中定义的，通过<code>RememberMeConfigurer</code>来配置Remember-Me。</p>
 <p>Remember-Me默认的请求参数是”remember-me”，有效时间两周。</p>
-<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">String</span> DEFAULT_PARAMETER = <span class="string">"remember-me"</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="built_in">int</span> TWO_WEEKS_S = <span class="number">1209600</span>;</span><br></pre></td></tr></table></figure>  
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">String</span> DEFAULT_PARAMETER = <span class="string">"remember-me"</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="built_in">int</span> TWO_WEEKS_S = <span class="number">1209600</span>;</div></pre></td></tr></table></figure>  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -176,13 +176,13 @@
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -190,23 +190,23 @@
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -267,7 +267,7 @@
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

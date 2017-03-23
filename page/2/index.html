@@ -21,7 +21,7 @@
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -83,8 +83,8 @@
 </header>
     <div class="article-content">
         
-        <h2 id="问题">问题</h2><p>如果我们有一个订单关联三个订单项，当进行下面的查询时</p>
-<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">List</span> <span class="literal">result</span> = session.createQuery(<span class="string">"select o from Order o left join fetch o.lineItems"</span>).list();</span><br></pre></td></tr></table></figure>
+        <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>如果我们有一个订单关联三个订单项，当进行下面的查询时</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">List result = session.createQuery("<span class="keyword">select</span> o <span class="keyword">from</span> <span class="keyword">Order</span> o <span class="keyword">left</span> <span class="keyword">join</span> <span class="keyword">fetch</span> o.lineItems<span class="string">").list();</span></div></pre></td></tr></table></figure>
 <p>返回的结果集会是三个一样的订单对象，分别包含了三个订单项。</p>
         
         
@@ -120,11 +120,11 @@
 </header>
     <div class="article-content">
         
-        <h2 id="问题">问题</h2><p>当使用Jackson进行json数据转换时，如果目标字段类型为TimeStamp并且要转换的值为空字串时会报空指针错误。</p>
-<h2 id="原因">原因</h2><p>下面是Timestamp反序列化器的代码</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public static <span class="class"><span class="keyword">class</span> <span class="title">TimestampDeserializer</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">DateBasedDeserializer&lt;Timestamp&gt;</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    public <span class="type">TimestampDeserializer</span>() &#123; <span class="keyword">super</span>(<span class="type">Timestamp</span>.<span class="keyword">class</span>); &#125;</span><br><span class="line">    public <span class="type">TimestampDeserializer</span>(<span class="type">TimestampDeserializer</span> src, <span class="type">DateFormat</span> df, <span class="type">String</span> formatString) &#123;</span><br><span class="line">        <span class="keyword">super</span>(src, df, formatString);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="type">TimestampDeserializer</span> withDateFormat(<span class="type">DateFormat</span> df, <span class="type">String</span> formatString) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">TimestampDeserializer</span>(<span class="keyword">this</span>, df, formatString);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    public java.sql.<span class="type">Timestamp</span> deserialize(<span class="type">JsonParser</span> jp, <span class="type">DeserializationContext</span> ctxt) <span class="keyword">throws</span> <span class="type">IOException</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">Timestamp</span>(_parseDate(jp, ctxt).getTime());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>当使用Jackson进行json数据转换时，如果目标字段类型为TimeStamp并且要转换的值为空字串时会报空指针错误。</p>
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>下面是Timestamp反序列化器的代码</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">public static <span class="class"><span class="keyword">class</span> <span class="title">TimestampDeserializer</span> <span class="keyword">extends</span> <span class="title">DateBasedDeserializer&lt;Timestamp&gt;</span></span></div><div class="line">&#123;</div><div class="line">    public <span class="type">TimestampDeserializer</span>() &#123; <span class="keyword">super</span>(<span class="type">Timestamp</span>.<span class="keyword">class</span>); &#125;</div><div class="line">    public <span class="type">TimestampDeserializer</span>(<span class="type">TimestampDeserializer</span> src, <span class="type">DateFormat</span> df, <span class="type">String</span> formatString) &#123;</div><div class="line">        <span class="keyword">super</span>(src, df, formatString);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="keyword">protected</span> <span class="type">TimestampDeserializer</span> withDateFormat(<span class="type">DateFormat</span> df, <span class="type">String</span> formatString) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">TimestampDeserializer</span>(<span class="keyword">this</span>, df, formatString);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="meta">@Override</span></div><div class="line">    public java.sql.<span class="type">Timestamp</span> deserialize(<span class="type">JsonParser</span> jp, <span class="type">DeserializationContext</span> ctxt) <span class="keyword">throws</span> <span class="type">IOException</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">Timestamp</span>(_parseDate(jp, ctxt).getTime());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>通过<code>_parseDate</code>方法转换为Date后，并没有判断是否转换成功而直接调用了getTime方法。</p>
-<h2 id="解决">解决</h2><p>添加一个自定义的TimeStamp的Deserializer，然后通过SimpleModule来注册到ObjectMapper中。</p>
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>添加一个自定义的TimeStamp的Deserializer，然后通过SimpleModule来注册到ObjectMapper中。</p>
 
         
         
@@ -158,7 +158,7 @@
 </header>
     <div class="article-content">
         
-        <h2 id="问题">问题</h2><p>Hibernate在使用OneToOne的反向关联或者使用主键关联（PrimaryKeyJoinColumn）时，会出来懒加载不起的作用的情况。究其原因，Hibernate的能够进行懒加载的前提是返回的关联对象是个代理对象。如果Hibernate不能确定关联的对象是否为空，那么他们不能直接返回代理对象，因为代理对象本身就是不为空的，它不得不去检查关联对象是否存在。但是用SELECT语句去检查存在性，还不如索性直接把查询结果返回，这也就导致了懒加载的失效。</p>
+        <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>Hibernate在使用OneToOne的反向关联或者使用主键关联（PrimaryKeyJoinColumn）时，会出来懒加载不起的作用的情况。究其原因，Hibernate的能够进行懒加载的前提是返回的关联对象是个代理对象。如果Hibernate不能确定关联的对象是否为空，那么他们不能直接返回代理对象，因为代理对象本身就是不为空的，它不得不去检查关联对象是否存在。但是用SELECT语句去检查存在性，还不如索性直接把查询结果返回，这也就导致了懒加载的失效。</p>
         
         
         <p class="article-more-link">
@@ -264,7 +264,7 @@
 </header>
     <div class="article-content">
         
-        <h2 id="问题">问题</h2><p>通过继承<code>ResourceServerConfigurerAdapter</code>来配置ResourceServer的资源权限时，虽然使用了<code>HttpSecurity#requestMatchers</code>方法来匹配特定的资源，但是其他未匹配的资源依然会被匹配保护。</p>
+        <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>通过继承<code>ResourceServerConfigurerAdapter</code>来配置ResourceServer的资源权限时，虽然使用了<code>HttpSecurity#requestMatchers</code>方法来匹配特定的资源，但是其他未匹配的资源依然会被匹配保护。</p>
 <p>github上同样的<a href="https://github.com/spring-projects/spring-security-oauth/issues/444">问题</a>。</p>
         
         
@@ -300,7 +300,7 @@
 </header>
     <div class="article-content">
         
-        <h2 id="Spring_Boot集成HATEOAS">Spring Boot集成HATEOAS</h2><p><code>JacksonAutoConfiguration</code>会注册Primary ObjectMapper，这个ObjectMapper通过<code>spring.jackson.*</code>来配置。<br><code>JacksonAutoConfiguration</code>配置完后会注册<code>HypermediaAutoConfiguration</code>，<code>HypermediaAutoConfiguration</code>中会对Primary ObjectMapper注册<code>Jackson2HalModule</code>（由apply-to-primary-object-mapper决定）。</p>
+        <h2 id="Spring-Boot集成HATEOAS"><a href="#Spring-Boot集成HATEOAS" class="headerlink" title="Spring Boot集成HATEOAS"></a>Spring Boot集成HATEOAS</h2><p><code>JacksonAutoConfiguration</code>会注册Primary ObjectMapper，这个ObjectMapper通过<code>spring.jackson.*</code>来配置。<br><code>JacksonAutoConfiguration</code>配置完后会注册<code>HypermediaAutoConfiguration</code>，<code>HypermediaAutoConfiguration</code>中会对Primary ObjectMapper注册<code>Jackson2HalModule</code>（由apply-to-primary-object-mapper决定）。</p>
         
         
         <p class="article-more-link">
@@ -405,7 +405,7 @@
 </header>
     <div class="article-content">
         
-        <h2 id="核心术语">核心术语</h2><h3 id="Persistence_Contexts">Persistence Contexts</h3><p>Persistence Unit 是实体类的一个命名配置。Persistence Context是托管的实体实例的集合。 每个Persistence Context关联一个Persistence Unit，限制了托管的实例的类在Persistence Unit所定义的类的集合范围内。一个实体实例被托管的意思是说，它被包含在一个Persistence Context中并且能够通过Entity Manager来操纵它。 因此，我们说Entity Manager管理一个Persistence Context。</p>
+        <h2 id="核心术语"><a href="#核心术语" class="headerlink" title="核心术语"></a>核心术语</h2><h3 id="Persistence-Contexts"><a href="#Persistence-Contexts" class="headerlink" title="Persistence Contexts"></a>Persistence Contexts</h3><p>Persistence Unit 是实体类的一个命名配置。Persistence Context是托管的实体实例的集合。 每个Persistence Context关联一个Persistence Unit，限制了托管的实例的类在Persistence Unit所定义的类的集合范围内。一个实体实例被托管的意思是说，它被包含在一个Persistence Context中并且能够通过Entity Manager来操纵它。 因此，我们说Entity Manager管理一个Persistence Context。</p>
 <p>如果一个Persistence Context参与到事务中，那么托管的实体的在内存中的状态将会同步到数据库。</p>
         
         
@@ -449,13 +449,13 @@
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -463,23 +463,23 @@
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -540,7 +540,7 @@
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

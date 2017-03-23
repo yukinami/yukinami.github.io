@@ -21,7 +21,7 @@
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -156,7 +156,7 @@
 </header>
     <div class="article-content">
         
-        <h1 id="Nutch爬虫开发">Nutch爬虫开发</h1><h2 id="介绍">介绍</h2><p>Nutch是一个用Java实现的搜索引擎，它包括全文搜索和网络爬虫。它支持针对不同的业务场景，使用本地运行模式或者基于Hadoop的分布式运行模式。</p>
+        <h1 id="Nutch爬虫开发"><a href="#Nutch爬虫开发" class="headerlink" title="Nutch爬虫开发"></a>Nutch爬虫开发</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Nutch是一个用Java实现的搜索引擎，它包括全文搜索和网络爬虫。它支持针对不同的业务场景，使用本地运行模式或者基于Hadoop的分布式运行模式。</p>
 <p>Nutch目前主要由1.x和2.x两个分支，主要的不同在于数据存储的实现。这里的存储指的是，Nutch本身会保存关于爬取过程中的爬虫的各种状态到称为<em>crawldb</em>的存储中去。1.x是以SequenceFile结构的方式保存到本地或者分布式文件系统中去，而2.x则是把存储层抽象了出来，不再依赖特定的存储结构，而是使用<a href="https://gora.apache.org/">gora</a>来处理存储映射，所以最终可以保存到gora支持的RDBMS、NOSQL（Mongodb、HBase）等各种存储中去。</p>
         
         
@@ -193,8 +193,8 @@
     <div class="article-content">
         
         <p>后台长时间任务的监控，例如，处理进度的监控，可以通过客户端轮询拉或者服务器推技术来实现。这里主要讨论服务器推技术的实现。</p>
-<h2 id="Comet">Comet</h2><p>基于HTTP 长连接、无须在浏览器端安装插件的“服务器推”技术为“Comet”。Comet主要有两种实现方式。</p>
-<h3 id="基于_AJAX_的长轮询（long-polling）方式">基于 AJAX 的长轮询（long-polling）方式</h3><p><img src="http://www.ibm.com/developerworks/cn/web/wa-lo-comet/fig002.jpg" alt=""></p>
+<h2 id="Comet"><a href="#Comet" class="headerlink" title="Comet"></a>Comet</h2><p>基于HTTP 长连接、无须在浏览器端安装插件的“服务器推”技术为“Comet”。Comet主要有两种实现方式。</p>
+<h3 id="基于-AJAX-的长轮询（long-polling）方式"><a href="#基于-AJAX-的长轮询（long-polling）方式" class="headerlink" title="基于 AJAX 的长轮询（long-polling）方式"></a>基于 AJAX 的长轮询（long-polling）方式</h3><p><img src="http://www.ibm.com/developerworks/cn/web/wa-lo-comet/fig002.jpg" alt=""></p>
 <p>使用 AJAX 实现“服务器推”与传统的 AJAX 应用不同之处在于</p>
 <ol>
 <li>服务器端会阻塞请求直到有数据传递或超时才返回。</li>
@@ -235,9 +235,9 @@
 </header>
     <div class="article-content">
         
-        <h2 id="JSR223">JSR223</h2><p>Java中调用其他脚本语言可以通过JSR223来实现。JSR223规范定义了脚本调用的抽象，只要拥有对应脚本的JSR223的实现，即可实现Java对对应脚本的调用。</p>
+        <h2 id="JSR223"><a href="#JSR223" class="headerlink" title="JSR223"></a>JSR223</h2><p>Java中调用其他脚本语言可以通过JSR223来实现。JSR223规范定义了脚本调用的抽象，只要拥有对应脚本的JSR223的实现，即可实现Java对对应脚本的调用。</p>
 <p>例如，下面是对JS脚本的调用</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.script.*;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloWorld</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ScriptException </span>&#123;</span><br><span class="line">        ScriptEngineManager manager = <span class="keyword">new</span> ScriptEngineManager();</span><br><span class="line">        ScriptEngine engine = manager.getEngineByName(<span class="string">"JavaScript"</span>);</span><br><span class="line">        engine.eval(<span class="string">"print ('Hello World')"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> javax.script.*;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloWorld</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ScriptException </span>&#123;</div><div class="line">        ScriptEngineManager manager = <span class="keyword">new</span> ScriptEngineManager();</div><div class="line">        ScriptEngine engine = manager.getEngineByName(<span class="string">"JavaScript"</span>);</div><div class="line">        engine.eval(<span class="string">"print ('Hello World')"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
         
         
         <p class="article-more-link">
@@ -272,9 +272,9 @@
 </header>
     <div class="article-content">
         
-        <h2 id="Spring_Test">Spring Test</h2><p>Spring Test框架提供的MockMvc可用于实现Controller的集成测试。</p>
+        <h2 id="Spring-Test"><a href="#Spring-Test" class="headerlink" title="Spring Test"></a>Spring Test</h2><p>Spring Test框架提供的MockMvc可用于实现Controller的集成测试。</p>
 <p>例如</p>
-<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">MockHttpServletRequestBuilder</span> create<span class="variable">Message</span> = post(<span class="string">"/messages/"</span>)</span><br><span class="line">    .param(<span class="string">"summary"</span>, <span class="string">"Spring Rocks"</span>)</span><br><span class="line">    .param(<span class="string">"text"</span>, <span class="string">"In case you didn't know, Spring Rocks!"</span>);</span><br><span class="line"></span><br><span class="line">mock<span class="variable">Mvc</span>.perform(create<span class="variable">Message</span>)</span><br><span class="line">    .<span class="keyword">and</span><span class="variable">Expect</span>(status().is3xx<span class="variable">Redirection</span>())</span><br><span class="line">    .<span class="keyword">and</span><span class="variable">Expect</span>(redirected<span class="variable">Url</span>(<span class="string">"/messages/123"</span>));</span><br></pre></td></tr></table></figure>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">MockHttpServletRequestBuilder createMessage = post(<span class="string">"/messages/"</span>)</div><div class="line"><span class="meta">    .param</span>(<span class="string">"summary"</span>, <span class="string">"Spring Rocks"</span>)</div><div class="line"><span class="meta">    .param</span>(<span class="string">"text"</span>, <span class="string">"In case you didn't know, Spring Rocks!"</span>)<span class="comment">;</span></div><div class="line"></div><div class="line">mockMvc.perform(createMessage)</div><div class="line"><span class="meta">    .andExpect</span>(status().is3xxRedirection())</div><div class="line"><span class="meta">    .andExpect</span>(redirectedUrl(<span class="string">"/messages/123"</span>))<span class="comment">;</span></div></pre></td></tr></table></figure>
         
         
         <p class="article-more-link">
@@ -309,7 +309,7 @@
 </header>
     <div class="article-content">
         
-        <h2 id="基本概念">基本概念</h2><h3 id="单元测试">单元测试</h3><p>一些单元测试中设计的基本概念</p>
+        <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><h3 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h3><p>一些单元测试中设计的基本概念</p>
 <ul>
 <li>Stub 指的是以可控的方式对对象方法进行模拟，使其按照预期的行为返回结果或抛出异常等的过程。</li>
 <li>Mock Object 整个对象都是模拟对象，所有方法在模拟之前进行调用都是空方法。</li>
@@ -384,9 +384,9 @@
 </header>
     <div class="article-content">
         
-        <h2 id="概念">概念</h2><p>首先，HATEOAS (Hypermedia as the Engine of Application State) 是REST应用架构的一个约束。一个<em>hypermedia-driven</em>的站点通过响应中的超媒体链接动态地提供了导航到站点的REST接口的信息。</p>
+        <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>首先，HATEOAS (Hypermedia as the Engine of Application State) 是REST应用架构的一个约束。一个<em>hypermedia-driven</em>的站点通过响应中的超媒体链接动态地提供了导航到站点的REST接口的信息。</p>
 <p>下面是一个基于HATEOAS的响应</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    "<span class="attribute">name</span>": <span class="value"><span class="string">"Alice"</span></span>,</span><br><span class="line">    "<span class="attribute">links</span>": <span class="value">[ &#123;</span><br><span class="line">        "<span class="attribute">rel</span>": <span class="value"><span class="string">"self"</span></span>,</span><br><span class="line">        "<span class="attribute">href</span>": <span class="value"><span class="string">"http://localhost:8080/customer/1"</span></span><br><span class="line">    </span>&#125; ]</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"name"</span>: <span class="string">"Alice"</span>,</div><div class="line">    <span class="attr">"links"</span>: [ &#123;</div><div class="line">        <span class="attr">"rel"</span>: <span class="string">"self"</span>,</div><div class="line">        <span class="attr">"href"</span>: <span class="string">"http://localhost:8080/customer/1"</span></div><div class="line">    &#125; ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
         
         
         <p class="article-more-link">
@@ -421,9 +421,9 @@
 </header>
     <div class="article-content">
         
-        <h2 id="概念">概念</h2><ul>
+        <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><ul>
 <li><p>Aspect 切面，指的是切分多个类的模块化的关注点，包括Pointcut或Advice</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Aspect</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NotVeryUsefulAspect</span> &#123;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Aspect</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NotVeryUsefulAspect</span> &#123;</span></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 </li>
 </ul>
         
@@ -468,13 +468,13 @@
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -482,23 +482,23 @@
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -559,7 +559,7 @@
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

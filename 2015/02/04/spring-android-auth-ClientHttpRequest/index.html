@@ -24,7 +24,7 @@
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -91,16 +91,16 @@
 		
 		</div>
 		
-		<h1 id="问题">问题</h1><p>使用spring-android-auth时，其使用的<code>RestTemplate</code>是依赖包spring-android-rest-template<code>中的，而是spring-web-mvc中的。该</code>RestTemplate`使用http request默认的逻辑如下</p>
-<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">boolean</span> HTTP_COMPONENTS_AVAILABLE = ClassUtils.isPresent(<span class="string">"org.apache.http.client.HttpClient"</span>, ClientHttpRequestFactory.<span class="keyword">class</span>.getClassLoader());</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.GINGERBREAD) &#123;</span><br><span class="line">	<span class="keyword">this</span>.requestFactory = <span class="keyword">new</span> SimpleClientHttpRequestFactory();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	<span class="keyword">this</span>.requestFactory = <span class="keyword">new</span> HttpComponentsClientHttpRequestFactory();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+		<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>使用spring-android-auth时，其使用的<code>RestTemplate</code>是依赖包spring-android-rest-template<code>中的，而是spring-web-mvc中的。该</code>RestTemplate`使用http request默认的逻辑如下</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">boolean</span> HTTP_COMPONENTS_AVAILABLE = ClassUtils.isPresent(<span class="string">"org.apache.http.client.HttpClient"</span>, ClientHttpRequestFactory.<span class="keyword">class</span>.getClassLoader());</div><div class="line"></div><div class="line"><span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.GINGERBREAD) &#123;</div><div class="line">	<span class="keyword">this</span>.requestFactory = <span class="keyword">new</span> SimpleClientHttpRequestFactory();</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">	<span class="keyword">this</span>.requestFactory = <span class="keyword">new</span> HttpComponentsClientHttpRequestFactory();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <a id="more"></a>
 <p>使用spring-android-auth的主要目的是使用其依赖的spring-social，其中的<code>OAuth1Template</code>,<code>OAuth2Template</code>等使用的RestTempalte中使用的http request是<code>ClientHttpRequestFactory</code>。</p>
-<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="function">ClientHttpRequestFactory <span class="title">getRequestFactory</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	Properties properties = System.getProperties();</span><br><span class="line">	String proxyHost = properties.getProperty(<span class="string">"http.proxyHost"</span>);</span><br><span class="line">	<span class="keyword">int</span> proxyPort = properties.containsKey(<span class="string">"http.proxyPort"</span>) ? Integer.valueOf(properties.getProperty(<span class="string">"http.proxyPort"</span>)) : 80;</span><br><span class="line">	<span class="keyword">if</span> (HTTP_COMPONENTS_AVAILABLE) &#123;</span><br><span class="line">		<span class="function"><span class="keyword">return</span> HttpComponentsClientRequestFactoryCreator.<span class="title">createRequestFactory</span><span class="params">(proxyHost, proxyPort)</span></span>;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		SimpleClientHttpRequestFactory requestFactory = <span class="keyword">new</span> SimpleClientHttpRequestFactory();</span><br><span class="line">		<span class="keyword">if</span> (proxyHost != <span class="keyword">null</span>) &#123;</span><br><span class="line">			requestFactory.setProxy(<span class="keyword">new</span> Proxy(Proxy.Type.HTTP, <span class="keyword">new</span> InetSocketAddress(proxyHost, proxyPort)));</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> requestFactory;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> ClientHttpRequestFactory getRequestFactory() &#123;</div><div class="line">	Properties properties = System.getProperties();</div><div class="line">	<span class="keyword">String</span> proxyHost = properties.getProperty(<span class="string">"http.proxyHost"</span>);</div><div class="line">	int proxyPort = properties.containsKey(<span class="string">"http.proxyPort"</span>) ? Integer.valueOf(properties.getProperty(<span class="string">"http.proxyPort"</span>)) : <span class="type">80</span>;</div><div class="line">	<span class="keyword">if</span> (HTTP_COMPONENTS_AVAILABLE) &#123;</div><div class="line">		<span class="keyword">return</span> HttpComponentsClientRequestFactoryCreator.createRequestFactory(proxyHost, proxyPort);</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		SimpleClientHttpRequestFactory requestFactory = <span class="keyword">new</span> <span class="type">SimpleClientHttpRequestFactory</span>();</div><div class="line">		<span class="keyword">if</span> (proxyHost != <span class="literal">null</span>) &#123;</div><div class="line">			requestFactory.setProxy(<span class="keyword">new</span> <span class="type">Proxy</span>(Proxy.Type.HTTP, <span class="keyword">new</span> <span class="type">InetSocketAddress</span>(proxyHost, proxyPort)));</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> requestFactory;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>由于Android SDK中带有<code>HttpClient</code>这个类的，但是又不包含创建的实例对象CloseableHttpClient，实际会报错ClassNotFound。</p>
-<h1 id="解决">解决</h1><p>spring-android的构建脚本中对于spring-android-rest-template模块的依赖</p>
-<figure class="highlight puppet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">project(<span class="string">"spring-android-rest-template"</span>) &#123;</span><br><span class="line">	description = <span class="string">"Spring for Android Rest Template"</span></span><br><span class="line"></span><br><span class="line">	ext.mavenTestDir = <span class="string">"../test/spring-android-rest-template-test/pom.xml"</span></span><br><span class="line"></span><br><span class="line">	<span class="name">dependencies</span> &#123;</span><br><span class="line">		provided(<span class="string">"com.google.android:android:<span class="variable">$androidVersion</span>"</span>)</span><br><span class="line">		compile(<span class="literal">project</span>(<span class="string">":spring-android-core"</span>))</span><br><span class="line">		optional(<span class="string">"org.apache.httpcomponents:httpclient-android:<span class="variable">$httpclientVersion</span>"</span>)</span><br><span class="line">		optional(<span class="string">"com.squareup.okhttp:okhttp-urlconnection:<span class="variable">$okHttpVersion</span>"</span>)</span><br><span class="line">		optional(<span class="string">"org.codehaus.jackson:jackson-mapper-asl:<span class="variable">$jacksonVersion</span>"</span>)</span><br><span class="line">		optional(<span class="string">"com.fasterxml.jackson.core:jackson-databind:<span class="variable">$jackson2Version</span>"</span>)</span><br><span class="line">		optional(<span class="string">"com.google.code.gson:gson:<span class="variable">$gsonVersion</span>"</span>)</span><br><span class="line">		optional(<span class="string">"org.simpleframework:simple-xml:<span class="variable">$simpleXmlVersion</span>"</span>) &#123; dep -&gt;</span><br><span class="line">			transitive = <span class="keyword">false</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>spring-android的构建脚本中对于spring-android-rest-template模块的依赖</p>
+<figure class="highlight puppet"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">project(<span class="string">"spring-android-rest-template"</span>) &#123;</div><div class="line">	description = <span class="string">"Spring for Android Rest Template"</span></div><div class="line"></div><div class="line">	ext.mavenTestDir = <span class="string">"../test/spring-android-rest-template-test/pom.xml"</span></div><div class="line"></div><div class="line">	<span class="keyword">dependencies</span> &#123;</div><div class="line">		provided(<span class="string">"com.google.android:android:<span class="variable">$androidVersion</span>"</span>)</div><div class="line">		compile(<span class="literal">project</span>(<span class="string">":spring-android-core"</span>))</div><div class="line">		optional(<span class="string">"org.apache.httpcomponents:httpclient-android:<span class="variable">$httpclientVersion</span>"</span>)</div><div class="line">		optional(<span class="string">"com.squareup.okhttp:okhttp-urlconnection:<span class="variable">$okHttpVersion</span>"</span>)</div><div class="line">		optional(<span class="string">"org.codehaus.jackson:jackson-mapper-asl:<span class="variable">$jacksonVersion</span>"</span>)</div><div class="line">		optional(<span class="string">"com.fasterxml.jackson.core:jackson-databind:<span class="variable">$jackson2Version</span>"</span>)</div><div class="line">		optional(<span class="string">"com.google.code.gson:gson:<span class="variable">$gsonVersion</span>"</span>)</div><div class="line">		optional(<span class="string">"org.simpleframework:simple-xml:<span class="variable">$simpleXmlVersion</span>"</span>) &#123; dep -&gt;</div><div class="line">			transitive = <span class="keyword">false</span></div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>httpclient-android是一个optional的依赖，所以使用HttpClient需要显示的指定依赖。</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">compile <span class="string">group:</span> <span class="string">'org.apache.httpcomponents'</span>, <span class="string">name:</span> <span class="string">'httpclient-android'</span>, <span class="string">version:</span><span class="string">'4.3.3'</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">compile <span class="string">group:</span> <span class="string">'org.apache.httpcomponents'</span>, <span class="string">name:</span> <span class="string">'httpclient-android'</span>, <span class="string">version:</span><span class="string">'4.3.3'</span></div></pre></td></tr></table></figure>
 <p><a href="https://github.com/spring-projects/spring-social/issues/111" target="_blank" rel="external">相关issue</a></p>
   
 	</div>
@@ -110,7 +110,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/Spring-Framework/">Spring Framework</a><a href="/tags/经验错误/">经验错误</a>
+  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/经验错误/">经验错误</a><a href="/tags/Spring-Framework/">Spring Framework</a>
   </div>
 
 </div>
@@ -181,13 +181,13 @@
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -195,23 +195,23 @@
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -272,7 +272,7 @@
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

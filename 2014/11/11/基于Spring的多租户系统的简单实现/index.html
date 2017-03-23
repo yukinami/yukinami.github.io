@@ -33,7 +33,7 @@
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -100,7 +100,7 @@
 		
 		</div>
 		
-		<h3 id="前言">前言</h3><p>对于一个完整的将web 应用程序转换为 SaaS 应用程序的过程而言，需要满足以下7个条件：</p>
+		<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>对于一个完整的将web 应用程序转换为 SaaS 应用程序的过程而言，需要满足以下7个条件：</p>
 <ol>
 <li>应用程序必须支持多租户</li>
 <li>应用程序必须具备某种程度的自助注册功能。</li>
@@ -112,7 +112,7 @@
 </ol>
 <p>本文主要讨论的是实现SaaS的核心，支持多租户。</p>
 <a id="more"></a>
-<h3 id="理论基础">理论基础</h3><p>实现多租户的方式，大致分为三种</p>
+<h3 id="理论基础"><a href="#理论基础" class="headerlink" title="理论基础"></a>理论基础</h3><p>实现多租户的方式，大致分为三种</p>
 <ul>
 <li>单独的数据库</li>
 </ul>
@@ -128,13 +128,13 @@
 </ul>
 <p><a href="http://yukinamia-wordpress.stor.sinaapp.com/uploads/2014/11/IC216.gif" target="_blank" rel="external"><img src="http://yukinamia-wordpress.stor.sinaapp.com/uploads/2014/11/IC216.gif" alt="" title="IC216"></a></p>
 <p>这种方式的硬件成本和维护成本是最小的。但是所有的压力都聚集到了应用这端，数据的隔离，安全性等问题都需要应用端来处理。</p>
-<h3 id="实现思路">实现思路</h3><p>本文主要针对第三种实现方式，在应用层实现多租户的功能，具体的实现是基于spring framework的。</p>
+<h3 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h3><p>本文主要针对第三种实现方式，在应用层实现多租户的功能，具体的实现是基于spring framework的。</p>
 <p>应用层实现多租户的重点，需要解决以下两个问题：</p>
 <ol>
 <li>用户所属租户的验证。用户所属的租户决定了用户所访问的数据。具体的实现可以是通过用户登录验证机制，查找用户所属的租户；或者是通过URL的子域，path，参数等等绑定到租户，通过过滤器设置用户所属的租户。</li>
 <li>租户数据的隔离和访问。租户对数据库的访问方式决定了数据表的隔离方式。比如说，我们可以让不同的租户使用不同的数据库用户来访问数据库，在数据库层对需要租户隔离的表创建动态视图，动态视图的条件就是TANANTID等于当前的数据库用户的租户ID。如果不同用户的数据库连接是隔离的，那么都不用不同的数据库，直接在设置connection的session用户变量为租户名或者租户ID，再进行动态视图的隔离。</li>
 </ol>
-<h3 id="具体实现">具体实现</h3><h4 id="用户所属租户的验证">用户所属租户的验证</h4><p>本文使用Servletpath绑定到租户的方式来实现租户的验证。</p>
+<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><h4 id="用户所属租户的验证"><a href="#用户所属租户的验证" class="headerlink" title="用户所属租户的验证"></a>用户所属租户的验证</h4><p>本文使用Servletpath绑定到租户的方式来实现租户的验证。</p>
 <p>容器启动的时候，注册所有的租户的business name(租户的一个标示)绑定到servlet mapping中：</p>
 <pre class="crayon-plain-tag">@Bean(name = DispatcherServletAutoConfiguration.DEFAULT_DISPATCHER_SERVLET_REGISTRATION_BEAN_NAME)
     public ServletRegistrationBean dispatcherServletRegistration() {
@@ -159,7 +159,7 @@
         //TODO other process
 }</pre>
 
-<h4 id="数据库的数据隔离">数据库的数据隔离</h4><p>对所有的需要租户隔离的业务表添加tenant_dbu(租户的数据库用户)，tenant_id(租户的ID)。然后创建动态视图，获取当前的数据库用户：</p>
+<h4 id="数据库的数据隔离"><a href="#数据库的数据隔离" class="headerlink" title="数据库的数据隔离"></a>数据库的数据隔离</h4><p>对所有的需要租户隔离的业务表添加tenant_dbu(租户的数据库用户)，tenant_id(租户的ID)。然后创建动态视图，获取当前的数据库用户：</p>
 <pre class="crayon-plain-tag">CREATE TABLE inventory (
   id BIGINT IDENTITY PRIMARY KEY,
   name VARCHAR(55),
@@ -180,7 +180,7 @@ IF (CURRENT_USER = 'root') THEN
 END IF;
 END</pre>
 
-<h4 id="应用对数据隔离的实现">应用对数据隔离的实现</h4><p>上述在数据库层简单地实现了对数据的隔离，最终还需要进行正确的操作，才能保证访问到正确的数据。</p>
+<h4 id="应用对数据隔离的实现"><a href="#应用对数据隔离的实现" class="headerlink" title="应用对数据隔离的实现"></a>应用对数据隔离的实现</h4><p>上述在数据库层简单地实现了对数据的隔离，最终还需要进行正确的操作，才能保证访问到正确的数据。</p>
 <p>这里需要实现一个能够进行动态路由的数据源，不同的租户使用不同的数据库用户的链接。</p>
 <p>这里使用Spring提供的AbstractRoutingDataSource。首先需要正确的初始化所有的数据源：</p>
 <pre class="crayon-plain-tag">protected void registerDataSource(Iterable&lt;Tenant&gt; tenants) {
@@ -225,7 +225,7 @@ END</pre>
     }
 }</pre>
 
-<h4 id="其他的一些优化">其他的一些优化</h4><p>系统中有一些资源是属于各个用户的，有一些资源的系统级别的。我们不希望租户访问到一些系统页面，也不希望系统访问一些租户数据。可以通过拦截器进行一定的拦截：</p>
+<h4 id="其他的一些优化"><a href="#其他的一些优化" class="headerlink" title="其他的一些优化"></a>其他的一些优化</h4><p>系统中有一些资源是属于各个用户的，有一些资源的系统级别的。我们不希望租户访问到一些系统页面，也不希望系统访问一些租户数据。可以通过拦截器进行一定的拦截：</p>
 <pre class="crayon-plain-tag">// restrict the access
         HandlerMethod method = (HandlerMethod) handler;
         TenantResource tenantResource = method.getMethodAnnotation(TenantResource.class);
@@ -256,7 +256,7 @@ END</pre>
 
 <p>我们自己是实现了两个注解@RootResource，@TenantResource，用来标记资源是租户级别的还是系统级别的。</p>
 <p>完整的示例请<a href="https://github.com/yukinami/spring-boot-saas" target="_blank" rel="external">参考</a>。</p>
-<h3 id="写在最后">写在最后</h3><p>本文只是抛砖引玉，简单地实现了基于SaaS的系统的部分功能，期待您的反馈。</p>
+<h3 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h3><p>本文只是抛砖引玉，简单地实现了基于SaaS的系统的部分功能，期待您的反馈。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -336,13 +336,13 @@ END</pre>
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -350,23 +350,23 @@ END</pre>
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -427,7 +427,7 @@ END</pre>
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

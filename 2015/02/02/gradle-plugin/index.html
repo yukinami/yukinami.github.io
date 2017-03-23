@@ -24,7 +24,7 @@ Packaging a pluginBuild scriptYou can include the source for the plugin directly
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -87,25 +87,25 @@ Packaging a pluginBuild scriptYou can include the source for the plugin directly
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Packaging_a_plugin"><span class="toc-number">1.</span> <span class="toc-text">Packaging a plugin</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Build_script"><span class="toc-number">1.1.</span> <span class="toc-text">Build script</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#buildSrc_project"><span class="toc-number">1.2.</span> <span class="toc-text">buildSrc project</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Standalone_project"><span class="toc-number">1.3.</span> <span class="toc-text">Standalone project</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Writing_a_simple_plugin"><span class="toc-number">2.</span> <span class="toc-text">Writing a simple plugin</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#A_standalone_project"><span class="toc-number">2.1.</span> <span class="toc-text">A standalone project</span></a></li></ol></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Packaging-a-plugin"><span class="toc-number">1.</span> <span class="toc-text">Packaging a plugin</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Build-script"><span class="toc-number">1.1.</span> <span class="toc-text">Build script</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#buildSrc-project"><span class="toc-number">1.2.</span> <span class="toc-text">buildSrc project</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Standalone-project"><span class="toc-number">1.3.</span> <span class="toc-text">Standalone project</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Writing-a-simple-plugin"><span class="toc-number">2.</span> <span class="toc-text">Writing a simple plugin</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#A-standalone-project"><span class="toc-number">2.1.</span> <span class="toc-text">A standalone project</span></a></li></ol></li></ol>
 		
 		</div>
 		
 		<p>Gradle plugin packages up reusable pieces of build logic, which can be used across many different projects and builds.</p>
-<h1 id="Packaging_a_plugin">Packaging a plugin</h1><h2 id="Build_script">Build script</h2><p>You can include the source for the plugin directly in the build script. This has the benefit that the plugin is automatically compiled and included in the classpath of the build script without you having to do anything. However, the plugin is not visible outside the build script, and so you cannot reuse the plugin outside the build script it is defined in.</p>
+<h1 id="Packaging-a-plugin"><a href="#Packaging-a-plugin" class="headerlink" title="Packaging a plugin"></a>Packaging a plugin</h1><h2 id="Build-script"><a href="#Build-script" class="headerlink" title="Build script"></a>Build script</h2><p>You can include the source for the plugin directly in the build script. This has the benefit that the plugin is automatically compiled and included in the classpath of the build script without you having to do anything. However, the plugin is not visible outside the build script, and so you cannot reuse the plugin outside the build script it is defined in.</p>
 <a id="more"></a>
-<h2 id="buildSrc_project">buildSrc project</h2><p>You can put the source for the plugin in the rootProjectDir/buildSrc/src/main/groovy directory. Gradle will take care of compiling and testing the plugin and making it available on the classpath of the build script. The plugin is visible to every build script used by the build. However, it is not visible outside the build, and so you cannot reuse the plugin outside the build it is defined in.</p>
+<h2 id="buildSrc-project"><a href="#buildSrc-project" class="headerlink" title="buildSrc project"></a>buildSrc project</h2><p>You can put the source for the plugin in the rootProjectDir/buildSrc/src/main/groovy directory. Gradle will take care of compiling and testing the plugin and making it available on the classpath of the build script. The plugin is visible to every build script used by the build. However, it is not visible outside the build, and so you cannot reuse the plugin outside the build it is defined in.</p>
 <p>See Chapter 60, Organizing Build Logic for more details about the buildSrc project.</p>
-<h2 id="Standalone_project">Standalone project</h2><p>You can create a separate project for your plugin. This project produces and publishes a JAR which you can then use in multiple builds and share with others. Generally, this JAR might include some custom plugins, or bundle several related task classes into a single library. Or some combination of the two.</p>
-<h1 id="Writing_a_simple_plugin">Writing a simple plugin</h1><p>build.gradle<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">apply plugin: GreetingPlugin</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> GreetingPlugin <span class="keyword">implements</span> Plugin&lt;<span class="keyword">Project</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">void</span> apply(<span class="keyword">Project</span> <span class="keyword">project</span>) &#123;</span><br><span class="line">        <span class="keyword">project</span>.<span class="keyword">task</span>(<span class="string">'hello'</span>) &lt;&lt; &#123;</span><br><span class="line">            <span class="keyword">println</span> <span class="string">"Hello from the GreetingPlugin"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Standalone-project"><a href="#Standalone-project" class="headerlink" title="Standalone project"></a>Standalone project</h2><p>You can create a separate project for your plugin. This project produces and publishes a JAR which you can then use in multiple builds and share with others. Generally, this JAR might include some custom plugins, or bundle several related task classes into a single library. Or some combination of the two.</p>
+<h1 id="Writing-a-simple-plugin"><a href="#Writing-a-simple-plugin" class="headerlink" title="Writing a simple plugin"></a>Writing a simple plugin</h1><p>build.gradle<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">apply plugin: GreetingPlugin</div><div class="line"></div><div class="line"><span class="keyword">class</span> GreetingPlugin <span class="keyword">implements</span> Plugin&lt;<span class="keyword">Project</span>&gt; &#123;</div><div class="line">    <span class="keyword">void</span> apply(<span class="keyword">Project</span> <span class="keyword">project</span>) &#123;</div><div class="line">        <span class="keyword">project</span>.<span class="keyword">task</span>(<span class="string">'hello'</span>) &lt;&lt; &#123;</div><div class="line">            <span class="keyword">println</span> <span class="string">"Hello from the GreetingPlugin"</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>Output of <strong><em>gradle -q hello</em></strong><br>`</p>
 <blockquote>
 <p>gradle -q hello<br>Hello from the GreetingPlugin<br>`</p>
 </blockquote>
-<h2 id="A_standalone_project">A standalone project</h2><p>Now we will move our plugin to a standalone project, so we can publish it and share it with others. This project is simply a Groovy project that produces a JAR containing the plugin classes.</p>
+<h2 id="A-standalone-project"><a href="#A-standalone-project" class="headerlink" title="A standalone project"></a>A standalone project</h2><p>Now we will move our plugin to a standalone project, so we can publish it and share it with others. This project is simply a Groovy project that produces a JAR containing the plugin classes.</p>
 <p>So how does Gradle find the Plugin implementation? The answer is you need to provide a properties file in the jar’s META-INF/gradle-plugins directory that matches the id of your plugin.</p>
 <p><strong><em>Example 59.6. Wiring for a custom plugin</em></strong></p>
-<p>src/main/resources/META-INF/gradle-plugins/org.samples.greeting.properties<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;&#10;Using your plugin in another project&#10;=====================================&#10;To use a plugin in a build script, you need to add the plugin classes to the build script&#39;s classpath. To do this, you use a &#8220;buildscript &#123; &#125;&#8221; block, as described in [Section 60.5, &#8220;External dependencies for the build script&#8221;][2].&#10;&#10;***Example 59.7. Using a custom plugin in another project***&#10;&#10;build.gradle</span><br></pre></td></tr></table></figure></p>
+<p>src/main/resources/META-INF/gradle-plugins/org.samples.greeting.properties<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line">Using your plugin in another project</div><div class="line">=====================================</div><div class="line">To use a plugin in a build script, you need to add the plugin classes to the build script&apos;s classpath. To do this, you use a “buildscript &#123; &#125;” block, as described in [Section 60.5, “External dependencies for the build script”][2].</div><div class="line"></div><div class="line">***Example 59.7. Using a custom plugin in another project***</div><div class="line"></div><div class="line">build.gradle</div></pre></td></tr></table></figure></p>
 <p>buildscript {<br>    repositories {<br>        maven {<br>            url uri(‘../repo’)<br>        }<br>    }<br>    dependencies {<br>        classpath group: ‘org.gradle’, name: ‘customPlugin’,<br>                  version: ‘1.0-SNAPSHOT’<br>    }<br>}<br>apply plugin: ‘org.samples.greeting’<br>```</p>
   
 	</div>
@@ -163,7 +163,7 @@ Packaging a pluginBuild scriptYou can include the source for the plugin directly
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Packaging_a_plugin"><span class="toc-number">1.</span> <span class="toc-text">Packaging a plugin</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Build_script"><span class="toc-number">1.1.</span> <span class="toc-text">Build script</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#buildSrc_project"><span class="toc-number">1.2.</span> <span class="toc-text">buildSrc project</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Standalone_project"><span class="toc-number">1.3.</span> <span class="toc-text">Standalone project</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Writing_a_simple_plugin"><span class="toc-number">2.</span> <span class="toc-text">Writing a simple plugin</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#A_standalone_project"><span class="toc-number">2.1.</span> <span class="toc-text">A standalone project</span></a></li></ol></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Packaging-a-plugin"><span class="toc-number">1.</span> <span class="toc-text">Packaging a plugin</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Build-script"><span class="toc-number">1.1.</span> <span class="toc-text">Build script</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#buildSrc-project"><span class="toc-number">1.2.</span> <span class="toc-text">buildSrc project</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Standalone-project"><span class="toc-number">1.3.</span> <span class="toc-text">Standalone project</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Writing-a-simple-plugin"><span class="toc-number">2.</span> <span class="toc-text">Writing a simple plugin</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#A-standalone-project"><span class="toc-number">2.1.</span> <span class="toc-text">A standalone project</span></a></li></ol></li></ol>
  
   </div>
 
@@ -186,13 +186,13 @@ Packaging a pluginBuild scriptYou can include the source for the plugin directly
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -200,23 +200,23 @@ Packaging a pluginBuild scriptYou can include the source for the plugin directly
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -277,7 +277,7 @@ Packaging a pluginBuild scriptYou can include the source for the plugin directly
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

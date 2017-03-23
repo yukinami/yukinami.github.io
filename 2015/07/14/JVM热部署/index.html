@@ -23,7 +23,7 @@
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -86,26 +86,26 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#JVM_Hot_Swapping"><span class="toc-number">1.</span> <span class="toc-text">JVM Hot Swapping</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#在Idea中的使用"><span class="toc-number">1.1.</span> <span class="toc-text">在Idea中的使用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JRebel"><span class="toc-number">2.</span> <span class="toc-text">JRebel</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#DCEVM"><span class="toc-number">3.</span> <span class="toc-text">DCEVM </span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring-Loaded"><span class="toc-number">4.</span> <span class="toc-text">Spring-Loaded</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ming使用"><span class="toc-number">4.1.</span> <span class="toc-text">ming使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在IDE中的使用"><span class="toc-number">4.2.</span> <span class="toc-text">在IDE中的使用</span></a></li></ol></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#JVM-Hot-Swapping"><span class="toc-number">1.</span> <span class="toc-text">JVM Hot Swapping</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#在Idea中的使用"><span class="toc-number">1.1.</span> <span class="toc-text">在Idea中的使用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JRebel"><span class="toc-number">2.</span> <span class="toc-text">JRebel</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#DCEVM"><span class="toc-number">3.</span> <span class="toc-text">DCEVM </span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring-Loaded"><span class="toc-number">4.</span> <span class="toc-text">Spring-Loaded</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ming使用"><span class="toc-number">4.1.</span> <span class="toc-text">ming使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在IDE中的使用"><span class="toc-number">4.2.</span> <span class="toc-text">在IDE中的使用</span></a></li></ol></li></ol>
 		
 		</div>
 		
-		<h1 id="JVM_Hot_Swapping">JVM Hot Swapping</h1><p>从Java1.4启，JVM引入了HotSwap，能够在Debug的时候更新类的字节码，所有新式的IDE（包括Eclipse、IDEA和NetBeans）都支持这一技术。但是它只能用来更新方法体，这一定程度上限制了它的实用性。</p>
+		<h1 id="JVM-Hot-Swapping"><a href="#JVM-Hot-Swapping" class="headerlink" title="JVM Hot Swapping"></a>JVM Hot Swapping</h1><p>从Java1.4启，JVM引入了HotSwap，能够在Debug的时候更新类的字节码，所有新式的IDE（包括Eclipse、IDEA和NetBeans）都支持这一技术。但是它只能用来更新方法体，这一定程度上限制了它的实用性。</p>
 <a id="more"></a>
-<h2 id="在Idea中的使用">在Idea中的使用</h2><ol>
+<h2 id="在Idea中的使用"><a href="#在Idea中的使用" class="headerlink" title="在Idea中的使用"></a>在Idea中的使用</h2><ol>
 <li>HotSwap要求必须以Debug方法启动JVM</li>
 <li>修改文件</li>
 <li>菜单选择 Run | Reload Changed Classes 重新加载所有修改的类，或者 Build | Compile “class_name” 重新编译加载当前的类</li>
 </ol>
-<h1 id="JRebel">JRebel</h1><p>JRebel是另外一种更新类的技术。他通过监控磁盘上已经编译的.class文件来实现类更新，所以它不依赖于IDE。同时对于更新类的字节码也没有HotSwap那么多的限制</p>
+<h1 id="JRebel"><a href="#JRebel" class="headerlink" title="JRebel"></a>JRebel</h1><p>JRebel是另外一种更新类的技术。他通过监控磁盘上已经编译的.class文件来实现类更新，所以它不依赖于IDE。同时对于更新类的字节码也没有HotSwap那么多的限制</p>
 <p>关于HotSwap和JRebel这里有更详细的<a href="http://zeroturnaround.com/blog/reloading_java_classes_401_hotswap_jrebel/" target="_blank" rel="external">介绍</a></p>
-<h1 id="DCEVM">DCEVM </h1><p><a href="http://ssw.jku.at/dcevm/" target="_blank" rel="external">DCEVM</a>的全称是Dynamic Code Evolution VM，它是实现在Oracle’s Java HotSpot VM之上，对其进行了扩展、修改，所以它对字节码的更新也没有什么限制。可以说是相对JRebel的一个不错的免费的选择。</p>
+<h1 id="DCEVM"><a href="#DCEVM" class="headerlink" title="DCEVM "></a>DCEVM </h1><p><a href="http://ssw.jku.at/dcevm/" target="_blank" rel="external">DCEVM</a>的全称是Dynamic Code Evolution VM，它是实现在Oracle’s Java HotSpot VM之上，对其进行了扩展、修改，所以它对字节码的更新也没有什么限制。可以说是相对JRebel的一个不错的免费的选择。</p>
 <p>Github上有一个它的fork<a href="https://github.com/dcevm/dcevm" target="_blank" rel="external">版本</a>，针对OpenJDK进行了一些加强。</p>
-<h1 id="Spring-Loaded">Spring-Loaded</h1><p>Spring-Loaded是用来重新加载类文件的JVM agent。不像HotSwap，Spring-Loaded支持方法、属性以及构造方法的增删改，同时也支持注解的增删改。</p>
-<h2 id="ming使用">ming使用</h2><p>如下方式启动JVM</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -javaagent:<span class="tag">&lt;<span class="title">pathTo</span>&gt;</span>/springloaded-&#123;VERSION&#125;.jar -noverify SomeJavaClass</span><br></pre></td></tr></table></figure>
+<h1 id="Spring-Loaded"><a href="#Spring-Loaded" class="headerlink" title="Spring-Loaded"></a>Spring-Loaded</h1><p>Spring-Loaded是用来重新加载类文件的JVM agent。不像HotSwap，Spring-Loaded支持方法、属性以及构造方法的增删改，同时也支持注解的增删改。</p>
+<h2 id="ming使用"><a href="#ming使用" class="headerlink" title="ming使用"></a>ming使用</h2><p>如下方式启动JVM</p>
+<figure class="highlight dust"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="xml">java -javaagent:<span class="tag">&lt;<span class="name">pathTo</span>&gt;</span>/springloaded-</span><span class="template-variable">&#123;VERSION&#125;</span><span class="xml">.jar -noverify SomeJavaClass</span></div></pre></td></tr></table></figure>
 <p>之后对类文件的修改即可更新加载到JVM中的类。</p>
-<h2 id="在IDE中的使用">在IDE中的使用</h2><p>Spring-Loaded并不需要以Debug方式启动JVM，直接修改文件，菜单选择 Run | Reload Changed Classes 重新加载所有修改的类，或者 Build | Compile “class_name” 重新编译加载当前的类即可</p>
+<h2 id="在IDE中的使用"><a href="#在IDE中的使用" class="headerlink" title="在IDE中的使用"></a>在IDE中的使用</h2><p>Spring-Loaded并不需要以Debug方式启动JVM，直接修改文件，菜单选择 Run | Reload Changed Classes 重新加载所有修改的类，或者 Build | Compile “class_name” 重新编译加载当前的类即可</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -162,7 +162,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#JVM_Hot_Swapping"><span class="toc-number">1.</span> <span class="toc-text">JVM Hot Swapping</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#在Idea中的使用"><span class="toc-number">1.1.</span> <span class="toc-text">在Idea中的使用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JRebel"><span class="toc-number">2.</span> <span class="toc-text">JRebel</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#DCEVM"><span class="toc-number">3.</span> <span class="toc-text">DCEVM </span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring-Loaded"><span class="toc-number">4.</span> <span class="toc-text">Spring-Loaded</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ming使用"><span class="toc-number">4.1.</span> <span class="toc-text">ming使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在IDE中的使用"><span class="toc-number">4.2.</span> <span class="toc-text">在IDE中的使用</span></a></li></ol></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#JVM-Hot-Swapping"><span class="toc-number">1.</span> <span class="toc-text">JVM Hot Swapping</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#在Idea中的使用"><span class="toc-number">1.1.</span> <span class="toc-text">在Idea中的使用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JRebel"><span class="toc-number">2.</span> <span class="toc-text">JRebel</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#DCEVM"><span class="toc-number">3.</span> <span class="toc-text">DCEVM </span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring-Loaded"><span class="toc-number">4.</span> <span class="toc-text">Spring-Loaded</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ming使用"><span class="toc-number">4.1.</span> <span class="toc-text">ming使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在IDE中的使用"><span class="toc-number">4.2.</span> <span class="toc-text">在IDE中的使用</span></a></li></ol></li></ol>
  
   </div>
 
@@ -185,13 +185,13 @@
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -199,23 +199,23 @@
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -276,7 +276,7 @@
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

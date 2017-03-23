@@ -24,7 +24,7 @@
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -92,12 +92,12 @@
 		</div>
 		
 		<p>本文主要简述一个前端项目使用grunt来进行构建的过程。项目本身是基于<code>RequireJS</code>的，样式则使用了<code>Less</code>来书写。</p>
-<h1 id="项目结构">项目结构</h1><p>先来看一下项目整体的目录结构。</p>
+<h1 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h1><p>先来看一下项目整体的目录结构。</p>
 <p><img src="/img/CE761032-FAA5-4FFE-9FC7-F87BA7DFF423.jpeg" alt="项目结构"></p>
 <a id="more"></a>
-<h1 id="Gruntfile">Gruntfile</h1><p>通常我们需要grunt分别在开发，以及部署时为我们进行构建。</p>
-<h2 id="运行时构建">运行时构建</h2><p>运行时构建需要的步骤如下，</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">grunt.registerTask(<span class="string">'serve'</span>, <span class="string">'Compile then start a connect web server'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">target</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (target === <span class="string">'dist'</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> grunt.task.run([<span class="string">'build'</span>, <span class="string">'connect:dist:keepalive'</span>]);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  grunt.task.run([</span><br><span class="line">    <span class="string">'clean:server'</span>,</span><br><span class="line">    <span class="string">'bower:install'</span>,</span><br><span class="line">    <span class="string">'less'</span>,</span><br><span class="line">    <span class="string">'concurrent:server'</span>,</span><br><span class="line">    <span class="string">'configureProxies'</span>,</span><br><span class="line">    <span class="string">'autoprefixer'</span>,</span><br><span class="line">    <span class="string">'connect:livereload'</span>,</span><br><span class="line">    <span class="string">'watch'</span></span><br><span class="line">  ]);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h1 id="Gruntfile"><a href="#Gruntfile" class="headerlink" title="Gruntfile"></a>Gruntfile</h1><p>通常我们需要grunt分别在开发，以及部署时为我们进行构建。</p>
+<h2 id="运行时构建"><a href="#运行时构建" class="headerlink" title="运行时构建"></a>运行时构建</h2><p>运行时构建需要的步骤如下，</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">grunt.registerTask(<span class="string">'serve'</span>, <span class="string">'Compile then start a connect web server'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">target</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (target === <span class="string">'dist'</span>) &#123;</div><div class="line">    <span class="keyword">return</span> grunt.task.run([<span class="string">'build'</span>, <span class="string">'connect:dist:keepalive'</span>]);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  grunt.task.run([</div><div class="line">    <span class="string">'clean:server'</span>,</div><div class="line">    <span class="string">'bower:install'</span>,</div><div class="line">    <span class="string">'less'</span>,</div><div class="line">    <span class="string">'concurrent:server'</span>,</div><div class="line">    <span class="string">'configureProxies'</span>,</div><div class="line">    <span class="string">'autoprefixer'</span>,</div><div class="line">    <span class="string">'connect:livereload'</span>,</div><div class="line">    <span class="string">'watch'</span></div><div class="line">  ]);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
 <ol>
 <li>清理上次的构建</li>
 <li>安装bower的依赖，这里安装到app的lib目录，以便<code>RequrieJS</code>进行引用</li>
@@ -105,23 +105,23 @@
 <pre><code>less: {
   dist: {
       files: {
-          <span class="string">'&lt;%= yeoman.app %&gt;/styles/main.css'</span>: [<span class="string">'&lt;%= yeoman.app %&gt;/styles/main.less'</span>]
+          &apos;&lt;%= yeoman.app %&gt;/styles/main.css&apos;: [&apos;&lt;%= yeoman.app %&gt;/styles/main.less&apos;]
       },
       options: {
-          <span class="built_in">source</span>Map: <span class="literal">true</span>,
-          <span class="built_in">source</span>MapFilename: <span class="string">'&lt;%= yeoman.app %&gt;/styles/main.css.map'</span>,
-          <span class="built_in">source</span>MapBasepath: <span class="string">'&lt;%= yeoman.app %&gt;/'</span>,
-          <span class="built_in">source</span>MapRootpath: <span class="string">'/'</span>
+          sourceMap: true,
+          sourceMapFilename: &apos;&lt;%= yeoman.app %&gt;/styles/main.css.map&apos;,
+          sourceMapBasepath: &apos;&lt;%= yeoman.app %&gt;/&apos;,
+          sourceMapRootpath: &apos;/&apos;
       }
   }
 },
 </code></pre></li>
 <li><p>复制<code>styles</code>目录下的css文件到<code>.tmp</code>目录。这里的<code>concurrent:server</code>只是并行的执行了<code>copy:styles</code>任务。</p>
-<pre><code><span class="string">styles:</span> {
-<span class="label">    expand:</span> <span class="literal">true</span>,
-<span class="label">    cwd:</span> <span class="string">'&lt;%= yeoman.app %&gt;/styles'</span>,
-<span class="label">    dest:</span> <span class="string">'.tmp/styles/'</span>,
-<span class="label">    src:</span> <span class="string">'{,*/}*.css'</span>
+<pre><code>styles: {
+    expand: true,
+    cwd: &apos;&lt;%= yeoman.app %&gt;/styles&apos;,
+    dest: &apos;.tmp/styles/&apos;,
+    src: &apos;{,*/}*.css&apos;
 }
 </code></pre></li>
 <li><p><code>configureProxies</code>是<code>grunt-connect-proxy</code>的任务，   由于开发阶段，前端项目是运行在node的服务器中，JS脚本和后台服务器并不在一个服务器，所以涉及脚本跨域问题，所以在开发阶段，需要配置一个代理服务器。</p>
@@ -140,30 +140,30 @@
 <p>因为之前已经使用了<code>grunt-connect-proxy</code>，这里还是使用<code>grunt-connect-proxy</code></p>
 <pre><code>livereload: {
   options: {
-    open: <span class="keyword">true</span>,
+    open: true,
     base: [
-      <span class="string">'.tmp'</span>,
-      <span class="string">'&lt;%= yeoman.app %&gt;'</span>
+      &apos;.tmp&apos;,
+      &apos;&lt;%= yeoman.app %&gt;&apos;
     ],
-    middleware: <span class="function"><span class="keyword">function</span> <span class="params">(connect, options)</span> </span>{
-      <span class="keyword">if</span> (!<span class="keyword">Array</span>.isArray(options.base)) {
+    middleware: function (connect, options) {
+      if (!Array.isArray(options.base)) {
         options.base = [options.base];
       }
-      <span class="keyword">var</span> middlewares = [<span class="keyword">require</span>(<span class="string">'grunt-connect-proxy/lib/utils'</span>).proxyRequest];
+      var middlewares = [require(&apos;grunt-connect-proxy/lib/utils&apos;).proxyRequest];
 
-      options.base.<span class="keyword">forEach</span>(<span class="function"><span class="keyword">function</span> <span class="params">(base)</span> </span>{
+      options.base.forEach(function (base) {
           grunt.log.warn(base);
-          middlewares.push(connect.<span class="keyword">static</span>(base));
+          middlewares.push(connect.static(base));
       })
-      <span class="keyword">return</span> middlewares;
+      return middlewares;
     }
   }
 }
 </code></pre></li>
 <li>配置watch，当文件有变化时进行reload</li>
 </ol>
-<h2 id="部署时构建">部署时构建</h2><p>相较于运行时的构建，部署构建最主要的差别在于需要对资源文件进行合并，压缩等优化工作。</p>
-<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">grunt</span><span class="class">.registerTask</span>(<span class="string">'build'</span>, [</span><br><span class="line">  <span class="comment">// Clean dist and .tmp directories</span></span><br><span class="line">  <span class="string">'clean:dist'</span>,</span><br><span class="line">  <span class="comment">// Run JSHint on all js files</span></span><br><span class="line">  <span class="string">'jshint'</span>,</span><br><span class="line">  <span class="comment">// Install bower components into &#123;xd.app&#125;/lib</span></span><br><span class="line">  <span class="string">'bower:install'</span>,</span><br><span class="line">  <span class="comment">// Compile LESS files into CSS</span></span><br><span class="line">  <span class="string">'less'</span>,</span><br><span class="line">  <span class="comment">// Copy CSS files into .tmp</span></span><br><span class="line">  <span class="string">'copy:styles'</span>,</span><br><span class="line">  <span class="comment">// Run autoprefixer on CSS files under .tmp</span></span><br><span class="line">  <span class="string">'autoprefixer'</span>,</span><br><span class="line">  <span class="comment">// Run useminPrepare to generate concat.generated and cssmin.generated targets</span></span><br><span class="line">  <span class="string">'useminPrepare'</span>,</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Concat CSS files in .tmp</span></span><br><span class="line">  <span class="string">'concat'</span>,</span><br><span class="line">  <span class="comment">// Copy concat css into dist</span></span><br><span class="line">  <span class="string">'cssmin'</span>,</span><br><span class="line">  <span class="comment">// minify and copy the minified images into dist</span></span><br><span class="line">  <span class="comment">// <span class="doctag">TODO:</span> imagemin has platform dependent issues; hence commenting out them for now.</span></span><br><span class="line">  <span class="comment">// 'imagemin',</span></span><br><span class="line">  <span class="comment">// Copy other necessary files into dist</span></span><br><span class="line">  <span class="string">'copy:dist'</span>,</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Now operate on dist directory</span></span><br><span class="line">  <span class="comment">// Static file asset revisioning through content hashing</span></span><br><span class="line">  <span class="string">'filerev'</span>,</span><br><span class="line">  <span class="comment">// Rewrite based on revved assets</span></span><br><span class="line">  <span class="string">'usemin'</span>,</span><br><span class="line">  <span class="string">'htmlmin'</span></span><br><span class="line">]);</span><br></pre></td></tr></table></figure>
+<h2 id="部署时构建"><a href="#部署时构建" class="headerlink" title="部署时构建"></a>部署时构建</h2><p>相较于运行时的构建，部署构建最主要的差别在于需要对资源文件进行合并，压缩等优化工作。</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">grunt.registerTask(<span class="string">'build'</span>, [</div><div class="line">  // Clean dist and .tmp directories</div><div class="line">  <span class="string">'clean:dist'</span>,</div><div class="line">  // <span class="keyword">Run</span><span class="bash"> JSHint on all js files</span></div><div class="line">  <span class="string">'jshint'</span>,</div><div class="line">  // Install bower components into &#123;xd.app&#125;/lib</div><div class="line">  <span class="string">'bower:install'</span>,</div><div class="line">  // Compile LESS files into CSS</div><div class="line">  <span class="string">'less'</span>,</div><div class="line">  // <span class="keyword">Copy</span><span class="bash"> CSS files into .tmp</span></div><div class="line">  <span class="string">'copy:styles'</span>,</div><div class="line">  // <span class="keyword">Run</span><span class="bash"> autoprefixer on CSS files under .tmp</span></div><div class="line">  <span class="string">'autoprefixer'</span>,</div><div class="line">  // <span class="keyword">Run</span><span class="bash"> useminPrepare to generate concat.generated and cssmin.generated targets</span></div><div class="line">  <span class="string">'useminPrepare'</span>,</div><div class="line"></div><div class="line">  // Concat CSS files in .tmp</div><div class="line">  <span class="string">'concat'</span>,</div><div class="line">  // <span class="keyword">Copy</span><span class="bash"> concat css into dist</span></div><div class="line">  <span class="string">'cssmin'</span>,</div><div class="line">  // minify and <span class="keyword">copy</span><span class="bash"> the minified images into dist</span></div><div class="line">  // TODO: imagemin has platform dependent issues; hence commenting out them for now.</div><div class="line">  // <span class="string">'imagemin'</span>,</div><div class="line">  // <span class="keyword">Copy</span><span class="bash"> other necessary files into dist</span></div><div class="line">  <span class="string">'copy:dist'</span>,</div><div class="line"></div><div class="line">  // Now operate on dist directory</div><div class="line">  // Static file asset revisioning through content hashing</div><div class="line">  <span class="string">'filerev'</span>,</div><div class="line">  // Rewrite based on revved assets</div><div class="line">  <span class="string">'usemin'</span>,</div><div class="line">  <span class="string">'htmlmin'</span></div><div class="line">]);</div></pre></td></tr></table></figure>
 <ol>
 <li><code>clean:dist</code>和运行时构建类似，清理上一次的build构建。</li>
 <li><code>jshint</code> 对js文件进行语法检查</li>
@@ -172,14 +172,14 @@
 <li><code>copy:styles</code> 同运行时构建</li>
 <li><code>autoprefixer</code> 同运行时构建</li>
 <li><code>useminPrepare</code> 任务更新gruntfile来设置一个配置好的转换流程。默认的对JS转换流程是concat以及uglifly。这个task需要需要Blocks来生成对应的grunt task。Blokcs的配置请参考<a href="https://github.com/yeoman/grunt-usemin#blocks" target="_blank" rel="external">Blocks</a><pre><code>useminPrepare: {
-  html: <span class="string">'&lt;%= yeoman.app %&gt;/index.html'</span>,
+  html: &apos;&lt;%= yeoman.app %&gt;/index.html&apos;,
   options: {
-    dest: <span class="string">'&lt;%= yeoman.dist %&gt;'</span>,
+    dest: &apos;&lt;%= yeoman.dist %&gt;&apos;,
     flow: {
       html: {
         steps: {
-          js: [<span class="string">'concat'</span>, <span class="string">'uglifyjs'</span>],
-          css: [<span class="string">'cssmin'</span>]
+          js: [&apos;concat&apos;, &apos;uglifyjs&apos;],
+          css: [&apos;cssmin&apos;]
         },
         post: {}
       }
@@ -190,29 +190,29 @@
 <li><code>concat</code>是由<code>useminPrepare</code>生成的task，进行js文件的合并。</li>
 <li><code>cssmin</code>也是由<code>useminPrepare</code>生成的task，进行css文件的压缩。<ol>
 <li><code>copy:dist</code>任务拷贝所有的资源到的最终需要部署的web项目的public目录中。<br>  dist: {<pre><code>files: [{
-  <span class="built_in">expand</span>: <span class="keyword">true</span>,
-  dot: <span class="keyword">true</span>,
-  cwd: <span class="string">'&lt;%= yeoman.app %&gt;'</span>,
-  dest: <span class="string">'&lt;%= yeoman.dist %&gt;'</span>,
+  expand: true,
+  dot: true,
+  cwd: &apos;&lt;%= yeoman.app %&gt;&apos;,
+  dest: &apos;&lt;%= yeoman.dist %&gt;&apos;,
   src: [
-    <span class="string">'*.{ico,png,txt}'</span>,
-    <span class="string">'.htaccess'</span>,
-    <span class="string">'*.html'</span>,
-    <span class="string">'views/{,*/}*.html'</span>,
-    <span class="string">'images/{,*/}*.{webp}'</span>,
-    <span class="string">'fonts/*'</span>,
-    <span class="string">'lib/**/*'</span>
+    &apos;*.{ico,png,txt}&apos;,
+    &apos;.htaccess&apos;,
+    &apos;*.html&apos;,
+    &apos;views/{,*/}*.html&apos;,
+    &apos;images/{,*/}*.{webp}&apos;,
+    &apos;fonts/*&apos;,
+    &apos;lib/**/*&apos;
   ]
 }, {
-  <span class="built_in">expand</span>: <span class="keyword">true</span>,
-  cwd: <span class="string">'.tmp/images'</span>,
-  dest: <span class="string">'&lt;%= yeoman.dist %&gt;/images'</span>,
-  src: [<span class="string">'generated/*'</span>]
+  expand: true,
+  cwd: &apos;.tmp/images&apos;,
+  dest: &apos;&lt;%= yeoman.dist %&gt;/images&apos;,
+  src: [&apos;generated/*&apos;]
 }, {
-  <span class="built_in">expand</span>: <span class="keyword">true</span>,
-  cwd: <span class="string">'bower_components/bootstrap/dist'</span>,
-  src: <span class="string">'fonts/*'</span>,
-  dest: <span class="string">'&lt;%= yeoman.dist %&gt;'</span>
+  expand: true,
+  cwd: &apos;bower_components/bootstrap/dist&apos;,
+  src: &apos;fonts/*&apos;,
+  dest: &apos;&lt;%= yeoman.dist %&gt;&apos;
 }]
 </code></pre>  },</li>
 <li><code>filerev</code>根据文件的内容生成修订版本号，用于文件缓存。</li>
@@ -304,13 +304,13 @@
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -318,23 +318,23 @@
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -395,7 +395,7 @@
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

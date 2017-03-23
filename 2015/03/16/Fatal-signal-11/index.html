@@ -23,7 +23,7 @@
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -90,10 +90,10 @@
 		
 		</div>
 		
-		<h1 id="错误">错误</h1><p>多个<code>AsyncTask</code>、<code>Loader</code>同时执行的时候，偶尔会闪退。 错误信息大致如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@@@ ABORTING: INVALID HEAP ADDRESS IN dlfree</span><br><span class="line">Fatal signal <span class="number">11</span> (SIGSEGV) at <span class="number">0xdeadbaad</span> (code=<span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
+		<h1 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h1><p>多个<code>AsyncTask</code>、<code>Loader</code>同时执行的时候，偶尔会闪退。 错误信息大致如下：<br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">@@@ ABORTING: INVALID HEAP ADDRESS <span class="keyword">IN</span> dlfree</div><div class="line">Fatal signal <span class="number">11</span> (SIGSEGV) <span class="meta">at</span> <span class="number">0xdeadbaad</span> (code=<span class="number">1</span>)</div></pre></td></tr></table></figure></p>
 <a id="more"></a>
-<h1 id="原因">原因</h1><p>Stackoverflow上有一个类型的<a href="http://stackoverflow.com/questions/10662446/invalid-heap-address-and-fatal-signal-11" target="_blank" rel="external">问题</a>，但是它的原因是在多个线程中调用了<code>BluetoothSocket#close</code>方法。回到自己的问题上来，我这边发生的问题也极有可能在网络操作方法，而不是异步任务本身。由于我的项目使用了<code>spring android</code>来对远程API进行请求操作的，所以最终问题定位到<code>RestTempalte</code>上。起初怀疑是使用的网络模块的问题，<code>spring android</code>可以使用<code>apache httpclient</code>、<code>okhttp</code>等作为http请求模块，但是逐一尝试还是解决不了问题。那问题只能出在<code>RestTempalte</code>本身了。Spring论坛上找到一个类似的<a href="http://stackoverflow.com/questions/10662446/invalid-heap-address-and-fatal-signal-11" target="_blank" rel="external">问题</a>，解决的办法是在<code>RestTemplate</code>初始化的代码上加上同步块，但是更为根本的原因还是不太清楚。</p>
-<h1 id="解决">解决</h1><p>我的项目是使用Roboguice来注入各种service供异步任务调用的，各个service对象注入的时候都会初始化<code>RestTempalte</code>。但是<code>RestTempalte</code>本身是线程安全的，所以所有的service使用同一个<code>RestTempalte</code>应该是没问题的。最终的修改就是service不再初始化<code>RestTempalte</code>，还是依赖注入一个容器中单例的<code>RestTempalte</code>。</p>
+<h1 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h1><p>Stackoverflow上有一个类型的<a href="http://stackoverflow.com/questions/10662446/invalid-heap-address-and-fatal-signal-11" target="_blank" rel="external">问题</a>，但是它的原因是在多个线程中调用了<code>BluetoothSocket#close</code>方法。回到自己的问题上来，我这边发生的问题也极有可能在网络操作方法，而不是异步任务本身。由于我的项目使用了<code>spring android</code>来对远程API进行请求操作的，所以最终问题定位到<code>RestTempalte</code>上。起初怀疑是使用的网络模块的问题，<code>spring android</code>可以使用<code>apache httpclient</code>、<code>okhttp</code>等作为http请求模块，但是逐一尝试还是解决不了问题。那问题只能出在<code>RestTempalte</code>本身了。Spring论坛上找到一个类似的<a href="http://stackoverflow.com/questions/10662446/invalid-heap-address-and-fatal-signal-11" target="_blank" rel="external">问题</a>，解决的办法是在<code>RestTemplate</code>初始化的代码上加上同步块，但是更为根本的原因还是不太清楚。</p>
+<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>我的项目是使用Roboguice来注入各种service供异步任务调用的，各个service对象注入的时候都会初始化<code>RestTempalte</code>。但是<code>RestTempalte</code>本身是线程安全的，所以所有的service使用同一个<code>RestTempalte</code>应该是没问题的。最终的修改就是service不再初始化<code>RestTempalte</code>，还是依赖注入一个容器中单例的<code>RestTempalte</code>。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -173,13 +173,13 @@
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -187,23 +187,23 @@
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -264,7 +264,7 @@
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

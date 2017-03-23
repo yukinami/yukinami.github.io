@@ -29,7 +29,7 @@ authorization server  当成功认证了resource owner并且获得授权后，�
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -92,12 +92,12 @@ authorization server  当成功认证了resource owner并且获得授权后，�
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#角色"><span class="toc-number">2.</span> <span class="toc-text">角色</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Client类型"><span class="toc-number">3.</span> <span class="toc-text">Client类型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#协议流程"><span class="toc-number">4.</span> <span class="toc-text">协议流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#授权模式（Authorization_Grant）"><span class="toc-number">5.</span> <span class="toc-text">授权模式（Authorization Grant）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Authorisation_Code"><span class="toc-number">5.1.</span> <span class="toc-text">Authorisation Code</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Implicit"><span class="toc-number">5.2.</span> <span class="toc-text">Implicit</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Resource_Owner_Password_Credentials"><span class="toc-number">5.3.</span> <span class="toc-text">Resource Owner Password Credentials</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Client_Credentials"><span class="toc-number">5.4.</span> <span class="toc-text">Client Credentials</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#其他"><span class="toc-number">6.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Access_Token_Scope"><span class="toc-number">6.1.</span> <span class="toc-text">Access Token Scope</span></a></li></ol></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#角色"><span class="toc-number">2.</span> <span class="toc-text">角色</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Client类型"><span class="toc-number">3.</span> <span class="toc-text">Client类型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#协议流程"><span class="toc-number">4.</span> <span class="toc-text">协议流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#授权模式（Authorization-Grant）"><span class="toc-number">5.</span> <span class="toc-text">授权模式（Authorization Grant）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Authorisation-Code"><span class="toc-number">5.1.</span> <span class="toc-text">Authorisation Code</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Implicit"><span class="toc-number">5.2.</span> <span class="toc-text">Implicit</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Resource-Owner-Password-Credentials"><span class="toc-number">5.3.</span> <span class="toc-text">Resource Owner Password Credentials</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Client-Credentials"><span class="toc-number">5.4.</span> <span class="toc-text">Client Credentials</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#其他"><span class="toc-number">6.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Access-Token-Scope"><span class="toc-number">6.1.</span> <span class="toc-text">Access Token Scope</span></a></li></ol></li></ol>
 		
 		</div>
 		
-		<h1 id="概述">概述</h1><p>OAuth2.0的最好的文档，莫过于<a href="http://www.rfcreader.com/#rfc6749" target="_blank" rel="external">RFC 6749</a>。OAuth2.0本身是一个比较灵活的标准，能够适配应用到各种场景。本文主要是对文档的翻译以及加上部分个人的理解。</p>
-<h1 id="角色">角色</h1><p>OAuth定义了4个角色</p>
+		<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>OAuth2.0的最好的文档，莫过于<a href="http://www.rfcreader.com/#rfc6749" target="_blank" rel="external">RFC 6749</a>。OAuth2.0本身是一个比较灵活的标准，能够适配应用到各种场景。本文主要是对文档的翻译以及加上部分个人的理解。</p>
+<h1 id="角色"><a href="#角色" class="headerlink" title="角色"></a>角色</h1><p>OAuth定义了4个角色</p>
 <ul>
 <li>resource owner<br>  能够对受保护的资源进行授权的实体。当<code>resource owner</code>是人的时候，它是指终端用户</li>
 <li>resource server<br>  持有受保护的资源的服务器，使用<code>access tokens</code>能够接收和响应对受保护资源的请求</li>
@@ -105,32 +105,32 @@ authorization server  当成功认证了resource owner并且获得授权后，�
 <li>authorization server<br>  当成功认证了<code>resource owner</code>并且获得授权后，分发<code>access tokens</code>给<code>client</code>的服务器。</li>
 </ul>
 <a id="more"></a>
-<h1 id="Client类型">Client类型</h1><p>OAuth定义了两种<code>client</code>类型，根据它们与<code>authorization server</code>安全地授权的能力（维护<code>client credentials</code>的保密性的能力）。</p>
+<h1 id="Client类型"><a href="#Client类型" class="headerlink" title="Client类型"></a>Client类型</h1><p>OAuth定义了两种<code>client</code>类型，根据它们与<code>authorization server</code>安全地授权的能力（维护<code>client credentials</code>的保密性的能力）。</p>
 <ul>
 <li><p>confidential<br>  能够维护它们的<code>credentials</code>的保密性（例如，对<code>client credentials</code>的访问进行限制的安全的服务器上实现的<code>client</code>）的<code>client</code>。具体的应用类型：web application</p>
 </li>
 <li><p>public<br>  不能够维护它们的<code>credentials</code>的保密性的<code>client</code>（例如，执行在<code>resource owner</code>的设备上的<code>client</code>，比如安装的本地应用或者基于浏览器的web应用）。具体的应用类型：user-agent-based application， native application</p>
 </li>
 </ul>
-<h1 id="协议流程">协议流程</h1><pre><code>+--------+                               +---------------+
-|<span class="string">        </span>|<span class="string">--(A)- Authorization Request -&gt;</span>|<span class="string">   Resource    </span>|
-|<span class="string">        </span>|<span class="string">                               </span>|<span class="string">     Owner     </span>|
-|<span class="string">        </span>|<span class="string">&lt;-(B)-- Authorization Grant ---</span>|<span class="string">               </span>|
-|<span class="string">        </span>|<span class="string">                               +---------------+
-</span>|<span class="string">        </span>|
-|<span class="string">        </span>|<span class="string">                               +---------------+
-</span>|<span class="string">        </span>|<span class="string">--(C)-- Authorization Grant --&gt;</span>|<span class="string"> Authorization </span>|
-|<span class="string"> Client </span>|<span class="string">                               </span>|<span class="string">     Server    </span>|
-|<span class="string">        </span>|<span class="string">&lt;-(D)----- Access Token -------</span>|<span class="string">               </span>|
-|<span class="string">        </span>|<span class="string">                               +---------------+
-</span>|<span class="string">        </span>|
-|<span class="string">        </span>|<span class="string">                               +---------------+
-</span>|<span class="string">        </span>|<span class="string">--(E)----- Access Token ------&gt;</span>|<span class="string">    Resource   </span>|
-|<span class="string">        </span>|<span class="string">                               </span>|<span class="string">     Server    </span>|
-|<span class="string">        </span>|<span class="string">&lt;-(F)--- Protected Resource ---</span>|<span class="string">               </span>|
+<h1 id="协议流程"><a href="#协议流程" class="headerlink" title="协议流程"></a>协议流程</h1><pre><code>+--------+                               +---------------+
+|        |--(A)- Authorization Request -&gt;|   Resource    |
+|        |                               |     Owner     |
+|        |&lt;-(B)-- Authorization Grant ---|               |
+|        |                               +---------------+
+|        |
+|        |                               +---------------+
+|        |--(C)-- Authorization Grant --&gt;| Authorization |
+| Client |                               |     Server    |
+|        |&lt;-(D)----- Access Token -------|               |
+|        |                               +---------------+
+|        |
+|        |                               +---------------+
+|        |--(E)----- Access Token ------&gt;|    Resource   |
+|        |                               |     Server    |
+|        |&lt;-(F)--- Protected Resource ---|               |
 +--------+                               +---------------+
 </code></pre><p>(A) <code>client</code>从<code>resource owner</code>请求认证。认证请求可以直接向认证服务器请求或者间接地通过<code>authorization server</code><br>(B) <code>client</code>收到一个<code>authorization grant</code>，实际是代表了<code>resource owner</code>的认证的证书，使用文档中定义的四种授权类型或者扩展的授权类型来表示<br>(C) <code>client</code>向<code>authorization server</code>提交<code>authorization grant</code>，请求授权获取<code>access token</code>，<br>(D) <code>authorization server</code>授权<code>client</code>，验证<code>authorization grant</code>，如果是有效的，分发<code>access token</code><br>(E) <code>client</code>从<code>resource server</code>提交<code>access token</code>请求受保护的资源<br>(F) <code>resource server</code>验证<code>access token</code>，如果是有效的，接收请求</p>
-<h1 id="授权模式（Authorization_Grant）">授权模式（Authorization Grant）</h1><p>对于协议的流程来说，最灵活的部分就是上面提到的(B)中<code>Authorization Grant</code>。也就是说(C)请求授权<code>access token</code>所提交的<code>authorization grant</code>，根据授权模式不同是不一样的。</p>
+<h1 id="授权模式（Authorization-Grant）"><a href="#授权模式（Authorization-Grant）" class="headerlink" title="授权模式（Authorization Grant）"></a>授权模式（Authorization Grant）</h1><p>对于协议的流程来说，最灵活的部分就是上面提到的(B)中<code>Authorization Grant</code>。也就是说(C)请求授权<code>access token</code>所提交的<code>authorization grant</code>，根据授权模式不同是不一样的。</p>
 <p><a href="http://www.rfcreader.com/#rfc6749" target="_blank" rel="external">RFC 6749</a>文档中提及了4种授权模式：</p>
 <ul>
 <li>Authorisation code grant</li>
@@ -138,17 +138,17 @@ authorization server  当成功认证了resource owner并且获得授权后，�
 <li>Resource owner credentials grant</li>
 <li>Client credentials grant</li>
 </ul>
-<h2 id="Authorisation_Code">Authorisation Code</h2><p><code>authorization code</code>是通过使用<code>authorization server</code>作为<code>client</code>和<code>resource owner</code>的中间人获取的。<code>client</code>把<code>resource owner</code>导向到<code>authorizatoin server</code>（通过它的用户代理），然后反过来带着<code>authorization code</code>把<code>resource owner</code>导向回<code>client</code>。</p>
+<h2 id="Authorisation-Code"><a href="#Authorisation-Code" class="headerlink" title="Authorisation Code"></a>Authorisation Code</h2><p><code>authorization code</code>是通过使用<code>authorization server</code>作为<code>client</code>和<code>resource owner</code>的中间人获取的。<code>client</code>把<code>resource owner</code>导向到<code>authorizatoin server</code>（通过它的用户代理），然后反过来带着<code>authorization code</code>把<code>resource owner</code>导向回<code>client</code>。</p>
 <p>在附带着<code>authorization code</code>把<code>resource owner</code>导向回<code>client</code>之前，<code>authorization server</code>认证<code>resource owner</code>并且获取授权。 因为<code>resource owner</code>只通过<code>authorization server</code>进行验证，<code>resource owner</code>的证书不需要和<code>client</code>共享。</p>
 <p><code>authorization code</code>提供了一些重要的安全方面的好处，比如说可以验证<code>client</code>，并且直接传递<code>access token</code>给<code>client</code>，不需要经过<code>resource owner</code>的用户代理，所以不会潜在地暴露给别人包括<code>resource owner</code>本身</p>
 <p>下面的图演示整个流程<br><img src="/img/oauth2_flow.png" alt="oauth2 work flow"></p>
-<h2 id="Implicit">Implicit</h2><p><code>implicit</code>授权为在浏览器中使用脚本语言（Javascript）实现的客户端而优化的简单版的<code>authorization code</code>流程。在<code>implicit</code>的流程中，<code>client</code>直接请求一个<code>access token</code>(作为<code>resource owner</code>授权的结果)而不是为<code>client</code>请求一个<code>authorization code</code></p>
+<h2 id="Implicit"><a href="#Implicit" class="headerlink" title="Implicit"></a>Implicit</h2><p><code>implicit</code>授权为在浏览器中使用脚本语言（Javascript）实现的客户端而优化的简单版的<code>authorization code</code>流程。在<code>implicit</code>的流程中，<code>client</code>直接请求一个<code>access token</code>(作为<code>resource owner</code>授权的结果)而不是为<code>client</code>请求一个<code>authorization code</code></p>
 <p>在<code>implicit</code>的流程中请求一个<code>access token</code>时，<code>authorization server</code>不验证客户端。在一些情况下，<code>client</code>的标示，可以通过，用来传递<code>access token</code>给<code>client</code>的<code>redirection URI</code>来验证。<code>access token</code>会暴露给<code>resource owner</code>或者其他访问<code>resource owner</code>的用户代理的应用程序（因为首先要经过用户代理的重定向才能把<code>access token</code>传递给<code>client</code>）。</p>
 <p><code>Implicit</code>授权提高了响应效率以及一些<code>client</code>的效率（比如用浏览应用实现的<code>client</code>），因为它减少了为了获取<code>access token</code>而进行的来回交互。然而，这些便利应该和安全影响进行权衡。</p>
-<h2 id="Resource_Owner_Password_Credentials">Resource Owner Password Credentials</h2><p><code>resource owner password credentials</code>（比如说用户名密码）， 能够被直接用作<code>authorization grant</code>来获取<code>access token</code>。<code>credentials</code>只应该用在<code>resource owner</code>和<code>client</code>之间是高度信任的情况下（例如，<code>client</code>是设备操作系统的一部分或者一个具有高权限的应用），并且其他的授权方式不可用的情况下。</p>
+<h2 id="Resource-Owner-Password-Credentials"><a href="#Resource-Owner-Password-Credentials" class="headerlink" title="Resource Owner Password Credentials"></a>Resource Owner Password Credentials</h2><p><code>resource owner password credentials</code>（比如说用户名密码）， 能够被直接用作<code>authorization grant</code>来获取<code>access token</code>。<code>credentials</code>只应该用在<code>resource owner</code>和<code>client</code>之间是高度信任的情况下（例如，<code>client</code>是设备操作系统的一部分或者一个具有高权限的应用），并且其他的授权方式不可用的情况下。</p>
 <p>尽管这种方式需要<code>client</code>直接访问<code>resource owner</code>的<code>credentials</code>，<code>resource owner</code>的<code>credentials</code>仅被用于一次请求来交换<code>access token</code>。这种授权类型能够通过用<code>credentials</code>交换长期存活的<code>access token</code>或者<code>refresh token</code>，排除<code>client</code>了为了以后的使用而保存<code>resource owner</code>的<code>credentials</code>的需要。</p>
-<h2 id="Client_Credentials">Client Credentials</h2><p>当授权范围被限制在，<code>client</code>控制下的受保护的资源的时候或者，受保护的资源事先和<code>authorization server</code>协商好的时候，能够使用<code>client credentials</code>（或者其他形式的<code>client</code>验证）。当<code>client</code>是在以自己名义行动（<code>client</code>就是就是<code>resource owner</code>），或者根据和<code>authorization server</code>事先协商好的授权访问受保护的资源的时候，使用<code>Client credentials</code>。</p>
-<h1 id="其他">其他</h1><h2 id="Access_Token_Scope">Access Token Scope</h2><p><code>authorization server</code>允许<code>client</code>获取<code>access token</code>的时候，指定<code>scope</code>参数。 这样获取的<code>access token</code>之后只能访问对应的<code>scope</code>的资源。资源服务器需要实现对资源的<code>scope</code>进行保护。<code>scope</code>的参数的值可以是多个用空格间隔的字符串，大写小敏感。<code>authorization server</code>需要定于<code>client</code>和其可获取的<code>scope</code>的对应关系，同时定义一个默认的<code>scope</code>。当请求<code>access token</code>实际获取的<code>scope</code>与<code>client</code>请求的<code>scope</code>不同的时候，<code>authorization server</code>需要返回实际授予的<code>scope</code>参数。</p>
+<h2 id="Client-Credentials"><a href="#Client-Credentials" class="headerlink" title="Client Credentials"></a>Client Credentials</h2><p>当授权范围被限制在，<code>client</code>控制下的受保护的资源的时候或者，受保护的资源事先和<code>authorization server</code>协商好的时候，能够使用<code>client credentials</code>（或者其他形式的<code>client</code>验证）。当<code>client</code>是在以自己名义行动（<code>client</code>就是就是<code>resource owner</code>），或者根据和<code>authorization server</code>事先协商好的授权访问受保护的资源的时候，使用<code>Client credentials</code>。</p>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><h2 id="Access-Token-Scope"><a href="#Access-Token-Scope" class="headerlink" title="Access Token Scope"></a>Access Token Scope</h2><p><code>authorization server</code>允许<code>client</code>获取<code>access token</code>的时候，指定<code>scope</code>参数。 这样获取的<code>access token</code>之后只能访问对应的<code>scope</code>的资源。资源服务器需要实现对资源的<code>scope</code>进行保护。<code>scope</code>的参数的值可以是多个用空格间隔的字符串，大写小敏感。<code>authorization server</code>需要定于<code>client</code>和其可获取的<code>scope</code>的对应关系，同时定义一个默认的<code>scope</code>。当请求<code>access token</code>实际获取的<code>scope</code>与<code>client</code>请求的<code>scope</code>不同的时候，<code>authorization server</code>需要返回实际授予的<code>scope</code>参数。</p>
 <p>实际应用的时候，可以实现一个类似RBAC的简化模型。<code>authorization server</code>定义的<code>scope</code>相当于定义了资源所属的角色。<code>client</code>定义多个需要的<code>scope</code>为一个access token type，相当于给用户赋予角色。根据<code>client</code>的不同，赋予不同的角色，即可实现对同一用户在不同的<code>client</code>中所能访问的资源的权限控制。</p>
   
 	</div>
@@ -206,7 +206,7 @@ authorization server  当成功认证了resource owner并且获得授权后，�
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#角色"><span class="toc-number">2.</span> <span class="toc-text">角色</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Client类型"><span class="toc-number">3.</span> <span class="toc-text">Client类型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#协议流程"><span class="toc-number">4.</span> <span class="toc-text">协议流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#授权模式（Authorization_Grant）"><span class="toc-number">5.</span> <span class="toc-text">授权模式（Authorization Grant）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Authorisation_Code"><span class="toc-number">5.1.</span> <span class="toc-text">Authorisation Code</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Implicit"><span class="toc-number">5.2.</span> <span class="toc-text">Implicit</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Resource_Owner_Password_Credentials"><span class="toc-number">5.3.</span> <span class="toc-text">Resource Owner Password Credentials</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Client_Credentials"><span class="toc-number">5.4.</span> <span class="toc-text">Client Credentials</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#其他"><span class="toc-number">6.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Access_Token_Scope"><span class="toc-number">6.1.</span> <span class="toc-text">Access Token Scope</span></a></li></ol></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#角色"><span class="toc-number">2.</span> <span class="toc-text">角色</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Client类型"><span class="toc-number">3.</span> <span class="toc-text">Client类型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#协议流程"><span class="toc-number">4.</span> <span class="toc-text">协议流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#授权模式（Authorization-Grant）"><span class="toc-number">5.</span> <span class="toc-text">授权模式（Authorization Grant）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Authorisation-Code"><span class="toc-number">5.1.</span> <span class="toc-text">Authorisation Code</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Implicit"><span class="toc-number">5.2.</span> <span class="toc-text">Implicit</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Resource-Owner-Password-Credentials"><span class="toc-number">5.3.</span> <span class="toc-text">Resource Owner Password Credentials</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Client-Credentials"><span class="toc-number">5.4.</span> <span class="toc-text">Client Credentials</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#其他"><span class="toc-number">6.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Access-Token-Scope"><span class="toc-number">6.1.</span> <span class="toc-text">Access Token Scope</span></a></li></ol></li></ol>
  
   </div>
 
@@ -229,13 +229,13 @@ authorization server  当成功认证了resource owner并且获得授权后，�
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -243,23 +243,23 @@ authorization server  当成功认证了resource owner并且获得授权后，�
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -320,7 +320,7 @@ authorization server  当成功认证了resource owner并且获得授权后，�
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

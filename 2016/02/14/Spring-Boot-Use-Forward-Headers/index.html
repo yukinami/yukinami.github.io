@@ -24,7 +24,7 @@
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -87,19 +87,19 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Forward_Headers"><span class="toc-number">1.</span> <span class="toc-text">Forward Headers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自定义Tomcat代理配置"><span class="toc-number">2.</span> <span class="toc-text">自定义Tomcat代理配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HttpServletRequest"><span class="toc-number">3.</span> <span class="toc-text">HttpServletRequest</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Forward-Headers"><span class="toc-number">1.</span> <span class="toc-text">Forward Headers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自定义Tomcat代理配置"><span class="toc-number">2.</span> <span class="toc-text">自定义Tomcat代理配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HttpServletRequest"><span class="toc-number">3.</span> <span class="toc-text">HttpServletRequest</span></a></li></ol>
 		
 		</div>
 		
-		<h2 id="Forward_Headers">Forward Headers</h2><p>应用有时候需要发送<code>302</code>重定向或者渲染指向自身的绝对链接。当应用运行在一个反向代理的后端，调用者想要获得的是指向代理的地址，而不是后面主机的物理地址。 通常这个这种情况，代理会通过添加HTTP头来告诉后端应用如何构建指向自己的链接。</p>
+		<h2 id="Forward-Headers"><a href="#Forward-Headers" class="headerlink" title="Forward Headers"></a>Forward Headers</h2><p>应用有时候需要发送<code>302</code>重定向或者渲染指向自身的绝对链接。当应用运行在一个反向代理的后端，调用者想要获得的是指向代理的地址，而不是后面主机的物理地址。 通常这个这种情况，代理会通过添加HTTP头来告诉后端应用如何构建指向自己的链接。</p>
 <p>如果代理添加了通常约定的<code>X-Forwarded-For</code>，<code>X-Forwarded-Proto</code>， 设置<code>server.use-forward-headers</code>为<code>true</code>， 就能生成正确的链接。</p>
 <a id="more"></a>
-<h2 id="自定义Tomcat代理配置">自定义Tomcat代理配置</h2><p>如果使用Tomcat，可以自定义携带“forwarded”信息的header头的名字。</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">server<span class="class">.tomcat</span><span class="class">.remote-ip-header</span>=x-your-remote-ip-<span class="tag">header</span></span><br><span class="line">server<span class="class">.tomcat</span><span class="class">.protocol-header</span>=x-your-protocol-header</span><br></pre></td></tr></table></figure>
+<h2 id="自定义Tomcat代理配置"><a href="#自定义Tomcat代理配置" class="headerlink" title="自定义Tomcat代理配置"></a>自定义Tomcat代理配置</h2><p>如果使用Tomcat，可以自定义携带“forwarded”信息的header头的名字。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">server<span class="selector-class">.tomcat</span><span class="selector-class">.remote-ip-header</span>=x-your-remote-ip-<span class="selector-tag">header</span></div><div class="line">server<span class="selector-class">.tomcat</span><span class="selector-class">.protocol-header</span>=x-your-protocol-header</div></pre></td></tr></table></figure>
 <p>Tomcat还可以配置一个默认的正则表达式来匹配能够信任的内部代理。默认，IP地址在10/8, 192.168/16, 169.254/16 and 127/8是被信任的。 可以自定义这个值</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server.tomcat.internal-proxies=<span class="number">192</span>\\<span class="number">.168</span>\\.\\d&#123;<span class="number">1</span>,<span class="number">3</span>&#125;\\.\\d&#123;<span class="number">1</span>,<span class="number">3</span>&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">server.tomcat.internal-proxies=<span class="number">192</span>\\<span class="number">.168</span>\\.\\d&#123;<span class="number">1</span>,<span class="number">3</span>&#125;\\.\\d&#123;<span class="number">1</span>,<span class="number">3</span>&#125;</div></pre></td></tr></table></figure>
 <p>想要完全控制Tomcat的RemoteIpValve的配置，可以通过关闭自动配置的实例（server.use-forward-headers=false），然后在<code>TomcatEmbeddedServletContainerFactory</code> Bean中添加一个新的实例。</p>
-<h2 id="HttpServletRequest">HttpServletRequest</h2><ul>
+<h2 id="HttpServletRequest"><a href="#HttpServletRequest" class="headerlink" title="HttpServletRequest"></a>HttpServletRequest</h2><ul>
 <li>getRemoteAddr 获取客户端或者最后发送请求的代理的IP地址</li>
 <li>getRemotePort 获取客户端或者最后发送请求的代理的IP端口</li>
 <li>getRemoteHost 获取客户端或者最终发送请求的代理的全名</li>
@@ -162,7 +162,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Forward_Headers"><span class="toc-number">1.</span> <span class="toc-text">Forward Headers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自定义Tomcat代理配置"><span class="toc-number">2.</span> <span class="toc-text">自定义Tomcat代理配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HttpServletRequest"><span class="toc-number">3.</span> <span class="toc-text">HttpServletRequest</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Forward-Headers"><span class="toc-number">1.</span> <span class="toc-text">Forward Headers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自定义Tomcat代理配置"><span class="toc-number">2.</span> <span class="toc-text">自定义Tomcat代理配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HttpServletRequest"><span class="toc-number">3.</span> <span class="toc-text">HttpServletRequest</span></a></li></ol>
  
   </div>
 
@@ -185,13 +185,13 @@
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -199,23 +199,23 @@
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -276,7 +276,7 @@
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

@@ -27,7 +27,7 @@
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -90,11 +90,11 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring_Integration_的_Type_Conversion"><span class="toc-number">1.</span> <span class="toc-text">Spring Integration 的 Type Conversion</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Datatype_Channel"><span class="toc-number">1.1.</span> <span class="toc-text">Datatype Channel</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring_XD_的_Type_Conversion"><span class="toc-number">2.</span> <span class="toc-text">Spring XD 的 Type Conversion</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring-Integration-的-Type-Conversion"><span class="toc-number">1.</span> <span class="toc-text">Spring Integration 的 Type Conversion</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Datatype-Channel"><span class="toc-number">1.1.</span> <span class="toc-text">Datatype Channel</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring-XD-的-Type-Conversion"><span class="toc-number">2.</span> <span class="toc-text">Spring XD 的 Type Conversion</span></a></li></ol>
 		
 		</div>
 		
-		<h1 id="Spring_Integration_的_Type_Conversion">Spring Integration 的 Type Conversion</h1><h2 id="Datatype_Channel">Datatype Channel</h2><p>Datatype Channel 可以指定Channel接收的数据的数据类型<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="keyword">int</span>:channel <span class="keyword">id</span>=<span class="string">"numberChannel"</span> datatype=<span class="string">"java.lang.Number"</span>/&gt;</span><br><span class="line">&lt;<span class="keyword">int</span>:channel <span class="keyword">id</span>=<span class="string">"stringOrNumberChannel"</span> datatype=<span class="string">"java.lang.String,java.lang.Number"</span>/&gt;</span><br></pre></td></tr></table></figure></p>
+		<h1 id="Spring-Integration-的-Type-Conversion"><a href="#Spring-Integration-的-Type-Conversion" class="headerlink" title="Spring Integration 的 Type Conversion"></a>Spring Integration 的 Type Conversion</h1><h2 id="Datatype-Channel"><a href="#Datatype-Channel" class="headerlink" title="Datatype Channel"></a>Datatype Channel</h2><p>Datatype Channel 可以指定Channel接收的数据的数据类型<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&lt;<span class="keyword">int</span>:channel <span class="keyword">id</span>=<span class="string">"numberChannel"</span> datatype=<span class="string">"java.lang.Number"</span>/&gt;</div><div class="line">&lt;<span class="keyword">int</span>:channel <span class="keyword">id</span>=<span class="string">"stringOrNumberChannel"</span> datatype=<span class="string">"java.lang.String,java.lang.Number"</span>/&gt;</div></pre></td></tr></table></figure></p>
 <p>指定了<code>datatype</code>之后，如果Channel收到了类型不是指定的类型，会如下进行：</p>
 <ol>
 <li>查找是否定义了一个叫做”integrationConversionService”的Bean，该Bean是Spring’s <a href="http://docs.spring.io/spring/docs/current/spring-framework-reference/html/validation.html#core-convert-ConversionService-API" target="_blank" rel="external">Conversion Service</a>的实例。如果没有，则会抛出异常。</li>
@@ -103,22 +103,22 @@
 <a id="more"></a>
 <p>定义了Converter的方式如下：</p>
 <ol>
-<li>实现<code>Converter</code>接口<pre><code><span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">StringToIntegerConverter</span> <span class="keyword">implements</span> <span class="title">Converter</span>&lt;<span class="title">String</span>, <span class="title">Integer</span>&gt; </span>{
-    <span class="keyword">public</span> <span class="function">Integer <span class="title">convert</span><span class="params">(String source)</span> </span>{
-        <span class="function"><span class="keyword">return</span> Integer.<span class="title">parseInt</span><span class="params">(source)</span></span>;
+<li>实现<code>Converter</code>接口<pre><code>public static class StringToIntegerConverter implements Converter&lt;String, Integer&gt; {
+    public Integer convert(String source) {
+        return Integer.parseInt(source);
     }
 }
 </code></pre></li>
-<li>Integration Conversion Service中注册为一个Converter<pre><code>&lt;<span class="type">int</span>:<span class="keyword">converter</span> <span class="keyword">ref</span>=<span class="string">"strToInt"</span>/&gt;
-&lt;bean id=<span class="string">"strToInt"</span> class=<span class="string">"org.springframework.integration.util.Demo.StringToIntegerConverter"</span>/&gt;
+<li>Integration Conversion Service中注册为一个Converter<pre><code>&lt;int:converter ref=&quot;strToInt&quot;/&gt;
+&lt;bean id=&quot;strToInt&quot; class=&quot;org.springframework.integration.util.Demo.StringToIntegerConverter&quot;/&gt;
 </code></pre>当<code>converter</code>元素被解析时，容器会注册名为”integrationConversionService”的bean，同时将convert注入到该bean中。</li>
 </ol>
 <p><strong><em>从4.0版本开始</em></strong><br><code>integrationConversionService</code>会由<code>DefaultDatatypeChannelMessageConverter</code>在application conext中查找，并调用。可以通过指定channel的<code>message-converter</code>属性，来只用另外的转换机制，指定的值需要实现<code>MessageConverter</code>接口。</p>
-<p>同时也可以通过注解的方式注册converter：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Component</span></span><br><span class="line"><span class="annotation">@IntegrationConverter</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestConverter</span> <span class="keyword">implements</span> <span class="title">Converter</span>&lt;<span class="title">Boolean</span>, <span class="title">Number</span>&gt; &#123;</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> Number convert(Boolean source) &#123;</span><br><span class="line">		<span class="keyword">return</span> source ? 1 : <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h1 id="Spring_XD_的_Type_Conversion">Spring XD 的 Type Conversion</h1><p>Spring XD 通过模块参数<code>--outputType=application/json</code>，让Spring XD注册实例的的时候动态设置datatype的方式，实现type conversion，本质上还是利用了Spring Integration的转换机制来实现的。</p>
+<p>同时也可以通过注解的方式注册converter：<br><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="variable">@Component</span></div><div class="line"><span class="variable">@IntegrationConverter</span></div><div class="line">public class TestConverter implements Converter&lt;Boolean, Number&gt; &#123;</div><div class="line"></div><div class="line">	<span class="selector-tag">public</span> <span class="selector-tag">Number</span> <span class="selector-tag">convert</span>(Boolean source) &#123;</div><div class="line">		<span class="selector-tag">return</span> <span class="selector-tag">source</span> ? <span class="selector-tag">1</span> : <span class="selector-tag">0</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="Spring-XD-的-Type-Conversion"><a href="#Spring-XD-的-Type-Conversion" class="headerlink" title="Spring XD 的 Type Conversion"></a>Spring XD 的 Type Conversion</h1><p>Spring XD 通过模块参数<code>--outputType=application/json</code>，让Spring XD注册实例的的时候动态设置datatype的方式，实现type conversion，本质上还是利用了Spring Integration的转换机制来实现的。</p>
 <p>Spring XD 环境中使用<code>CompositeMessageConverter</code>（<code>message-converter</code>属性）来进行转换。Spring XD将<code>xd.messageConverters</code>和<code>customMessageConverters</code>的两个list注入到<code>CompositeMessageConverter</code>，并代理给它们进行实际的转换工作。</p>
 <p>之所以<code>CompositeMessageConverter</code>的机制是比较满意的，是因为在 Spring XD 环境中，一个模块的从上一个模块的接收到Message的Payload类型是不确定的（Converter的Source类型是不确定的）。比如，Spring XD 提供的转换器能够将任何Java对象转换为<code>Tuple</code>。但是针对每个类转换到<code>Tuple</code>的方式是不一样的。所以<code>CompositeMessageConverter</code>需要根据<code>outputType</code>参数以及实际的传入类型来找到合适的转换器进行转换。</p>
-<p>在Spring XD中实现自定义的转换器，只需要注册”customMessageConverters”，并添加到converter其中<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Users can override this to add converters.--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">util:list</span> <span class="attribute">id</span>=<span class="value">"customMessageConverters"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">bean</span> <span class="attribute">class</span>=<span class="value">"..."</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">util:list</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>在Spring XD中实现自定义的转换器，只需要注册”customMessageConverters”，并添加到converter其中<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- Users can override this to add converters.--&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">util:list</span> <span class="attr">id</span>=<span class="string">"customMessageConverters"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"..."</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">util:list</span>&gt;</span></div></pre></td></tr></table></figure></p>
 <p>向”customMessageConverters”中注册的converter需要继承<code>AbstractFromMessageConverter</code>类。</p>
   
 	</div>
@@ -128,7 +128,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Spring-Ingegration/">Spring Ingegration</a><a href="/tags/Spring-XD/">Spring XD</a>
+  <span></span> <a href="/tags/Spring-XD/">Spring XD</a><a href="/tags/Spring-Ingegration/">Spring Ingegration</a>
   </div>
 
 </div>
@@ -176,7 +176,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring_Integration_的_Type_Conversion"><span class="toc-number">1.</span> <span class="toc-text">Spring Integration 的 Type Conversion</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Datatype_Channel"><span class="toc-number">1.1.</span> <span class="toc-text">Datatype Channel</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring_XD_的_Type_Conversion"><span class="toc-number">2.</span> <span class="toc-text">Spring XD 的 Type Conversion</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring-Integration-的-Type-Conversion"><span class="toc-number">1.</span> <span class="toc-text">Spring Integration 的 Type Conversion</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Datatype-Channel"><span class="toc-number">1.1.</span> <span class="toc-text">Datatype Channel</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring-XD-的-Type-Conversion"><span class="toc-number">2.</span> <span class="toc-text">Spring XD 的 Type Conversion</span></a></li></ol>
  
   </div>
 
@@ -199,13 +199,13 @@
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -213,23 +213,23 @@
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -290,7 +290,7 @@
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

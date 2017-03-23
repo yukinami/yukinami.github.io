@@ -31,7 +31,7 @@
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -99,7 +99,7 @@
 		</div>
 		
 		<p>关于RESTful API Versioning，有很多讨论 <a href="http://blog.steveklabnik.com/posts/2011-07-03-nobody-understands-rest-or-http#i_want_my_api_to_be_versioned" target="_blank" rel="external">Nobody Understands REST or HTTP</a>, <a href="http://www.informit.com/articles/article.aspx?p=1566460" target="_blank" rel="external">Versioning REST Services</a>, <a href="http://stackoverflow.com/questions/389169/best-practices-for-api-versioning" target="_blank" rel="external">best-practices-for-api-versioning</a>, <a href="http://www.lexicalscope.com/blog/2012/03/12/how-are-rest-apis-versioned/" target="_blank" rel="external">How are REST APIs versioned?</a>， 总结如下。</p>
-<h1 id="为什么需要Versioning">为什么需要Versioning</h1><p>尽管设计API的时候，我们尽可能设计完美的API，尽可能的避免修改API。但是随着业务需求的变更，API接口的变化几乎是无法避免的。</p>
+<h1 id="为什么需要Versioning"><a href="#为什么需要Versioning" class="headerlink" title="为什么需要Versioning"></a>为什么需要Versioning</h1><p>尽管设计API的时候，我们尽可能设计完美的API，尽可能的避免修改API。但是随着业务需求的变更，API接口的变化几乎是无法避免的。</p>
 <p>当业务需求变更的时候，可以这样选择：</p>
 <ol>
 <li>保持接口的兼容性。这是一种方式，但是并非能切实做到的，为了兼容必定会损失一些新特性，或者牺牲良好的代码为代价。</li>
@@ -108,7 +108,7 @@
 </ol>
 <p>通常情况下，我们会选择第三种方式来实现API接口的变更。</p>
 <a id="more"></a>
-<h1 id="实现策略">实现策略</h1><ol>
+<h1 id="实现策略"><a href="#实现策略" class="headerlink" title="实现策略"></a>实现策略</h1><ol>
 <li><p>URI</p>
 <ul>
 <li><code>https://api-v1.example.com/places</code></li>
@@ -118,35 +118,35 @@
 </ul>
 </li>
 <li><p>请求体，Query参数</p>
-<pre><code><span class="constant">POST</span>/placesHTTP/<span class="number">1.1</span>
-<span class="constant">Host</span><span class="symbol">:api</span>.example.com
-<span class="constant">Content</span>-<span class="constant">Type</span><span class="symbol">:application/json</span>
+<pre><code>POST/placesHTTP/1.1
+Host:api.example.com
+Content-Type:application/json
 
 {
-    <span class="string">"version"</span> <span class="symbol">:</span> <span class="string">"1.0"</span> <span class="number">7</span>
+    &quot;version&quot; : &quot;1.0&quot; 7
 }
 </code></pre><p> 如果客户端的请求是JSON格式的，实现起来倒是不难。如果是Content-Type是image/png     或者是text/csv呢，这就不好处理。</p>
 <p> 或者把参数放到Query参数里：</p>
-<pre><code>POST/places?version=<span class="number">1.0</span>HTTP/<span class="number">1.1</span>
+<pre><code>POST/places?version=1.0HTTP/1.1
 </code></pre><p> 这种情况下，如果是POST请求呢，一些框架在POST请求的时候会直接忽略GET参数，虽然这有悖于HTTP协议，但是在POST请求带入GET参数，还是让人非常困惑的。</p>
 </li>
 <li><p>自定义请求头</p>
-<pre><code>GET<span class="regexp">/placesHTTP/</span><span class="number">1.1</span>
-<span class="string">Host:</span>api.example.com
-<span class="string">BadApiVersion:</span><span class="number">1.0</span>
+<pre><code>GET/placesHTTP/1.1
+Host:api.example.com
+BadApiVersion:1.0
 </code></pre><p>看起来好像挺好的，但是这绝对代码中的坏味道。为了让缓存系统能够正确低返回果，我们Response必须是这个样子的：</p>
-<pre><code>HTTP/<span class="number">1.1200</span>OK
-<span class="label">BadAPIVersion:</span><span class="number">1.1</span>
-<span class="label">Vary:</span>BadAPIVersion
+<pre><code>HTTP/1.1200OK
+BadAPIVersion:1.1
+Vary:BadAPIVersion
 </code></pre><p> 如果不指定Vary，像<a href="https://github.com/varnish/Varnish-Cache" target="_blank" rel="external">varnish</a>缓存系统是不知道如何缓存这样的请求的。另外，抛开这点不说，要知道这个HTTP还必须通过查阅文档才能了解，这也挺恼人的。关于Vary头，请参考<a href="https://www.imququ.com/post/vary-header-in-http.html" target="_blank" rel="external">6</a>。</p>
 </li>
 <li><p>Content Negotiation<br> 这种方式是符合HATEOAS，也是相对最优雅的方式。<a href="https://developer.github.com/v3/media/" target="_blank" rel="external">Github API</a>的Versioning就是通过这种方式实现的。</p>
-<pre><code><span class="constant">Accept</span><span class="symbol">:application/vnd</span>.github.user.v4+json
-<span class="constant">Accept</span><span class="symbol">:application/vnd</span>.github.user+json;version=<span class="number">4.0</span>
+<pre><code>Accept:application/vnd.github.user.v4+json
+Accept:application/vnd.github.user+json;version=4.0
 </code></pre><p> 这种方式，对HATEOAS和缓存都非常友好。唯一可能有点麻烦的就是实现, 主流的框架都没有处理自动根据请求的Content-Type处理的机制。</p>
 </li>
 </ol>
-<h1 id="代码实现">代码实现</h1><ol>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><ol>
 <li><p>对于URI的实现策略，最直接有效的实现方式就是通过多个代码库实现API的多个版本。部署时候把不同的版本部署到不同的server上。像这样：</p>
 <ul>
 <li>1.0/master</li>
@@ -161,11 +161,11 @@
 <p><strong><em>以Rails为例</em></strong>。 Rails本身有一个很好的Gem叫做<a href="https://github.com/bploetz/versionist" target="_blank" rel="external">versionist</a>实现了这个功能。<br> 为了更好的理解其实现，我们可以自己实现以下。</p>
 </li>
 </ol>
-<h2 id="首先是路由，给v1版本设置namespace">首先是路由，给v1版本设置namespace</h2><p>/config/routes.rb<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">Store:</span><span class="symbol">:Application</span>.routes.draw <span class="keyword">do</span></span><br><span class="line">  namespace <span class="symbol">:api</span> <span class="keyword">do</span></span><br><span class="line">    namespace <span class="symbol">:v1</span> <span class="keyword">do</span></span><br><span class="line">      resources <span class="symbol">:products</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  </span><br><span class="line">  resources <span class="symbol">:products</span></span><br><span class="line">  root <span class="symbol">to:</span> <span class="string">'products#index'</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="接着是v1的实现">接着是v1的实现</h2><p>/app/controllers/api/v1/products_controller.rb<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">module</span> <span class="title">Api</span></span></span><br><span class="line">  <span class="class"><span class="keyword">module</span> <span class="title">V1</span></span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">ProductsController</span> <span class="inheritance">&lt; <span class="parent">ApplicationController</span></span></span></span><br><span class="line">      respond_to <span class="symbol">:json</span></span><br><span class="line">      </span><br><span class="line">      <span class="function"><span class="keyword">def</span> <span class="title">index</span></span></span><br><span class="line">        respond_with <span class="constant">Product</span>.all</span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line">      </span><br><span class="line">      <span class="function"><span class="keyword">def</span> <span class="title">show</span></span></span><br><span class="line">        respond_with <span class="constant">Product</span>.find(params[<span class="symbol">:id</span>])</span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line">      </span><br><span class="line">      <span class="function"><span class="keyword">def</span> <span class="title">create</span></span></span><br><span class="line">        respond_with <span class="constant">Product</span>.create(params[<span class="symbol">:product</span>])</span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line">      </span><br><span class="line">      <span class="function"><span class="keyword">def</span> <span class="title">update</span></span></span><br><span class="line">        respond_with <span class="constant">Product</span>.update(params[<span class="symbol">:id</span>], params[<span class="symbol">:products</span>])</span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line">      </span><br><span class="line">      <span class="function"><span class="keyword">def</span> <span class="title">destroy</span></span></span><br><span class="line">        respond_with <span class="constant">Product</span>.destroy(params[<span class="symbol">:id</span>])</span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="然后，v2版本需要变更这个API">然后，v2版本需要变更这个API</h2><p>###数据库变更###<br>/config/db/migrations/201205230000_change_products_released_on.rb<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ChangeProductsReleasedOn</span> <span class="inheritance">&lt; <span class="parent">ActiveRecord::Migration</span></span></span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">up</span></span></span><br><span class="line">    rename_column <span class="symbol">:products</span>, <span class="symbol">:released_on</span>, <span class="symbol">:released_at</span></span><br><span class="line">    change_column <span class="symbol">:products</span>, <span class="symbol">:released_at</span>, <span class="symbol">:datetime</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">down</span></span></span><br><span class="line">    change_column <span class="symbol">:products</span>, <span class="symbol">:released_at</span>, <span class="symbol">:date</span></span><br><span class="line">    rename_column <span class="symbol">:products</span>, <span class="symbol">:released_at</span>, <span class="symbol">:released_on</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="首先是路由，给v1版本设置namespace"><a href="#首先是路由，给v1版本设置namespace" class="headerlink" title="首先是路由，给v1版本设置namespace"></a>首先是路由，给v1版本设置namespace</h2><p>/config/routes.rb<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">Store:</span><span class="symbol">:Application</span>.routes.draw <span class="keyword">do</span></div><div class="line">  namespace <span class="symbol">:api</span> <span class="keyword">do</span></div><div class="line">    namespace <span class="symbol">:v1</span> <span class="keyword">do</span></div><div class="line">      resources <span class="symbol">:products</span></div><div class="line">    <span class="keyword">end</span></div><div class="line">  <span class="keyword">end</span></div><div class="line">  </div><div class="line">  resources <span class="symbol">:products</span></div><div class="line">  root <span class="symbol">to:</span> <span class="string">'products#index'</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure></p>
+<h2 id="接着是v1的实现"><a href="#接着是v1的实现" class="headerlink" title="接着是v1的实现"></a>接着是v1的实现</h2><p>/app/controllers/api/v1/products_controller.rb<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">module</span> <span class="title">Api</span></span></div><div class="line">  <span class="class"><span class="keyword">module</span> <span class="title">V1</span></span></div><div class="line">    <span class="class"><span class="keyword">class</span> <span class="title">ProductsController</span> &lt; ApplicationController</span></div><div class="line">      respond_to <span class="symbol">:json</span></div><div class="line">      </div><div class="line">      <span class="function"><span class="keyword">def</span> <span class="title">index</span></span></div><div class="line">        respond_with Product.all</div><div class="line">      <span class="keyword">end</span></div><div class="line">      </div><div class="line">      <span class="function"><span class="keyword">def</span> <span class="title">show</span></span></div><div class="line">        respond_with Product.find(params[<span class="symbol">:id</span>])</div><div class="line">      <span class="keyword">end</span></div><div class="line">      </div><div class="line">      <span class="function"><span class="keyword">def</span> <span class="title">create</span></span></div><div class="line">        respond_with Product.create(params[<span class="symbol">:product</span>])</div><div class="line">      <span class="keyword">end</span></div><div class="line">      </div><div class="line">      <span class="function"><span class="keyword">def</span> <span class="title">update</span></span></div><div class="line">        respond_with Product.update(params[<span class="symbol">:id</span>], params[<span class="symbol">:products</span>])</div><div class="line">      <span class="keyword">end</span></div><div class="line">      </div><div class="line">      <span class="function"><span class="keyword">def</span> <span class="title">destroy</span></span></div><div class="line">        respond_with Product.destroy(params[<span class="symbol">:id</span>])</div><div class="line">      <span class="keyword">end</span></div><div class="line">    <span class="keyword">end</span></div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure></p>
+<h2 id="然后，v2版本需要变更这个API"><a href="#然后，v2版本需要变更这个API" class="headerlink" title="然后，v2版本需要变更这个API"></a>然后，v2版本需要变更这个API</h2><p>###数据库变更###<br>/config/db/migrations/201205230000_change_products_released_on.rb<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ChangeProductsReleasedOn</span> &lt; ActiveRecord::Migration</span></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">up</span></span></div><div class="line">    rename_column <span class="symbol">:products</span>, <span class="symbol">:released_on</span>, <span class="symbol">:released_at</span></div><div class="line">    change_column <span class="symbol">:products</span>, <span class="symbol">:released_at</span>, <span class="symbol">:datetime</span></div><div class="line">  <span class="keyword">end</span></div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">down</span></span></div><div class="line">    change_column <span class="symbol">:products</span>, <span class="symbol">:released_at</span>, <span class="symbol">:date</span></div><div class="line">    rename_column <span class="symbol">:products</span>, <span class="symbol">:released_at</span>, <span class="symbol">:released_on</span></div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure></p>
 <p>这样V2版本已经能正确返回的修改后的结果了。</p>
-<p>###保留V1###<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">module</span> <span class="title">Api</span></span></span><br><span class="line">  <span class="class"><span class="keyword">module</span> <span class="title">V1</span></span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">ProductsController</span> <span class="inheritance">&lt; <span class="parent">ApplicationController</span></span></span></span><br><span class="line">      <span class="class"><span class="keyword">class</span> <span class="title">Product</span> <span class="inheritance">&lt; </span>::<span class="title">Product</span></span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">as_json</span><span class="params">(options=&#123;&#125;)</span></span></span><br><span class="line">          <span class="keyword">super</span>.merge(<span class="symbol">released_on:</span> released_at.to_date)</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line">      </span><br><span class="line">     respond_to <span class="symbol">:json</span></span><br><span class="line">        <span class="comment"># Actions omitted</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></p>
+<p>###保留V1###<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">module</span> <span class="title">Api</span></span></div><div class="line">  <span class="class"><span class="keyword">module</span> <span class="title">V1</span></span></div><div class="line">    <span class="class"><span class="keyword">class</span> <span class="title">ProductsController</span> &lt; ApplicationController</span></div><div class="line">      <span class="class"><span class="keyword">class</span> <span class="title">Product</span> &lt; ::<span class="title">Product</span></span></div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">as_json</span><span class="params">(options=&#123;&#125;)</span></span></div><div class="line">          <span class="keyword">super</span>.merge(<span class="symbol">released_on:</span> released_at.to_date)</div><div class="line">        <span class="keyword">end</span></div><div class="line">      <span class="keyword">end</span></div><div class="line">      </div><div class="line">     respond_to <span class="symbol">:json</span></div><div class="line">        <span class="comment"># Actions omitted</span></div><div class="line">    <span class="keyword">end</span></div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure></p>
 <p>这里两个版本的ProductsController有很多重复代码，不太符合DRY原则。旧版本的代码的保留通常了为了兼容，总有那么一天旧版本的API废止了，那么重构就不值得了。如果确实觉得需要，可以把共通的行为提取到超类里面。</p>
 <p><strong><em><a href="http://railscasts.com/episodes/350-rest-api-versioning?view=asciicast" target="_blank" rel="external">完整示例</a></em></strong></p>
   
@@ -247,13 +247,13 @@
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -261,23 +261,23 @@
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -338,7 +338,7 @@
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		

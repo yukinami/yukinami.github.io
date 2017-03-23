@@ -25,7 +25,7 @@ org.hibernate.util.JDBCExceptionReporter: The last packet successfully received 
     <link rel="apple-touch-icon" href="/img/">
     <link rel="apple-touch-icon-precomposed" href="/img/">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -88,24 +88,24 @@ org.hibernate.util.JDBCExceptionReporter: The last packet successfully received 
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题"><span class="toc-number">1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原因"><span class="toc-number">2.</span> <span class="toc-text">原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决"><span class="toc-number">3.</span> <span class="toc-text">解决</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#修改Mysql配置"><span class="toc-number">3.1.</span> <span class="toc-text">修改Mysql配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#autoReconnect"><span class="toc-number">3.2.</span> <span class="toc-text">autoReconnect</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#testing_connection_validity"><span class="toc-number">3.3.</span> <span class="toc-text">testing connection validity</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#c3p0"><span class="toc-number">3.3.1.</span> <span class="toc-text">c3p0</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#tomcat_jdbc"><span class="toc-number">3.3.1.1.</span> <span class="toc-text">tomcat jdbc</span></a></li></ol></li></ol></li></ol></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题"><span class="toc-number">1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原因"><span class="toc-number">2.</span> <span class="toc-text">原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决"><span class="toc-number">3.</span> <span class="toc-text">解决</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#修改Mysql配置"><span class="toc-number">3.1.</span> <span class="toc-text">修改Mysql配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#autoReconnect"><span class="toc-number">3.2.</span> <span class="toc-text">autoReconnect</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#testing-connection-validity"><span class="toc-number">3.3.</span> <span class="toc-text">testing connection validity</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#c3p0"><span class="toc-number">3.3.1.</span> <span class="toc-text">c3p0</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#tomcat-jdbc"><span class="toc-number">3.3.1.1.</span> <span class="toc-text">tomcat jdbc</span></a></li></ol></li></ol></li></ol></li></ol>
 		
 		</div>
 		
-		<h2 id="问题">问题</h2><p>系统长时间运行，但是没有人使用后，再次使用时会无法连接上数据库，会报类似这样的错误</p>
+		<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>系统长时间运行，但是没有人使用后，再次使用时会无法连接上数据库，会报类似这样的错误</p>
 <blockquote>
 <p>org.hibernate.util.JDBCExceptionReporter: The last packet successfully received from the server was 56697 seconds ago. The last packet sent successfully to the server was 56697 seconds ago, which  is longer than the server configured value of ‘wait_timeout’. You should consider either expiring and/or testing connection validity before use in your application, increasing the server configured values for client timeouts, or using the Connector/J connection property ‘autoReconnect=true’ to avoid this problem.</p>
 </blockquote>
 <a id="more"></a>
-<h2 id="原因">原因</h2><p>Mysql默认8小时会丢弃一个没有活动的连接，这就导致如果使用了数据库连接池，那么8小时后连接池中的连接就被Mysql断开，无法使用，最终报错。</p>
-<h2 id="解决">解决</h2><h3 id="修改Mysql配置">修改Mysql配置</h3><p>最直接的方法就是修改Mysql断开连接的时间，比如从8小时改到2周，具体是修改<code>mysql.cnf</code>中的<code>wait_timeout</code>。 但是这并不是一个可靠的方法，应用本身必须能够重新连接到数据库，因为数据库本身会崩溃，重启等等。 所以这这能作为一个临时的方案。</p>
-<h3 id="autoReconnect">autoReconnect</h3><p>就像错误信息中提示的那样，使用在数据库连接URL后面添加参数<code>autoReconnect=true</code>来避免这个问题。但是他首先只支持<code>Connector/J</code>驱动；其次，即便配置了<code>autoReconnect</code>，最终虽然能够重新连接上数据库，但是连接池中第一次取出来的数据库连接仍然是无效的，依然还是会有一次错误提示。</p>
-<h3 id="testing_connection_validity">testing connection validity</h3><p>使用连接池的连接之前，先验证它的有效性。连接池的实现通常都提供了这样的功能。</p>
-<h4 id="c3p0">c3p0</h4><ul>
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>Mysql默认8小时会丢弃一个没有活动的连接，这就导致如果使用了数据库连接池，那么8小时后连接池中的连接就被Mysql断开，无法使用，最终报错。</p>
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><h3 id="修改Mysql配置"><a href="#修改Mysql配置" class="headerlink" title="修改Mysql配置"></a>修改Mysql配置</h3><p>最直接的方法就是修改Mysql断开连接的时间，比如从8小时改到2周，具体是修改<code>mysql.cnf</code>中的<code>wait_timeout</code>。 但是这并不是一个可靠的方法，应用本身必须能够重新连接到数据库，因为数据库本身会崩溃，重启等等。 所以这这能作为一个临时的方案。</p>
+<h3 id="autoReconnect"><a href="#autoReconnect" class="headerlink" title="autoReconnect"></a>autoReconnect</h3><p>就像错误信息中提示的那样，使用在数据库连接URL后面添加参数<code>autoReconnect=true</code>来避免这个问题。但是他首先只支持<code>Connector/J</code>驱动；其次，即便配置了<code>autoReconnect</code>，最终虽然能够重新连接上数据库，但是连接池中第一次取出来的数据库连接仍然是无效的，依然还是会有一次错误提示。</p>
+<h3 id="testing-connection-validity"><a href="#testing-connection-validity" class="headerlink" title="testing connection validity"></a>testing connection validity</h3><p>使用连接池的连接之前，先验证它的有效性。连接池的实现通常都提供了这样的功能。</p>
+<h4 id="c3p0"><a href="#c3p0" class="headerlink" title="c3p0"></a>c3p0</h4><ul>
 <li>testConnectionOnCheckout 使用连接池之前也测试，官方文档并不推荐，因为每个请求都测试连接会影响性能</li>
 <li>idleConnectionTestPeriod 测试连接池中空闲连接的间隔  虽然没有在Checkout的检测连接来的可靠，但是对于大多数应用来说，配合<code>testConnectionOnCheckin</code>已经有较高的可靠性，并且有更好的性能。</li>
 </ul>
-<h5 id="tomcat_jdbc">tomcat jdbc</h5><p>和c3p0类似的，分别可以设置<code>testOnBorrow</code>，<code>testWhileIdle</code>，<code>testOnReturn</code>来实现上面提到的功能。另外设置这几个参数还需要设置<code>validationQuery</code>，<code>validatorClassName</code>来告诉连接池如何验证连接，通常可以设置<code>validationQuery</code>为SELECT 1(mysql), select 1 from dual(oracle), SELECT 1(MS Sql Server)。</p>
+<h5 id="tomcat-jdbc"><a href="#tomcat-jdbc" class="headerlink" title="tomcat jdbc"></a>tomcat jdbc</h5><p>和c3p0类似的，分别可以设置<code>testOnBorrow</code>，<code>testWhileIdle</code>，<code>testOnReturn</code>来实现上面提到的功能。另外设置这几个参数还需要设置<code>validationQuery</code>，<code>validatorClassName</code>来告诉连接池如何验证连接，通常可以设置<code>validationQuery</code>为SELECT 1(mysql), select 1 from dual(oracle), SELECT 1(MS Sql Server)。</p>
 <p><a href="http://leakfromjavaheap.blogspot.jp/2013/11/robust-db-connection-pool-configuration.html" target="_blank" rel="external">http://leakfromjavaheap.blogspot.jp/2013/11/robust-db-connection-pool-configuration.html</a></p>
   
 	</div>
@@ -163,7 +163,7 @@ org.hibernate.util.JDBCExceptionReporter: The last packet successfully received 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题"><span class="toc-number">1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原因"><span class="toc-number">2.</span> <span class="toc-text">原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决"><span class="toc-number">3.</span> <span class="toc-text">解决</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#修改Mysql配置"><span class="toc-number">3.1.</span> <span class="toc-text">修改Mysql配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#autoReconnect"><span class="toc-number">3.2.</span> <span class="toc-text">autoReconnect</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#testing_connection_validity"><span class="toc-number">3.3.</span> <span class="toc-text">testing connection validity</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#c3p0"><span class="toc-number">3.3.1.</span> <span class="toc-text">c3p0</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#tomcat_jdbc"><span class="toc-number">3.3.1.1.</span> <span class="toc-text">tomcat jdbc</span></a></li></ol></li></ol></li></ol></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题"><span class="toc-number">1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原因"><span class="toc-number">2.</span> <span class="toc-text">原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决"><span class="toc-number">3.</span> <span class="toc-text">解决</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#修改Mysql配置"><span class="toc-number">3.1.</span> <span class="toc-text">修改Mysql配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#autoReconnect"><span class="toc-number">3.2.</span> <span class="toc-text">autoReconnect</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#testing-connection-validity"><span class="toc-number">3.3.</span> <span class="toc-text">testing connection validity</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#c3p0"><span class="toc-number">3.3.1.</span> <span class="toc-text">c3p0</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#tomcat-jdbc"><span class="toc-number">3.3.1.1.</span> <span class="toc-text">tomcat jdbc</span></a></li></ol></li></ol></li></ol></li></ol>
  
   </div>
 
@@ -186,13 +186,13 @@ org.hibernate.util.JDBCExceptionReporter: The last packet successfully received 
 		
 			<li><a href="/tags/Spring-Boot/" title="Spring Boot">Spring Boot<sup>6</sup></a></li>
 		
-			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
-		
-			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
+			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
 		
 			<li><a href="/tags/API/" title="API">API<sup>4</sup></a></li>
 		
-			<li><a href="/tags/测试/" title="测试">测试<sup>4</sup></a></li>
+			<li><a href="/tags/Spring-Security/" title="Spring Security">Spring Security<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Hibernate/" title="Hibernate">Hibernate<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Spring-Data/" title="Spring Data">Spring Data<sup>3</sup></a></li>
 		
@@ -200,23 +200,23 @@ org.hibernate.util.JDBCExceptionReporter: The last packet successfully received 
 		
 			<li><a href="/tags/JPA/" title="JPA">JPA<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
-		
-			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
-		
 			<li><a href="/tags/前端开发/" title="前端开发">前端开发<sup>2</sup></a></li>
 		
 			<li><a href="/tags/热部署/" title="热部署">热部署<sup>2</sup></a></li>
 		
 			<li><a href="/tags/HTML/" title="HTML">HTML<sup>2</sup></a></li>
 		
+			<li><a href="/tags/Mysql/" title="Mysql">Mysql<sup>2</sup></a></li>
+		
 			<li><a href="/tags/Spring-Social/" title="Spring Social">Spring Social<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Gradle/" title="Gradle">Gradle<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
+		
+			<li><a href="/tags/CI/" title="CI">CI<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Https/" title="Https">Https<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -277,7 +277,7 @@ org.hibernate.util.JDBCExceptionReporter: The last packet successfully received 
 		<a href="mailto:yukinami.jiong@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2016 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Pacman">Jacman</a> © 2017 
 		
 		<a href="http://yukinami.github.io/about" target="_blank" title="Jyong">Jyong</a>
 		
